@@ -1,0 +1,102 @@
+{
+  "protocol": "1. Forward-chained validation: fit each calibrator on blocks < k and evaluate it on block k (k = 1, 2), so a\n   calibrator is never evaluated on its own fitting rows or on earlier time than it was fitted on.\n2. A method is *justified* for a model if, compared with the raw probabilities, it lowers BOTH log loss and top-label\n   ECE on BOTH evaluation blocks, and lowers Critical one-vs-rest ROC-AUC by at most 0.005 on the pooled blocks.\n   Among justified methods, the lower pooled log loss wins. If none is justified, raw probabilities stay the only output.\n3. The chosen method is refitted on all three validation blocks (2,905 shipments) for use at inference.\n4. The test period is scored once with the step-3 calibrators as a diagnostic. It is reported, never used for the choice.",
+  "models": {
+    "xgboost": "XGBoost",
+    "logistic_regression": "Logistic Regression"
+  },
+  "decision": {
+    "xgboost": {
+      "chosen_method": null,
+      "checks": {
+        "sigmoid": {
+          "justified": false,
+          "per_block": [
+            {
+              "block": 1,
+              "log_loss_better": true,
+              "ece_better": true
+            },
+            {
+              "block": 2,
+              "log_loss_better": false,
+              "ece_better": true
+            }
+          ],
+          "pooled_log_loss": 0.7894531561307992,
+          "pooled_raw_log_loss": 0.7867540502725692,
+          "critical_auc_drop": -0.005214364474254052
+        },
+        "isotonic": {
+          "justified": false,
+          "per_block": [
+            {
+              "block": 1,
+              "log_loss_better": false,
+              "ece_better": true
+            },
+            {
+              "block": 2,
+              "log_loss_better": false,
+              "ece_better": true
+            }
+          ],
+          "pooled_log_loss": 0.8767118465932452,
+          "pooled_raw_log_loss": 0.7867540502725692,
+          "critical_auc_drop": -0.002991791768525931
+        }
+      }
+    },
+    "logistic_regression": {
+      "chosen_method": null,
+      "checks": {
+        "sigmoid": {
+          "justified": false,
+          "per_block": [
+            {
+              "block": 1,
+              "log_loss_better": true,
+              "ece_better": true
+            },
+            {
+              "block": 2,
+              "log_loss_better": true,
+              "ece_better": false
+            }
+          ],
+          "pooled_log_loss": 0.7538357134701553,
+          "pooled_raw_log_loss": 0.7868409015344952,
+          "critical_auc_drop": -0.007202436044830507
+        },
+        "isotonic": {
+          "justified": false,
+          "per_block": [
+            {
+              "block": 1,
+              "log_loss_better": false,
+              "ece_better": true
+            },
+            {
+              "block": 2,
+              "log_loss_better": false,
+              "ece_better": false
+            }
+          ],
+          "pooled_log_loss": 0.8522871504718394,
+          "pooled_raw_log_loss": 0.7868409015344952,
+          "critical_auc_drop": -0.003968533959776477
+        }
+      }
+    }
+  },
+  "validation_blocks": {
+    "0": 965,
+    "1": 970,
+    "2": 970
+  },
+  "validation_critical_share_by_block": {
+    "0": 0.23108808290155441,
+    "1": 0.2597938144329897,
+    "2": 0.25876288659793817
+  },
+  "test_critical_share": 0.0898078529657477
+}

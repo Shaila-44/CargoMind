@@ -26,6 +26,7 @@ def main() -> None:
             "vessels_at_anchor"]
     window = rows[cols].assign(dwell_reconstructed=(rows["prov_dwell"] == 2).astype(int).values).reset_index(drop=True)
     print(window.to_string(index=False))
+    # production call (transformer_t_w with automatic c_w_lstm fallback), then the EWMA benchmark for reference
     for model in (a.model, "ewma"):
         print(json.dumps(forecast(window, a.port, model=model).to_dict(), indent=2))
     actual = p.loc[p["hour_index"] == a.hour + 1, "dwell"]

@@ -8,7 +8,7 @@ DL/  Dataset ──► EDA ──► DL ──► Evaluation        next-hour po
                 ▲
                 └── DL/Dataset reads ML/Dataset (shared source data, read-only)
 
-streamlit_app/  ──► services ──► ML inference (saved classifier) / DL inference (dl.inference)
+streamlit_app/  ──► services ──► ML inference (cargomind_ml.inference) / DL inference (dl.inference)
 docs/           project-wide documentation
 ```
 
@@ -44,11 +44,14 @@ docs/           project-wide documentation
 
 | Workflow | Interface | Notes |
 |---|---|---|
-| DL | `dl.inference.forecast(window_df, port_id, model=..., fallback=...)` | Validates raw 12-hour windows; checkpoint and scaler hashes verified; EWMA fallback only when requested. See `DL/Evaluation/reports/DL_final_report.md` §12. |
-| ML | `streamlit_app/services/ml_risk.py` → saved `ML/ML/models/*.joblib` | Scores rows that already contain the ML model features |
+| DL | `dl.inference.forecast(window_df, port_id)`; `dl.inference.windows.window_from_dataset(port_id, end_hour)` | Transformer T_w primary, C_w LSTM automatic fallback on load failure or invalid output; raw 12-hour windows validated; checkpoint and scaler hashes verified. Adapter: `streamlit_app/services/dl_forecasting.py`. |
+| ML | `cargomind_ml.inference.predict_shipments(shipments_df)` / `predict(feature_df)` | XGBoost classification and Isolation Forest anomaly score/flag as separate sections; shipment attributes are turned into the 51 features with the training code. Adapter: `streamlit_app/services/ml_risk.py`. |
+
+Model selection, the LSTM fallback evidence and both output contracts: [model_selection.md](model_selection.md).
 
 ## Known gaps
 
-- **The ML workflow has no raw-shipment → features inference function.** Features are built in batch by `cargomind_ml.features.build_modelling_table` from the full source tables. Live ML scoring needs a per-shipment feature builder inside `ML/ML`; it must not be written in Streamlit.
-- **DL inference expects pre-computed disruption state** and a reconstruction flag (see the DL final report, limitations).
+- **No live data feed.** `cargomind_ml.inference.build_features_for_shipments` turns shipment attributes into model features, but it reads port telemetry, weather, disruptions, holidays and arrived outcomes from `ML/Dataset/Processed`. It therefore works only for departures whose cutoff hour lies in 2025-01-01 .. 2025-02-11 15:00 UTC. Likewise, `window_from_dataset` serves DL windows only from `DL/Dataset/processed/hourly_panel.csv`. Real use needs a feed of these inputs in the same schema.
+- **DL inference expects pre-computed disruption state** and a reconstruction flag when windows come from outside the panel (see the DL final report, limitations).
+- **Probabilities are served raw.** Recalibration and decision thresholds evaluated in `ML/Evaluation` are not applied.
 - **Both workflows are synthetic-data prototypes.**

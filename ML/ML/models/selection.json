@@ -1,0 +1,30 @@
+{
+  "description": "Production model selection for CargoMind ML inference (cargomind_ml.inference). Product decision; the ML stage's own metric-based picks are in ML/ML/results/comparison/selection.json and are unchanged.",
+  "classifier": {
+    "name": "xgboost",
+    "role": "primary delay-class classifier (On-Time / At-Risk / Critical)",
+    "artifact": "ML/ML/models/xgboost.joblib",
+    "config": "ML/ML/models/xgboost_config.json",
+    "decision_rule": "argmax of the three class probabilities (raw; calibration not justified on validation, see ML/Evaluation/calibration_study/decision.json)",
+    "status": "provisional primary (2026-11-02): not shown to be statistically better than Logistic Regression on the synthetic data",
+    "challenger": "logistic_regression",
+    "alert_threshold": null,
+    "alert_threshold_note": "No P(Critical) alert threshold is set. Choosing one requires an explicit decision on the cost of a missed Critical shipment versus a false Critical alert."
+  },
+  "anomaly_detector": {
+    "name": "isolation_forest",
+    "role": "primary anomaly detector (unusual origin operating state); separate output, never combined with the classifier",
+    "artifact": "ML/ML/models/isolation_forest.joblib",
+    "config": "ML/ML/models/isolation_forest_config.json",
+    "flag_rule": "anomaly_score > threshold stored in the bundle (95th percentile of training On-Time scores)"
+  },
+  "research_and_comparison": [
+    "logistic_regression (challenger)",
+    "random_forest",
+    "lightgbm",
+    "one_class_svm",
+    "dummy_prior"
+  ],
+  "selected_on": "2026-11-02",
+  "evidence": "ML/Evaluation/reports/evaluation_report.md: XGBoost and Logistic Regression are statistically indistinguishable on test macro-F1 (LR - XGB +0.011, 95% CI -0.013..+0.042); XGBoost is not claimed to be better. Isolation Forest is the better detector (delayed ROC-AUC +0.024, CI excludes 0)."
+}

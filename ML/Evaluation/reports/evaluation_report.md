@@ -1,5 +1,7 @@
 # CargoMind - Independent Model Evaluation
 
+> **Status note (2026-11-02).** The models served by CargoMind are now **XGBoost** (classifier) and **Isolation Forest** (anomaly detector), a product decision recorded in [docs/model_selection.md](../../../docs/model_selection.md) and `ML/ML/models/selection.json`. The recommendation below is this report's original analysis; its measurements are unchanged.
+
 Scope: the six models saved by the ML stage in `ML/ML/models/`: four supervised `delay_status` classifiers and two anomaly detectors. Prediction is made at `departure_ts − 1 h`. The data is synthetic.
 
 Reproduce with: `.venv/bin/python ML/Evaluation/scripts/run_evaluation.py` (about 2 minutes). Every number in this report comes from a file under `ML/Evaluation/`; the file is named next to each table. The generated tables are in [model_comparison.md](model_comparison.md), and the known limitations are in [limitations.md](limitations.md).

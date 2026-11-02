@@ -21,8 +21,9 @@ The editable install maps the import names to the stage folders (see `pyproject.
 
 | Check | Command |
 |---|---|
-| DL unit tests (52) | `.venv/bin/python -m unittest discover -s DL/Evaluation/tests` |
-| DL sample prediction | `.venv/bin/python -m dl.inference.demo --model transformer_t_w --port SGSIN --hour 811` |
+| DL unit tests (84) | `.venv/bin/python -m unittest discover -s DL/Evaluation/tests` |
+| ML inference tests (20) | `.venv/bin/python -m unittest discover -s ML/ML/tests` |
+| DL sample prediction | `.venv/bin/python -m dl.inference.demo --port SGSIN --hour 811` (production call: Transformer T_w, automatic C_w LSTM fallback) |
 | DL model registry (regenerate from result tables) | `.venv/bin/python -m dl.inference.build_registry` |
 
 ## ML workflow
@@ -33,6 +34,7 @@ The editable install maps the import names to the stage folders (see `pyproject.
 | Run a notebook | open it from `ML/EDA/notebooks/` (notebooks resolve paths from that folder) | `ML/EDA/reports/` |
 | Train / evaluate / compare (full ML stage) | `.venv/bin/python ML/ML/scripts/run_ml_pipeline.py` | `ML/ML/{models,results}` (**overwrites**) |
 | Independent ML evaluation | `.venv/bin/python ML/Evaluation/scripts/run_evaluation.py` | `ML/Evaluation/*` |
+| Calibration study (sigmoid vs isotonic, validation only; no retraining) | `.venv/bin/python ML/Evaluation/scripts/run_calibration_study.py` | `ML/Evaluation/calibration_study/`; saves `ML/ML/models/xgboost_calibrator.joblib` only if calibration is justified (currently not) |
 
 ## DL workflow
 

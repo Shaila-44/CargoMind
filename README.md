@@ -82,7 +82,7 @@ result = forecast(window_df, port_id="SGSIN")           # 12 raw hourly rows, ol
 
 | Workflow | Status |
 |---|---|
-| ML | Complete. Logistic Regression is the recommended classifier and Isolation Forest the anomaly detector; see `ML/ML/reports/ML_model_report.md` and `ML/Evaluation/reports/evaluation_report.md`. |
-| DL | **Complete with limitations.** Transformer T_w is the leading research candidate, with GRU and C_w within the tie threshold, and EWMA is the operational fallback. See `DL/Evaluation/reports/DL_final_report.md`. |
+| ML | Complete. **Selected for inference: XGBoost** (delay class; provisional primary, not shown to be better than the Logistic Regression challenger) **and Isolation Forest** (anomaly score and flag, a separate output). Raw probabilities are served (calibration was not justified on validation), and no alert threshold is set. The other models are kept for research and comparison. See `docs/model_selection.md`; measured results in `ML/ML/reports/ML_model_report.md` and `ML/Evaluation/reports/evaluation_report.md`. |
+| DL | **Complete with limitations.** **Transformer T_w is the primary model and the C_w LSTM the automatic fallback**; EWMA (α = 0.2) is kept as a benchmark, and the GNN is experimental and excluded from inference. See `docs/model_selection.md` and `DL/Evaluation/reports/DL_final_report.md`. |
 
 Neither workflow's results establish real-world performance.

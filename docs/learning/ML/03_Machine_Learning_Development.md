@@ -295,18 +295,17 @@ Because the classifiers are trained with balanced weights, their raw probabiliti
 |---|---|---|
 | Saved artifact | `ML/ML/models/<name>.joblib` holds the **full** fitted `Pipeline` (preprocessor + model). The preprocessor alone is also saved as `<name>_preprocessor.joblib`. Anomaly artifacts are a dict `{"pipeline", "threshold"}` | available |
 | Configuration | `ML/ML/models/<name>_config.json` (best params, search space, CV scores, feature list, seed) | available |
-| Feature construction for new shipments | `build_modelling_table` builds features for the **whole historical dataset** from `ML/Dataset/Processed`. There is no function that turns a single new raw shipment into the 51 features | **gap** |
-| Serving adapter | `streamlit_app/services/ml_risk.py`: `load_classifier(name="logistic_regression")` (cached `joblib.load`) and `predict_delay_risk(features)`. It checks that all `FEATURES` are present and returns `p_On-Time`, `p_At-Risk`, `p_Critical` and `predicted_class` (argmax) | available; scores **pre-built feature rows only** (docstring and `docs/architecture.md`, "Known gaps") |
-| Anomaly serving | none in the adapter | not implemented |
-| Threshold / calibration at inference | none; the adapter uses argmax and raw probabilities | not implemented |
+| Production selection | `ML/ML/models/selection.json`: **XGBoost** classifier, **Isolation Forest** anomaly detector (product decision; the ML stage's own metric-based picks in `results/comparison/selection.json` are unchanged) | available |
+| Feature construction for new shipments | `cargomind_ml.inference.build_features_for_shipments` runs the training code (`build_shipment_features` + the ML-stage steps of `build_modelling_table`) for shipment attributes, reading port, weather, disruption, holiday and outcome history from `ML/Dataset/Processed`. Its output equals the stored training table for dataset shipments | available **within the data's coverage only** (cutoff 2025-01-01 .. 2025-02-11 15:00 UTC; no live feed) |
+| Scoring | `cargomind_ml.inference.predict`: validates the 51 features, then returns separate `classification` (XGBoost, argmax + 3 probabilities) and `anomaly` (Isolation Forest score, flag, threshold) sections; it reproduces the stored test outputs | available |
+| Serving adapter | `streamlit_app/services/ml_risk.py`: `predict_shipments`, `predict_features`, `build_features`, `selection` | available |
+| Threshold / calibration at inference | none; argmax and raw probabilities are served | not implemented |
 
-A minimal scoring example:
+Contract and gaps: `docs/model_selection.md`. A minimal call:
 
 ```python
-from cargomind_ml.features import FEATURES
-import joblib
-pipe = joblib.load("ML/ML/models/logistic_regression.joblib")
-proba = pipe.predict_proba(rows[FEATURES])   # rows must already contain the 51 model features
+from cargomind_ml import inference as mli
+results = mli.predict_shipments(shipments_df)   # SHIPMENT_INPUT_COLUMNS, no outcome columns
 ```
 
 ---
@@ -329,13 +328,14 @@ proba = pipe.predict_proba(rows[FEATURES])   # rows must already contain the 51 
 | `ML/ML/src/cargomind_ml/feature_importance.py` | `native_importances`, `lr_coefficients`, `permutation_by_feature`, `permutation_by_group`, `shap_values`, `main` | interpretability on the test period (`N_REPEATS = 5`) | saved models, test | `results/feature_importance/*`, figures |
 | `ML/ML/src/cargomind_ml/compare_models.py` | `supervised_tables`, `anomaly_tables`, `main` | comparison tables and pre-registered selection | metrics, configs | `results/comparison/*` |
 | `ML/ML/scripts/run_ml_pipeline.py` | `main` | end-to-end entry point (**overwrites** `models/` and `results/`) | — | all of the above |
-| `streamlit_app/services/ml_risk.py` | `load_classifier`, `predict_delay_risk` | serving adapter | feature rows | probabilities + class |
+| `ML/ML/src/cargomind_ml/inference.py` | `build_features_for_shipments`, `validate_features`, `predict`, `predict_shipments`, `load_classifier`, `load_detector` | production inference: XGBoost + Isolation Forest, separate outputs | shipment attributes or feature rows | result dicts (`docs/model_selection.md`) |
+| `streamlit_app/services/ml_risk.py` | `predict_shipments`, `predict_features`, `build_features`, `selection` | serving adapter over `cargomind_ml.inference` | shipments or feature rows | result dicts |
 
 ---
 
 ## J. Limitations of the ML implementation
 
-1. **No raw-shipment → feature inference path.** Only pre-built feature rows can be scored (§H).
+1. **Feature construction depends on the processed synthetic tables** (§H). There is no live data feed, so only departures inside the data's coverage can be scored.
 2. **Raw, balanced-weight probabilities are served.** No calibration or threshold is saved with the models; both exist only as evaluation analyses.
 3. **Selection uses a single validation design.** There are 3 folds over about 4 weeks, and the folds train on labels that would not yet be known (42–62 %).
 4. **The linear model's advantage reflects the generator** (an additive formula). The tree models may be preferable on real data with interactions.

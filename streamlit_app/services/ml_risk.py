@@ -1,40 +1,46 @@
-"""ML service: shipment delay-risk classification (On-Time / At-Risk / Critical).
+"""ML service: shipment delay-risk classification (XGBoost) and unusual-conditions detection (Isolation Forest).
 
-A thin adapter over the ML workflow's saved artifacts (ML/ML/models) and feature definitions
-(`cargomind_ml.features`). It adds no feature engineering: callers supply rows that already contain the
-ML workflow's model features (as produced by `cargomind_ml.features.build_modelling_table`).
+A thin adapter over the ML workflow's inference module (`cargomind_ml.inference`, ML/ML/src/cargomind_ml/inference.py).
+It adds no model, feature or validation logic of its own.
 
-Note: the ML workflow does not yet provide a raw-shipment -> features inference function. Until it does,
-this service can only score pre-built feature rows (see docs/architecture.md, "Known gaps").
+    from services import ml_risk
+    results = ml_risk.predict_shipments(shipments_df)   # shipment attributes -> features -> both models
+    results = ml_risk.predict_features(feature_df)      # rows that already hold the 51 model features
+
+Each result keeps the classifier output (`classification`) and the anomaly output (`anomaly`) separate; see the
+contract in cargomind_ml.inference. Feature construction reads port, weather, disruption and holiday data from
+ML/Dataset/Processed, so it only works for departures inside that data's coverage (no live feed; docs/architecture.md).
 """
 from __future__ import annotations
 
-from functools import lru_cache
-
-import joblib
 import pandas as pd
 
-from cargomind_ml import config as ml_config
-from cargomind_ml.features import FEATURES
+from cargomind_ml import inference as _ml
+from cargomind_ml.inference import (ANOMALY_DETECTOR, CONTRACT_VERSION, PRIMARY_CLASSIFIER, SHIPMENT_INPUT_COLUMNS,
+                                    FeatureValidationError, ModelArtifactError, ShipmentInputError)
 
-DEFAULT_CLASSIFIER = "logistic_regression"  # selected by the ML workflow (ML/ML/reports/ML_model_report.md)
-CLASSES = list(ml_config.CLASSES)
+DEFAULT_CLASSIFIER = PRIMARY_CLASSIFIER  # "xgboost" (ML/ML/models/selection.json)
+DEFAULT_DETECTOR = ANOMALY_DETECTOR      # "isolation_forest"
 
-
-@lru_cache(maxsize=None)
-def load_classifier(name: str = DEFAULT_CLASSIFIER):
-    path = ml_config.MODELS / f"{name}.joblib"
-    if not path.exists():
-        raise FileNotFoundError(f"ML model {name!r} not found at {path}")
-    return joblib.load(path)
+__all__ = ["DEFAULT_CLASSIFIER", "DEFAULT_DETECTOR", "CONTRACT_VERSION", "SHIPMENT_INPUT_COLUMNS", "FeatureValidationError",
+           "ModelArtifactError", "ShipmentInputError", "predict_shipments", "predict_features", "build_features", "selection"]
 
 
-def predict_delay_risk(features: pd.DataFrame, model: str = DEFAULT_CLASSIFIER) -> pd.DataFrame:
-    """Class probabilities and predicted class for rows of ML model features."""
-    missing = [c for c in FEATURES if c not in features.columns]
-    if missing:
-        raise ValueError(f"missing ML feature columns: {missing}")
-    proba = load_classifier(model).predict_proba(features[FEATURES])
-    out = pd.DataFrame(proba, columns=[f"p_{c}" for c in CLASSES], index=features.index)
-    out["predicted_class"] = [CLASSES[i] for i in proba.argmax(1)]
-    return out
+def predict_shipments(shipments: pd.DataFrame, classifier: str = DEFAULT_CLASSIFIER, detector: str = DEFAULT_DETECTOR) -> list[dict]:
+    """Shipment attributes (SHIPMENT_INPUT_COLUMNS, no outcome columns) -> one result dict per shipment."""
+    return _ml.predict_shipments(shipments, classifier=classifier, detector=detector)
+
+
+def predict_features(features: pd.DataFrame, classifier: str = DEFAULT_CLASSIFIER, detector: str = DEFAULT_DETECTOR) -> list[dict]:
+    """Pre-built rows holding the 51 model features (optionally shipment_id and cutoff_ts) -> result dicts."""
+    return _ml.predict(features, classifier=classifier, detector=detector)
+
+
+def build_features(shipments: pd.DataFrame) -> pd.DataFrame:
+    """Shipment attributes -> model features (for display or caching)."""
+    return _ml.build_features_for_shipments(shipments)
+
+
+def selection() -> dict:
+    """The production model selection (ML/ML/models/selection.json)."""
+    return _ml.load_selection()

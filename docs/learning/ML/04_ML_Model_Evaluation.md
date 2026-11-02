@@ -227,7 +227,7 @@ Prior correction improves log loss, Brier and ECE for all four models but lowers
 - Show prior-corrected probabilities on the dashboard.
 - Show Isolation Forest as a separate "unusual port conditions" flag.
 
-None of this is implemented in the serving adapter ([03 · §H](03_Machine_Learning_Development.md#h-inference-architecture)).
+None of this is implemented in the inference module ([03 · §H](03_Machine_Learning_Development.md#h-inference-architecture)), which serves XGBoost argmax decisions and raw probabilities.
 
 ---
 
@@ -473,6 +473,8 @@ For LR, permuting weather drops Critical recall by 0.130 and permuting disruptio
 | Prototype choice | **Logistic Regression** with a P(Critical) threshold of about 0.36, prior-corrected probabilities for display, Isolation Forest as a separate flag, and XGBoost as challenger | — |
 
 The ML stage's selections are **confirmed in direction**, with two qualifications: LR's lead over XGBoost lies within statistical uncertainty, and "best Critical detector" reflects LR's operating point rather than better ranking.
+
+**Production selection (later product decision).** CargoMind serves **XGBoost** as the provisional primary classifier, with Logistic Regression as the challenger, and **Isolation Forest** as the anomaly detector (`docs/model_selection.md`). This is consistent with the evidence above: XGBoost is statistically indistinguishable from LR on macro-F1. Its known trade-offs are lower Critical recall at the default decision (0.540 vs 0.595, not significant) and a larger Critical-recall loss under realistic label availability (§G.1).
 
 **Before real-world deployment,** the evaluation requires:
 - training and validating on real data;

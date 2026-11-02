@@ -1,5 +1,7 @@
 # CargoMind — Shipment Delay-Risk Models: Report
 
+> **Status note (2026-11-02).** The models served by CargoMind are now **XGBoost** (classifier) and **Isolation Forest** (anomaly detector), a product decision recorded in [docs/model_selection.md](../../../docs/model_selection.md) and `ML/ML/models/selection.json`. The recommendation below is this report's original analysis; its measurements are unchanged.
+
 **Scope:** pre-departure prediction of `delay_status` (On-Time ≤ 12 h < At-Risk ≤ 48 h < Critical), built on the existing
 cleaned data and EDA. Six algorithms: four supervised classifiers and two anomaly detectors.
 **Reproduce (from the CargoMind root):** `.venv/bin/python -m pip install -r ML/ML/requirements.txt` then

@@ -2,6 +2,8 @@
 
 **Status: COMPLETE WITH LIMITATIONS.**
 
+> **Status note (2026-11-02).** The inference configuration is now: **Transformer T_w primary** and **C_w LSTM (`c_w_lstm`, seed 2) as the automatic fallback** when T_w cannot be loaded or returns an invalid value. EWMA (α = 0.2) is kept as a benchmark/reference, and the GNN is experimental and not registered. The current interface, output contract and selection evidence are in [docs/model_selection.md](../../../docs/model_selection.md). The sections below describe the state at the end of the research phase; their measurements are unchanged.
+
 This is a **research / prototype forecasting pipeline trained and evaluated on synthetic data.** It is **not** a validated production forecaster for real ports, and nothing here establishes performance on real port data.
 
 The research phase is frozen: no further data generation, retraining, tuning or test-set use. This report consolidates the stage. The detailed source reports are listed in section 16.
