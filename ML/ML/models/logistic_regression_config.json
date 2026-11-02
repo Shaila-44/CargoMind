@@ -1,0 +1,127 @@
+{
+  "model": "Logistic Regression",
+  "estimator": "LogisticRegression",
+  "preprocessing": "linear",
+  "features": [
+    "origin_port_id",
+    "destination_port_id",
+    "hub_port_id",
+    "route_type",
+    "route_distance_km",
+    "planned_transit_hours",
+    "carrier",
+    "shipping_mode",
+    "cargo_type",
+    "priority_rank",
+    "container_teu",
+    "dep_hour_local",
+    "dep_dow_utc",
+    "hol_o_days_to_nearest_cap14",
+    "hol_o_within_2d",
+    "hol_h_days_in_voyage_sched",
+    "o_port_utilization_pct",
+    "o_util_max24",
+    "o_util_change24",
+    "o_vessel_time_in_port_hours",
+    "o_arrivals_sum24",
+    "o_labour_disrupted_share24",
+    "o_customs_mean24",
+    "o_equip_min24",
+    "o_container_dwell_hours",
+    "o_anchor_mean24",
+    "wx_o_gust_max24",
+    "wx_o_precip_sum24",
+    "wx_o_thunderstorm_hours24",
+    "wx_o_pressure_change24",
+    "dis_o_active_any",
+    "dis_o_active_weather",
+    "dis_o_active_strike",
+    "dis_o_active_congestion",
+    "dis_o_active_equipment_failure",
+    "dis_o_active_cyber",
+    "dis_o_active_hours_elapsed",
+    "dis_o_started_72h_n",
+    "d_util_mean24",
+    "d_anchor_mean24",
+    "dis_d_active_any",
+    "h_util_mean24",
+    "h_anchor_mean24",
+    "h_container_dwell_hours",
+    "wx_h_gust_max24",
+    "dis_h_active_any",
+    "hist_carrier_pct_delayed",
+    "hist_carrier_mean_delay_h",
+    "hist_origin_port_id_pct_delayed",
+    "hist_destination_port_id_pct_delayed",
+    "hist_route_id_pct_delayed"
+  ],
+  "best_params": {
+    "model__C": 0.12563152773938666,
+    "model__penalty": "l1"
+  },
+  "search_space": {
+    "model__C": "loguniform(0.001, 10)",
+    "model__penalty": "['l1', 'l2']"
+  },
+  "n_iter": 20,
+  "tuning_metric": "f1_macro",
+  "cv_scores_best": {
+    "f1_macro": {
+      "cv_mean": 0.6332758571213398,
+      "cv_std": 0.015277785960252675,
+      "per_fold": [
+        0.6494947563203306,
+        0.6128041020187972,
+        0.6375287130248919
+      ]
+    },
+    "f1_weighted": {
+      "cv_mean": 0.6358780754648737,
+      "cv_std": 0.009281640329953355,
+      "per_fold": [
+        0.646584915268763,
+        0.6239484897436759,
+        0.6371008213821819
+      ]
+    },
+    "accuracy": {
+      "cv_mean": 0.6282499154247458,
+      "cv_std": 0.012569229195578386,
+      "per_fold": [
+        0.6414507772020726,
+        0.6113402061855671,
+        0.6319587628865979
+      ]
+    },
+    "recall_critical": {
+      "cv_mean": 0.6915513261921351,
+      "cv_std": 0.06408429808251254,
+      "per_fold": [
+        0.7623318385650224,
+        0.6071428571428571,
+        0.7051792828685259
+      ]
+    },
+    "recall_at_risk": {
+      "cv_mean": 0.6482286296728593,
+      "cv_std": 0.030142444317528855,
+      "per_fold": [
+        0.690625,
+        0.6308724832214765,
+        0.6231884057971014
+      ]
+    },
+    "neg_log_loss": {
+      "cv_mean": -0.7945077296180054,
+      "cv_std": 0.026810335045373616,
+      "per_fold": [
+        -0.8098413857850261,
+        -0.816871724688073,
+        -0.7568100783809171
+      ]
+    }
+  },
+  "n_train": 6452,
+  "seed": 42,
+  "tuning_seconds": 26.0
+}

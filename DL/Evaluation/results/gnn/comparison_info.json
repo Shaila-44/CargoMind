@@ -1,0 +1,5 @@
+{
+  "split": "validation only",
+  "n_windows": 1306,
+  "note": "test split not loaded; GNN aligned to the same windows by window_id"
+}

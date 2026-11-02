@@ -1,0 +1,11 @@
+Majority-class reference - test_sea
+
+              precision    recall  f1-score   support
+
+     On-Time      0.597     1.000     0.748      1353
+     At-Risk      0.000     0.000     0.000       698
+    Critical      0.000     0.000     0.000       215
+
+    accuracy                          0.597      2266
+   macro avg      0.199     0.333     0.249      2266
+weighted avg      0.357     0.597     0.446      2266

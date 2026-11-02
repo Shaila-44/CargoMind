@@ -1,0 +1,11 @@
+Logistic Regression - test_sea
+
+              precision    recall  f1-score   support
+
+     On-Time      0.824     0.817     0.820      1353
+     At-Risk      0.553     0.552     0.552       698
+    Critical      0.559     0.595     0.577       215
+
+    accuracy                          0.714      2266
+   macro avg      0.645     0.655     0.650      2266
+weighted avg      0.715     0.714     0.715      2266

@@ -1,0 +1,11 @@
+LightGBM - test_sea
+
+              precision    recall  f1-score   support
+
+     On-Time      0.846     0.749     0.795      1353
+     At-Risk      0.512     0.652     0.573       698
+    Critical      0.579     0.479     0.524       215
+
+    accuracy                          0.694      2266
+   macro avg      0.645     0.627     0.631      2266
+weighted avg      0.718     0.694     0.701      2266

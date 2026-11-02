@@ -1,0 +1,3419 @@
+{
+  "dataset_dimensions": {
+    "arrays": {
+      "train": {
+        "X": [
+          6579,
+          12,
+          7
+        ],
+        "provenance": [
+          6579,
+          12,
+          5
+        ],
+        "aux_flags": [
+          6579,
+          12,
+          2
+        ],
+        "y": [
+          6579
+        ],
+        "y_hours": [
+          6579
+        ],
+        "last_dwell_hours": [
+          6579
+        ],
+        "port_index": [
+          6579
+        ],
+        "target_hour_index": [
+          6579
+        ],
+        "window_id": [
+          6579
+        ]
+      },
+      "val": {
+        "X": [
+          1306,
+          12,
+          7
+        ],
+        "provenance": [
+          1306,
+          12,
+          5
+        ],
+        "aux_flags": [
+          1306,
+          12,
+          2
+        ],
+        "y": [
+          1306
+        ],
+        "y_hours": [
+          1306
+        ],
+        "last_dwell_hours": [
+          1306
+        ],
+        "port_index": [
+          1306
+        ],
+        "target_hour_index": [
+          1306
+        ],
+        "window_id": [
+          1306
+        ]
+      },
+      "test": {
+        "X": [
+          1318,
+          12,
+          7
+        ],
+        "provenance": [
+          1318,
+          12,
+          5
+        ],
+        "aux_flags": [
+          1318,
+          12,
+          2
+        ],
+        "y": [
+          1318
+        ],
+        "y_hours": [
+          1318
+        ],
+        "last_dwell_hours": [
+          1318
+        ],
+        "port_index": [
+          1318
+        ],
+        "target_hour_index": [
+          1318
+        ],
+        "window_id": [
+          1318
+        ]
+      }
+    },
+    "windows_per_port": {
+      "train": {
+        "INNSA": 663,
+        "USLAX": 662,
+        "MYPKG": 661,
+        "DEHAM": 659,
+        "INMAA": 658,
+        "NLRTM": 657,
+        "SGSIN": 657,
+        "LKCMB": 656,
+        "AEJEA": 653,
+        "CNSHA": 653
+      },
+      "val": {
+        "DEHAM": 135,
+        "INMAA": 134,
+        "CNSHA": 133,
+        "AEJEA": 132,
+        "INNSA": 132,
+        "LKCMB": 131,
+        "NLRTM": 131,
+        "SGSIN": 127,
+        "MYPKG": 126,
+        "USLAX": 125
+      },
+      "test": {
+        "MYPKG": 135,
+        "USLAX": 135,
+        "SGSIN": 134,
+        "AEJEA": 133,
+        "INMAA": 132,
+        "LKCMB": 132,
+        "DEHAM": 131,
+        "CNSHA": 129,
+        "NLRTM": 129,
+        "INNSA": 128
+      }
+    },
+    "window_hours": 12,
+    "horizon_hours": 1,
+    "ports": [
+      "AEJEA",
+      "CNSHA",
+      "DEHAM",
+      "INMAA",
+      "INNSA",
+      "LKCMB",
+      "MYPKG",
+      "NLRTM",
+      "SGSIN",
+      "USLAX"
+    ],
+    "scaled_array_stats": {
+      "train": {
+        "y_mean": 0.008,
+        "y_std": 1.002,
+        "X_channel_mean": [
+          0.002,
+          0.76,
+          0.031,
+          0.004,
+          0.171,
+          0.003,
+          0.003
+        ],
+        "X_channel_std": [
+          1.001,
+          0.175,
+          0.173,
+          1.009,
+          0.377,
+          1.002,
+          1.001
+        ]
+      },
+      "val": {
+        "y_mean": 0.06,
+        "y_std": 0.968,
+        "X_channel_mean": [
+          0.07,
+          0.754,
+          0.011,
+          0.146,
+          0.082,
+          -0.251,
+          0.1
+        ],
+        "X_channel_std": [
+          0.965,
+          0.166,
+          0.105,
+          1.116,
+          0.274,
+          0.618,
+          1.014
+        ]
+      },
+      "test": {
+        "y_mean": -0.209,
+        "y_std": 1.046,
+        "X_channel_mean": [
+          -0.245,
+          0.759,
+          0.078,
+          -0.247,
+          0.105,
+          -0.182,
+          -0.221
+        ],
+        "X_channel_std": [
+          0.963,
+          0.171,
+          0.268,
+          0.722,
+          0.306,
+          0.742,
+          0.944
+        ]
+      }
+    },
+    "split_bounds_hour_index": {
+      "train": [
+        0,
+        700
+      ],
+      "val": [
+        700,
+        850
+      ],
+      "test": [
+        850,
+        1000
+      ]
+    },
+    "split_bounds_utc": {
+      "train": [
+        "2025-01-01 00:00:00+00:00",
+        "2025-01-30 03:00:00+00:00"
+      ],
+      "val": [
+        "2025-01-30 04:00:00+00:00",
+        "2025-02-05 09:00:00+00:00"
+      ],
+      "test": [
+        "2025-02-05 10:00:00+00:00",
+        "2025-02-11 15:00:00+00:00"
+      ]
+    }
+  },
+  "sanity_checks": [
+    {
+      "check": "train: all arrays have the same number of windows",
+      "result": "PASS",
+      "evidence": "N = 6579"
+    },
+    {
+      "check": "train: X is [N, 12, 7] and provenance [N, 12, 5]",
+      "result": "PASS",
+      "evidence": "X (6579, 12, 7), provenance (6579, 12, 5)"
+    },
+    {
+      "check": "train: X and y finite (no NaN / inf)",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "check": "train: window count matches split_metadata.json",
+      "result": "PASS",
+      "evidence": "6579 vs 6579"
+    },
+    {
+      "check": "train: provenance codes only in {0,1,2}",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "check": "val: all arrays have the same number of windows",
+      "result": "PASS",
+      "evidence": "N = 1306"
+    },
+    {
+      "check": "val: X is [N, 12, 7] and provenance [N, 12, 5]",
+      "result": "PASS",
+      "evidence": "X (1306, 12, 7), provenance (1306, 12, 5)"
+    },
+    {
+      "check": "val: X and y finite (no NaN / inf)",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "check": "val: window count matches split_metadata.json",
+      "result": "PASS",
+      "evidence": "1306 vs 1306"
+    },
+    {
+      "check": "val: provenance codes only in {0,1,2}",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "check": "test: all arrays have the same number of windows",
+      "result": "PASS",
+      "evidence": "N = 1318"
+    },
+    {
+      "check": "test: X is [N, 12, 7] and provenance [N, 12, 5]",
+      "result": "PASS",
+      "evidence": "X (1318, 12, 7), provenance (1318, 12, 5)"
+    },
+    {
+      "check": "test: X and y finite (no NaN / inf)",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "check": "test: window count matches split_metadata.json",
+      "result": "PASS",
+      "evidence": "1318 vs 1318"
+    },
+    {
+      "check": "test: provenance codes only in {0,1,2}",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "check": "no channel is constant within any split",
+      "result": "PASS",
+      "evidence": "{\"train\": [], \"val\": [], \"test\": []}"
+    },
+    {
+      "check": "every window_id is unique across splits",
+      "result": "PASS",
+      "evidence": "9203 windows"
+    },
+    {
+      "check": "each window maps to exactly one kept windows.csv row with the same split",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "check": "port_index agrees with windows.csv port_id and schema port list",
+      "result": "PASS",
+      "evidence": "AEJEA, CNSHA, DEHAM, INMAA, INNSA, LKCMB, MYPKG, NLRTM, SGSIN, USLAX"
+    },
+    {
+      "check": "target hour = last input hour + 1, and no reconstructed target",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "check": "per-port window counts match sequence_counts.csv",
+      "result": "PASS",
+      "evidence": ""
+    },
+    {
+      "check": "dl/dataset files match manifest.json SHA-256",
+      "result": "PASS",
+      "evidence": "mismatched: none"
+    },
+    {
+      "check": "saved dwell scaler inverts y to y_hours",
+      "result": "PASS",
+      "evidence": "max |\u0394| 9.7e-06 h"
+    },
+    {
+      "check": "saved dwell scaler inverts X[:, -1, 0] to last_dwell_hours",
+      "result": "PASS",
+      "evidence": "max |\u0394| 9.7e-06 h"
+    },
+    {
+      "check": "all X values reproduce from hourly_panel.csv with the saved scalers (12 consecutive hours per window)",
+      "result": "PASS",
+      "evidence": "max |\u0394| 0.0e+00"
+    },
+    {
+      "check": "provenance arrays equal the hourly_panel provenance codes",
+      "result": "PASS",
+      "evidence": "all windows, all splits"
+    },
+    {
+      "check": "reconstruction indicator is NOT in saved X; dataset.load_split appends it as channel 8",
+      "result": "PASS",
+      "evidence": "loader channels: ['dwell', 'utilization', 'labour_strike', 'wind_gust', 'disruption_active', 'disruption_hours_elapsed', 'vessels_at_anchor', 'dwell_reconstructed']"
+    }
+  ],
+  "features": {
+    "dwell": {
+      "position": 0,
+      "type": "continuous (h)",
+      "unit": "h",
+      "scaling": "per-port z-score"
+    },
+    "utilization": {
+      "position": 1,
+      "type": "continuous, bounded 0-100 %, right-censored at 100",
+      "unit": "%",
+      "scaling": "fixed: value / 100 (bounded 0-1, no fitting)"
+    },
+    "labour_strike": {
+      "position": 2,
+      "type": "binary",
+      "unit": "0/1",
+      "scaling": "none (0/1)"
+    },
+    "wind_gust": {
+      "position": 3,
+      "type": "continuous (km/h)",
+      "unit": "km/h",
+      "scaling": "global z-score"
+    },
+    "disruption_active": {
+      "position": 4,
+      "type": "binary",
+      "unit": "0/1",
+      "scaling": "none (0/1)"
+    },
+    "disruption_hours_elapsed": {
+      "position": 5,
+      "type": "count-like hours, zero-inflated",
+      "unit": "h",
+      "scaling": "log1p, then global z-score"
+    },
+    "vessels_at_anchor": {
+      "position": 6,
+      "type": "count (vessels)",
+      "unit": "vessels",
+      "scaling": "log1p, then per-port z-score"
+    }
+  },
+  "loader_default_channels": [
+    "dwell",
+    "utilization",
+    "labour_strike",
+    "wind_gust",
+    "disruption_active",
+    "disruption_hours_elapsed",
+    "vessels_at_anchor",
+    "dwell_reconstructed"
+  ],
+  "target": {
+    "units": "hours (y_hours; y is the per-port z-score of the same value)",
+    "train": {
+      "n": 6579,
+      "mean": 90.328,
+      "median": 84.8,
+      "std": 23.953,
+      "min": 55.3,
+      "max": 205.2,
+      "q1": 70.9,
+      "q3": 105.5,
+      "iqr": 34.6,
+      "skewness": 1.524,
+      "excess_kurtosis": 3.683,
+      "outliers_iqr_rule": 175
+    },
+    "val": {
+      "n": 1306,
+      "mean": 90.941,
+      "median": 87.6,
+      "std": 21.583,
+      "min": 54.6,
+      "max": 158.2,
+      "q1": 72.0,
+      "q3": 105.8,
+      "iqr": 33.8,
+      "skewness": 0.621,
+      "excess_kurtosis": -0.391,
+      "outliers_iqr_rule": 2
+    },
+    "per_port": {
+      "AEJEA": {
+        "train": {
+          "n": 653,
+          "mean": 105.605,
+          "median": 105.4,
+          "std": 4.605,
+          "min": 92.5,
+          "max": 122.7,
+          "q1": 102.7,
+          "q3": 108.1,
+          "iqr": 5.4,
+          "skewness": 0.429,
+          "excess_kurtosis": 0.757,
+          "outliers_iqr_rule": 25
+        },
+        "val": {
+          "n": 132,
+          "mean": 104.861,
+          "median": 105.25,
+          "std": 4.047,
+          "min": 92.7,
+          "max": 115.1,
+          "q1": 102.475,
+          "q3": 107.3,
+          "iqr": 4.825,
+          "skewness": -0.148,
+          "excess_kurtosis": 0.312,
+          "outliers_iqr_rule": 3
+        },
+        "val_minus_train_mean_h": -0.743,
+        "val_shift_in_train_sd": -0.161,
+        "ks_train_vs_val": {
+          "statistic": 0.1,
+          "p_value": 0.203
+        }
+      },
+      "CNSHA": {
+        "train": {
+          "n": 653,
+          "mean": 82.489,
+          "median": 75.9,
+          "std": 15.279,
+          "min": 60.0,
+          "max": 117.5,
+          "q1": 70.1,
+          "q3": 97.5,
+          "iqr": 27.4,
+          "skewness": 0.535,
+          "excess_kurtosis": -1.15,
+          "outliers_iqr_rule": 0
+        },
+        "val": {
+          "n": 133,
+          "mean": 102.927,
+          "median": 102.6,
+          "std": 4.084,
+          "min": 95.2,
+          "max": 114.6,
+          "q1": 99.8,
+          "q3": 105.5,
+          "iqr": 5.7,
+          "skewness": 0.366,
+          "excess_kurtosis": -0.343,
+          "outliers_iqr_rule": 1
+        },
+        "val_minus_train_mean_h": 20.438,
+        "val_shift_in_train_sd": 1.338,
+        "ks_train_vs_val": {
+          "statistic": 0.721,
+          "p_value": 2.97e-57
+        }
+      },
+      "DEHAM": {
+        "train": {
+          "n": 659,
+          "mean": 68.489,
+          "median": 68.5,
+          "std": 4.375,
+          "min": 55.3,
+          "max": 81.5,
+          "q1": 65.4,
+          "q3": 71.2,
+          "iqr": 5.8,
+          "skewness": 0.173,
+          "excess_kurtosis": -0.096,
+          "outliers_iqr_rule": 7
+        },
+        "val": {
+          "n": 135,
+          "mean": 69.456,
+          "median": 69.5,
+          "std": 4.856,
+          "min": 59.7,
+          "max": 82.6,
+          "q1": 65.6,
+          "q3": 72.8,
+          "iqr": 7.2,
+          "skewness": 0.258,
+          "excess_kurtosis": -0.38,
+          "outliers_iqr_rule": 0
+        },
+        "val_minus_train_mean_h": 0.967,
+        "val_shift_in_train_sd": 0.221,
+        "ks_train_vs_val": {
+          "statistic": 0.143,
+          "p_value": 0.0185
+        }
+      },
+      "INMAA": {
+        "train": {
+          "n": 658,
+          "mean": 70.114,
+          "median": 69.6,
+          "std": 4.998,
+          "min": 57.4,
+          "max": 88.6,
+          "q1": 66.6,
+          "q3": 72.875,
+          "iqr": 6.275,
+          "skewness": 0.662,
+          "excess_kurtosis": 0.712,
+          "outliers_iqr_rule": 18
+        },
+        "val": {
+          "n": 134,
+          "mean": 68.947,
+          "median": 68.6,
+          "std": 4.236,
+          "min": 54.6,
+          "max": 79.9,
+          "q1": 66.1,
+          "q3": 71.6,
+          "iqr": 5.5,
+          "skewness": 0.006,
+          "excess_kurtosis": 0.605,
+          "outliers_iqr_rule": 3
+        },
+        "val_minus_train_mean_h": -1.167,
+        "val_shift_in_train_sd": -0.233,
+        "ks_train_vs_val": {
+          "statistic": 0.122,
+          "p_value": 0.0675
+        }
+      },
+      "INNSA": {
+        "train": {
+          "n": 663,
+          "mean": 85.716,
+          "median": 82.8,
+          "std": 10.06,
+          "min": 64.5,
+          "max": 120.2,
+          "q1": 78.95,
+          "q3": 90.05,
+          "iqr": 11.1,
+          "skewness": 1.127,
+          "excess_kurtosis": 0.746,
+          "outliers_iqr_rule": 38
+        },
+        "val": {
+          "n": 132,
+          "mean": 84.117,
+          "median": 82.8,
+          "std": 6.901,
+          "min": 71.2,
+          "max": 99.2,
+          "q1": 78.55,
+          "q3": 89.0,
+          "iqr": 10.45,
+          "skewness": 0.387,
+          "excess_kurtosis": -0.722,
+          "outliers_iqr_rule": 0
+        },
+        "val_minus_train_mean_h": -1.599,
+        "val_shift_in_train_sd": -0.159,
+        "ks_train_vs_val": {
+          "statistic": 0.119,
+          "p_value": 0.08
+        }
+      },
+      "LKCMB": {
+        "train": {
+          "n": 656,
+          "mean": 107.3,
+          "median": 106.2,
+          "std": 6.122,
+          "min": 92.9,
+          "max": 129.9,
+          "q1": 103.075,
+          "q3": 109.8,
+          "iqr": 6.725,
+          "skewness": 1.024,
+          "excess_kurtosis": 1.357,
+          "outliers_iqr_rule": 35
+        },
+        "val": {
+          "n": 131,
+          "mean": 113.01,
+          "median": 112.8,
+          "std": 6.098,
+          "min": 101.2,
+          "max": 129.7,
+          "q1": 108.45,
+          "q3": 117.25,
+          "iqr": 8.8,
+          "skewness": 0.215,
+          "excess_kurtosis": -0.583,
+          "outliers_iqr_rule": 0
+        },
+        "val_minus_train_mean_h": 5.71,
+        "val_shift_in_train_sd": 0.933,
+        "ks_train_vs_val": {
+          "statistic": 0.431,
+          "p_value": 8.69e-19
+        }
+      },
+      "MYPKG": {
+        "train": {
+          "n": 661,
+          "mean": 67.815,
+          "median": 67.6,
+          "std": 4.068,
+          "min": 56.4,
+          "max": 79.6,
+          "q1": 65.3,
+          "q3": 70.4,
+          "iqr": 5.1,
+          "skewness": 0.133,
+          "excess_kurtosis": -0.046,
+          "outliers_iqr_rule": 6
+        },
+        "val": {
+          "n": 126,
+          "mean": 67.456,
+          "median": 67.2,
+          "std": 3.934,
+          "min": 58.4,
+          "max": 74.7,
+          "q1": 64.425,
+          "q3": 70.7,
+          "iqr": 6.275,
+          "skewness": -0.006,
+          "excess_kurtosis": -0.923,
+          "outliers_iqr_rule": 0
+        },
+        "val_minus_train_mean_h": -0.358,
+        "val_shift_in_train_sd": -0.088,
+        "ks_train_vs_val": {
+          "statistic": 0.087,
+          "p_value": 0.379
+        }
+      },
+      "NLRTM": {
+        "train": {
+          "n": 657,
+          "mean": 132.973,
+          "median": 113.9,
+          "std": 31.501,
+          "min": 96.4,
+          "max": 205.2,
+          "q1": 108.3,
+          "q3": 159.8,
+          "iqr": 51.5,
+          "skewness": 0.798,
+          "excess_kurtosis": -0.888,
+          "outliers_iqr_rule": 0
+        },
+        "val": {
+          "n": 131,
+          "mean": 132.59,
+          "median": 131.5,
+          "std": 10.268,
+          "min": 113.2,
+          "max": 158.2,
+          "q1": 124.65,
+          "q3": 140.7,
+          "iqr": 16.05,
+          "skewness": 0.312,
+          "excess_kurtosis": -0.624,
+          "outliers_iqr_rule": 0
+        },
+        "val_minus_train_mean_h": -0.383,
+        "val_shift_in_train_sd": -0.012,
+        "ks_train_vs_val": {
+          "statistic": 0.528,
+          "p_value": 1.13e-28
+        }
+      },
+      "SGSIN": {
+        "train": {
+          "n": 657,
+          "mean": 82.362,
+          "median": 79.2,
+          "std": 10.807,
+          "min": 64.6,
+          "max": 120.9,
+          "q1": 75.0,
+          "q3": 86.3,
+          "iqr": 11.3,
+          "skewness": 1.295,
+          "excess_kurtosis": 1.22,
+          "outliers_iqr_rule": 49
+        },
+        "val": {
+          "n": 127,
+          "mean": 76.045,
+          "median": 75.6,
+          "std": 4.111,
+          "min": 65.1,
+          "max": 85.7,
+          "q1": 73.05,
+          "q3": 79.6,
+          "iqr": 6.55,
+          "skewness": -0.092,
+          "excess_kurtosis": -0.581,
+          "outliers_iqr_rule": 0
+        },
+        "val_minus_train_mean_h": -6.317,
+        "val_shift_in_train_sd": -0.585,
+        "ks_train_vs_val": {
+          "statistic": 0.307,
+          "p_value": 2.2e-09
+        }
+      },
+      "USLAX": {
+        "train": {
+          "n": 662,
+          "mean": 100.683,
+          "median": 95.3,
+          "std": 13.898,
+          "min": 78.5,
+          "max": 139.2,
+          "q1": 89.725,
+          "q3": 111.7,
+          "iqr": 21.975,
+          "skewness": 0.68,
+          "excess_kurtosis": -0.734,
+          "outliers_iqr_rule": 0
+        },
+        "val": {
+          "n": 125,
+          "mean": 89.51,
+          "median": 89.2,
+          "std": 4.237,
+          "min": 79.9,
+          "max": 99.7,
+          "q1": 87.0,
+          "q3": 92.5,
+          "iqr": 5.5,
+          "skewness": 0.114,
+          "excess_kurtosis": -0.23,
+          "outliers_iqr_rule": 0
+        },
+        "val_minus_train_mean_h": -11.173,
+        "val_shift_in_train_sd": -0.804,
+        "ks_train_vs_val": {
+          "statistic": 0.425,
+          "p_value": 1.22e-17
+        }
+      }
+    },
+    "train_vs_val_pooled_ks": {
+      "statistic": 0.054,
+      "p_value": 0.00334
+    },
+    "between_port_variance_share": 0.712,
+    "share_of_total_sum_of_squares_by_port": {
+      "AEJEA": 0.044,
+      "CNSHA": 0.049,
+      "DEHAM": 0.09,
+      "INMAA": 0.08,
+      "INNSA": 0.021,
+      "LKCMB": 0.065,
+      "MYPKG": 0.095,
+      "NLRTM": 0.476,
+      "SGSIN": 0.034,
+      "USLAX": 0.046
+    },
+    "within_port_outliers_iqr_rule": {
+      "AEJEA": 28,
+      "CNSHA": 1,
+      "DEHAM": 7,
+      "INMAA": 21,
+      "INNSA": 38,
+      "LKCMB": 35,
+      "MYPKG": 6,
+      "NLRTM": 0,
+      "SGSIN": 49,
+      "USLAX": 0
+    },
+    "representative_ports": {
+      "lowest_variability": "MYPKG",
+      "median_variability": "INNSA",
+      "highest_variability": "NLRTM"
+    },
+    "rolling_24h_sd": [
+      {
+        "port": "AEJEA",
+        "rolling24_sd_median": 3.955,
+        "rolling24_sd_max": 6.062
+      },
+      {
+        "port": "CNSHA",
+        "rolling24_sd_median": 4.202,
+        "rolling24_sd_max": 5.828
+      },
+      {
+        "port": "DEHAM",
+        "rolling24_sd_median": 3.964,
+        "rolling24_sd_max": 5.373
+      },
+      {
+        "port": "INMAA",
+        "rolling24_sd_median": 4.03,
+        "rolling24_sd_max": 6.095
+      },
+      {
+        "port": "INNSA",
+        "rolling24_sd_median": 4.165,
+        "rolling24_sd_max": 6.118
+      },
+      {
+        "port": "LKCMB",
+        "rolling24_sd_median": 4.055,
+        "rolling24_sd_max": 6.572
+      },
+      {
+        "port": "MYPKG",
+        "rolling24_sd_median": 3.924,
+        "rolling24_sd_max": 5.94
+      },
+      {
+        "port": "NLRTM",
+        "rolling24_sd_median": 4.244,
+        "rolling24_sd_max": 10.08
+      },
+      {
+        "port": "SGSIN",
+        "rolling24_sd_median": 4.399,
+        "rolling24_sd_max": 7.048
+      },
+      {
+        "port": "USLAX",
+        "rolling24_sd_median": 4.091,
+        "rolling24_sd_max": 7.12
+      }
+    ]
+  },
+  "temporal": {
+    "acf": {
+      "AEJEA": {
+        "lag_1": 0.278,
+        "lag_2": 0.319,
+        "lag_3": 0.243,
+        "lag_6": 0.232,
+        "lag_12": 0.149,
+        "lag_24": 0.055,
+        "lag_48": -0.07,
+        "lag_72": -0.097,
+        "max_abs_diff_vs_including_reconstructed": 0.02
+      },
+      "CNSHA": {
+        "lag_1": 0.938,
+        "lag_2": 0.938,
+        "lag_3": 0.937,
+        "lag_6": 0.935,
+        "lag_12": 0.928,
+        "lag_24": 0.898,
+        "lag_48": 0.867,
+        "lag_72": 0.819,
+        "max_abs_diff_vs_including_reconstructed": 0.007
+      },
+      "DEHAM": {
+        "lag_1": 0.239,
+        "lag_2": 0.21,
+        "lag_3": 0.25,
+        "lag_6": 0.202,
+        "lag_12": 0.189,
+        "lag_24": 0.133,
+        "lag_48": -0.0,
+        "lag_72": -0.018,
+        "max_abs_diff_vs_including_reconstructed": 0.032
+      },
+      "INMAA": {
+        "lag_1": 0.295,
+        "lag_2": 0.255,
+        "lag_3": 0.328,
+        "lag_6": 0.303,
+        "lag_12": 0.265,
+        "lag_24": 0.192,
+        "lag_48": 0.02,
+        "lag_72": -0.032,
+        "max_abs_diff_vs_including_reconstructed": 0.029
+      },
+      "INNSA": {
+        "lag_1": 0.854,
+        "lag_2": 0.837,
+        "lag_3": 0.838,
+        "lag_6": 0.823,
+        "lag_12": 0.811,
+        "lag_24": 0.713,
+        "lag_48": 0.41,
+        "lag_72": 0.1,
+        "max_abs_diff_vs_including_reconstructed": 0.015
+      },
+      "LKCMB": {
+        "lag_1": 0.635,
+        "lag_2": 0.631,
+        "lag_3": 0.634,
+        "lag_6": 0.616,
+        "lag_12": 0.583,
+        "lag_24": 0.444,
+        "lag_48": 0.16,
+        "lag_72": -0.028,
+        "max_abs_diff_vs_including_reconstructed": 0.021
+      },
+      "MYPKG": {
+        "lag_1": 0.063,
+        "lag_2": 0.043,
+        "lag_3": 0.0,
+        "lag_6": -0.033,
+        "lag_12": 0.061,
+        "lag_24": 0.075,
+        "lag_48": 0.05,
+        "lag_72": 0.016,
+        "max_abs_diff_vs_including_reconstructed": 0.038
+      },
+      "NLRTM": {
+        "lag_1": 0.971,
+        "lag_2": 0.961,
+        "lag_3": 0.96,
+        "lag_6": 0.966,
+        "lag_12": 0.964,
+        "lag_24": 0.943,
+        "lag_48": 0.856,
+        "lag_72": 0.718,
+        "max_abs_diff_vs_including_reconstructed": 0.023
+      },
+      "SGSIN": {
+        "lag_1": 0.857,
+        "lag_2": 0.863,
+        "lag_3": 0.855,
+        "lag_6": 0.86,
+        "lag_12": 0.819,
+        "lag_24": 0.766,
+        "lag_48": 0.562,
+        "lag_72": 0.308,
+        "max_abs_diff_vs_including_reconstructed": 0.042
+      },
+      "USLAX": {
+        "lag_1": 0.918,
+        "lag_2": 0.926,
+        "lag_3": 0.916,
+        "lag_6": 0.924,
+        "lag_12": 0.903,
+        "lag_24": 0.854,
+        "lag_48": 0.743,
+        "lag_72": 0.596,
+        "max_abs_diff_vs_including_reconstructed": 0.014
+      }
+    },
+    "acf_of_hourly_change": {
+      "AEJEA": {
+        "lag_1": -0.516,
+        "lag_2": 0.076,
+        "lag_3": -0.034,
+        "lag_24": 0.012
+      },
+      "CNSHA": {
+        "lag_1": -0.522,
+        "lag_2": 0.026,
+        "lag_3": -0.016,
+        "lag_24": -0.025
+      },
+      "DEHAM": {
+        "lag_1": -0.478,
+        "lag_2": -0.034,
+        "lag_3": 0.066,
+        "lag_24": 0.087
+      },
+      "INMAA": {
+        "lag_1": -0.483,
+        "lag_2": -0.054,
+        "lag_3": 0.103,
+        "lag_24": -0.0
+      },
+      "INNSA": {
+        "lag_1": -0.463,
+        "lag_2": -0.026,
+        "lag_3": -0.011,
+        "lag_24": 0.041
+      },
+      "LKCMB": {
+        "lag_1": -0.496,
+        "lag_2": 0.014,
+        "lag_3": 0.012,
+        "lag_24": 0.015
+      },
+      "MYPKG": {
+        "lag_1": -0.466,
+        "lag_2": -0.011,
+        "lag_3": -0.059,
+        "lag_24": 0.107
+      },
+      "NLRTM": {
+        "lag_1": -0.424,
+        "lag_2": -0.059,
+        "lag_3": -0.026,
+        "lag_24": -0.006
+      },
+      "SGSIN": {
+        "lag_1": -0.52,
+        "lag_2": 0.031,
+        "lag_3": -0.031,
+        "lag_24": 0.063
+      },
+      "USLAX": {
+        "lag_1": -0.484,
+        "lag_2": 0.013,
+        "lag_3": 0.0,
+        "lag_24": -0.039
+      }
+    },
+    "pacf": {
+      "AEJEA": {
+        "lag_1": 0.267,
+        "lag_2": 0.254,
+        "lag_3": 0.124,
+        "lag_6": 0.093,
+        "lag_12": -0.033,
+        "lag_24": -0.025
+      },
+      "CNSHA": {
+        "lag_1": 0.935,
+        "lag_2": 0.497,
+        "lag_3": 0.296,
+        "lag_6": 0.117,
+        "lag_12": 0.014,
+        "lag_24": -0.015
+      },
+      "DEHAM": {
+        "lag_1": 0.247,
+        "lag_2": 0.192,
+        "lag_3": 0.173,
+        "lag_6": 0.081,
+        "lag_12": 0.054,
+        "lag_24": 0.048
+      },
+      "INMAA": {
+        "lag_1": 0.282,
+        "lag_2": 0.166,
+        "lag_3": 0.22,
+        "lag_6": 0.129,
+        "lag_12": 0.037,
+        "lag_24": 0.005
+      },
+      "INNSA": {
+        "lag_1": 0.838,
+        "lag_2": 0.426,
+        "lag_3": 0.281,
+        "lag_6": 0.098,
+        "lag_12": 0.04,
+        "lag_24": 0.021
+      },
+      "LKCMB": {
+        "lag_1": 0.629,
+        "lag_2": 0.385,
+        "lag_3": 0.259,
+        "lag_6": 0.166,
+        "lag_12": 0.003,
+        "lag_24": 0.023
+      },
+      "MYPKG": {
+        "lag_1": 0.069,
+        "lag_2": 0.038,
+        "lag_3": -0.011,
+        "lag_6": -0.036,
+        "lag_12": 0.025,
+        "lag_24": 0.051
+      },
+      "NLRTM": {
+        "lag_1": 0.982,
+        "lag_2": 0.41,
+        "lag_3": 0.265,
+        "lag_6": 0.048,
+        "lag_12": 0.004,
+        "lag_24": -0.053
+      },
+      "SGSIN": {
+        "lag_1": 0.825,
+        "lag_2": 0.47,
+        "lag_3": 0.282,
+        "lag_6": 0.172,
+        "lag_12": -0.008,
+        "lag_24": 0.063
+      },
+      "USLAX": {
+        "lag_1": 0.915,
+        "lag_2": 0.483,
+        "lag_3": 0.306,
+        "lag_6": 0.168,
+        "lag_12": -0.009,
+        "lag_24": -0.05
+      }
+    },
+    "noise_decomposition_train": {
+      "AEJEA": {
+        "noise_sd_h": 3.829,
+        "dwell_sd_h": 4.567,
+        "signal_share": 0.297,
+        "lag1_acf_of_change": -0.509
+      },
+      "CNSHA": {
+        "noise_sd_h": 4.035,
+        "dwell_sd_h": 15.226,
+        "signal_share": 0.93,
+        "lag1_acf_of_change": -0.501
+      },
+      "DEHAM": {
+        "noise_sd_h": 3.877,
+        "dwell_sd_h": 4.392,
+        "signal_share": 0.221,
+        "lag1_acf_of_change": -0.502
+      },
+      "INMAA": {
+        "noise_sd_h": 3.935,
+        "dwell_sd_h": 4.924,
+        "signal_share": 0.361,
+        "lag1_acf_of_change": -0.467
+      },
+      "INNSA": {
+        "noise_sd_h": 3.547,
+        "dwell_sd_h": 9.92,
+        "signal_share": 0.872,
+        "lag1_acf_of_change": -0.443
+      },
+      "LKCMB": {
+        "noise_sd_h": 3.947,
+        "dwell_sd_h": 6.12,
+        "signal_share": 0.584,
+        "lag1_acf_of_change": -0.502
+      },
+      "MYPKG": {
+        "noise_sd_h": 3.822,
+        "dwell_sd_h": 4.052,
+        "signal_share": 0.11,
+        "lag1_acf_of_change": -0.484
+      },
+      "NLRTM": {
+        "noise_sd_h": 3.539,
+        "dwell_sd_h": 31.628,
+        "signal_share": 0.987,
+        "lag1_acf_of_change": -0.427
+      },
+      "SGSIN": {
+        "noise_sd_h": 4.354,
+        "dwell_sd_h": 10.594,
+        "signal_share": 0.831,
+        "lag1_acf_of_change": -0.533
+      },
+      "USLAX": {
+        "noise_sd_h": 3.826,
+        "dwell_sd_h": 13.856,
+        "signal_share": 0.924,
+        "lag1_acf_of_change": -0.5
+      }
+    },
+    "lag_corr_1_12": {
+      "AEJEA": {
+        "lag_1": 0.28,
+        "lag_2": 0.322,
+        "lag_3": 0.244,
+        "lag_4": 0.238,
+        "lag_5": 0.206,
+        "lag_6": 0.232,
+        "lag_7": 0.187,
+        "lag_8": 0.223,
+        "lag_9": 0.228,
+        "lag_10": 0.204,
+        "lag_11": 0.204,
+        "lag_12": 0.148
+      },
+      "CNSHA": {
+        "lag_1": 0.935,
+        "lag_2": 0.938,
+        "lag_3": 0.937,
+        "lag_4": 0.937,
+        "lag_5": 0.932,
+        "lag_6": 0.935,
+        "lag_7": 0.932,
+        "lag_8": 0.934,
+        "lag_9": 0.93,
+        "lag_10": 0.929,
+        "lag_11": 0.925,
+        "lag_12": 0.924
+      },
+      "DEHAM": {
+        "lag_1": 0.242,
+        "lag_2": 0.213,
+        "lag_3": 0.252,
+        "lag_4": 0.177,
+        "lag_5": 0.254,
+        "lag_6": 0.203,
+        "lag_7": 0.211,
+        "lag_8": 0.212,
+        "lag_9": 0.214,
+        "lag_10": 0.206,
+        "lag_11": 0.184,
+        "lag_12": 0.192
+      },
+      "INMAA": {
+        "lag_1": 0.293,
+        "lag_2": 0.254,
+        "lag_3": 0.327,
+        "lag_4": 0.261,
+        "lag_5": 0.284,
+        "lag_6": 0.298,
+        "lag_7": 0.301,
+        "lag_8": 0.273,
+        "lag_9": 0.283,
+        "lag_10": 0.268,
+        "lag_11": 0.283,
+        "lag_12": 0.26
+      },
+      "INNSA": {
+        "lag_1": 0.842,
+        "lag_2": 0.832,
+        "lag_3": 0.828,
+        "lag_4": 0.83,
+        "lag_5": 0.827,
+        "lag_6": 0.817,
+        "lag_7": 0.809,
+        "lag_8": 0.81,
+        "lag_9": 0.806,
+        "lag_10": 0.792,
+        "lag_11": 0.801,
+        "lag_12": 0.796
+      },
+      "LKCMB": {
+        "lag_1": 0.635,
+        "lag_2": 0.63,
+        "lag_3": 0.629,
+        "lag_4": 0.624,
+        "lag_5": 0.607,
+        "lag_6": 0.621,
+        "lag_7": 0.614,
+        "lag_8": 0.603,
+        "lag_9": 0.614,
+        "lag_10": 0.579,
+        "lag_11": 0.579,
+        "lag_12": 0.586
+      },
+      "MYPKG": {
+        "lag_1": 0.064,
+        "lag_2": 0.043,
+        "lag_3": 0.0,
+        "lag_4": 0.087,
+        "lag_5": 0.008,
+        "lag_6": -0.032,
+        "lag_7": -0.008,
+        "lag_8": 0.028,
+        "lag_9": -0.031,
+        "lag_10": -0.053,
+        "lag_11": 0.016,
+        "lag_12": 0.06
+      },
+      "NLRTM": {
+        "lag_1": 0.982,
+        "lag_2": 0.979,
+        "lag_3": 0.979,
+        "lag_4": 0.979,
+        "lag_5": 0.979,
+        "lag_6": 0.977,
+        "lag_7": 0.975,
+        "lag_8": 0.974,
+        "lag_9": 0.972,
+        "lag_10": 0.972,
+        "lag_11": 0.971,
+        "lag_12": 0.97
+      },
+      "SGSIN": {
+        "lag_1": 0.834,
+        "lag_2": 0.837,
+        "lag_3": 0.83,
+        "lag_4": 0.835,
+        "lag_5": 0.819,
+        "lag_6": 0.832,
+        "lag_7": 0.828,
+        "lag_8": 0.813,
+        "lag_9": 0.804,
+        "lag_10": 0.806,
+        "lag_11": 0.806,
+        "lag_12": 0.791
+      },
+      "USLAX": {
+        "lag_1": 0.917,
+        "lag_2": 0.917,
+        "lag_3": 0.915,
+        "lag_4": 0.914,
+        "lag_5": 0.914,
+        "lag_6": 0.917,
+        "lag_7": 0.901,
+        "lag_8": 0.902,
+        "lag_9": 0.907,
+        "lag_10": 0.907,
+        "lag_11": 0.898,
+        "lag_12": 0.896
+      }
+    },
+    "quietest_port": "MYPKG",
+    "most_episodic_port": "NLRTM",
+    "diurnal": {
+      "amplitude_h_max_minus_min_hourly_mean": 1.148,
+      "anova_p": 0.00273,
+      "eta_squared": 0.0058
+    },
+    "weekly": {
+      "anova_p": 0.89,
+      "weeks_covered": 5.06,
+      "note": "fewer than 6 weeks of development data: a weekly pattern cannot be separated from individual episodes"
+    },
+    "history_length_rmse_dev": {
+      "EWMA alpha 0.2 (full history)": 4.31,
+      "EWMA alpha 0.3 (full history)": 4.36,
+      "trailing mean 6 h": 4.364,
+      "trailing mean 12 h": 4.364,
+      "EWMA alpha 0.1 (full history)": 4.486,
+      "EWMA alpha 0.5 (full history)": 4.59,
+      "trailing mean 3 h": 4.601,
+      "trailing mean 24 h": 4.744,
+      "trailing mean 2 h": 4.864,
+      "EWMA alpha 0.05 (full history)": 5.146,
+      "trailing mean 1 h": 5.57,
+      "trailing mean 48 h": 5.81
+    },
+    "history_length_note": "Descriptive smoothing errors on development targets (t >= 47 h so all lengths are comparable); nothing fitted.",
+    "older_history_partial_corr": {
+      "partial_r_mean_hours_t47_to_t12_given_window_ewma": -0.068,
+      "n": 7548,
+      "ewma_alpha": 0.2
+    }
+  },
+  "feature_analysis": {
+    "dwell": {
+      "type": "continuous (h)",
+      "unit": "h",
+      "min": 54.6,
+      "p01": 61.0,
+      "median": 85.15,
+      "p99": 181.701,
+      "max": 205.2,
+      "mean": 90.366,
+      "std": 23.589,
+      "n_unique": 1008,
+      "share_zero": 0.0,
+      "between_port_variance_share": 0.715,
+      "median_within_port_std": 7.961,
+      "per_port_mean": {
+        "AEJEA": 105.42,
+        "CNSHA": 85.827,
+        "DEHAM": 68.708,
+        "INMAA": 69.865,
+        "INNSA": 85.221,
+        "LKCMB": 108.169,
+        "MYPKG": 67.745,
+        "NLRTM": 133.152,
+        "SGSIN": 81.046,
+        "USLAX": 98.509
+      },
+      "per_port_std": {
+        "AEJEA": 4.474,
+        "CNSHA": 16.013,
+        "DEHAM": 4.495,
+        "INMAA": 4.843,
+        "INNSA": 9.484,
+        "LKCMB": 6.437,
+        "MYPKG": 4.029,
+        "NLRTM": 29.028,
+        "SGSIN": 10.04,
+        "USLAX": 13.372
+      }
+    },
+    "utilization": {
+      "type": "continuous, bounded 0-100 %, right-censored at 100",
+      "unit": "%",
+      "min": 9.06,
+      "p01": 23.68,
+      "median": 75.545,
+      "p99": 100.0,
+      "max": 100.0,
+      "mean": 75.917,
+      "std": 17.265,
+      "n_unique": 3041,
+      "share_zero": 0.0,
+      "between_port_variance_share": 0.134,
+      "median_within_port_std": 15.201,
+      "per_port_mean": {
+        "AEJEA": 67.666,
+        "CNSHA": 69.56,
+        "DEHAM": 81.601,
+        "INMAA": 80.468,
+        "INNSA": 78.081,
+        "LKCMB": 80.82,
+        "MYPKG": 63.845,
+        "NLRTM": 81.707,
+        "SGSIN": 81.077,
+        "USLAX": 74.342
+      },
+      "per_port_std": {
+        "AEJEA": 13.856,
+        "CNSHA": 17.136,
+        "DEHAM": 11.924,
+        "INMAA": 12.009,
+        "INNSA": 15.621,
+        "LKCMB": 14.782,
+        "MYPKG": 8.775,
+        "NLRTM": 24.845,
+        "SGSIN": 16.983,
+        "USLAX": 19.171
+      },
+      "share_at_100": 0.168,
+      "per_port_share_at_100": {
+        "AEJEA": 0.078,
+        "CNSHA": 0.135,
+        "DEHAM": 0.1,
+        "INMAA": 0.06,
+        "INNSA": 0.206,
+        "LKCMB": 0.205,
+        "MYPKG": 0.013,
+        "NLRTM": 0.415,
+        "SGSIN": 0.234,
+        "USLAX": 0.235
+      }
+    },
+    "labour_strike": {
+      "type": "binary",
+      "unit": "0/1",
+      "min": 0.0,
+      "p01": 0.0,
+      "median": 0.0,
+      "p99": 1.0,
+      "max": 1.0,
+      "mean": 0.029,
+      "std": 0.167,
+      "n_unique": 2,
+      "share_zero": 0.971,
+      "between_port_variance_share": 0.05,
+      "median_within_port_std": 0.0,
+      "per_port_mean": {
+        "AEJEA": 0.0,
+        "CNSHA": 0.0,
+        "DEHAM": 0.076,
+        "INMAA": 0.0,
+        "INNSA": 0.0,
+        "LKCMB": 0.0,
+        "MYPKG": 0.0,
+        "NLRTM": 0.101,
+        "SGSIN": 0.066,
+        "USLAX": 0.044
+      },
+      "per_port_std": {
+        "AEJEA": 0.0,
+        "CNSHA": 0.0,
+        "DEHAM": 0.266,
+        "INMAA": 0.0,
+        "INNSA": 0.0,
+        "LKCMB": 0.0,
+        "MYPKG": 0.0,
+        "NLRTM": 0.302,
+        "SGSIN": 0.248,
+        "USLAX": 0.204
+      },
+      "prevalence": 0.0287,
+      "per_port_prevalence": {
+        "AEJEA": 0.0,
+        "CNSHA": 0.0,
+        "DEHAM": 0.0765,
+        "INMAA": 0.0,
+        "INNSA": 0.0,
+        "LKCMB": 0.0,
+        "MYPKG": 0.0,
+        "NLRTM": 0.1012,
+        "SGSIN": 0.0659,
+        "USLAX": 0.0435
+      },
+      "episodes": 4
+    },
+    "wind_gust": {
+      "type": "continuous (km/h)",
+      "unit": "km/h",
+      "min": 0.0,
+      "p01": 6.699,
+      "median": 24.3,
+      "p99": 81.503,
+      "max": 105.7,
+      "mean": 26.601,
+      "std": 13.549,
+      "n_unique": 757,
+      "share_zero": 0.0,
+      "between_port_variance_share": 0.088,
+      "median_within_port_std": 11.998,
+      "per_port_mean": {
+        "AEJEA": 25.257,
+        "CNSHA": 35.255,
+        "DEHAM": 23.21,
+        "INMAA": 23.737,
+        "INNSA": 26.54,
+        "LKCMB": 29.76,
+        "MYPKG": 24.732,
+        "NLRTM": 20.372,
+        "SGSIN": 30.257,
+        "USLAX": 26.897
+      },
+      "per_port_std": {
+        "AEJEA": 18.238,
+        "CNSHA": 12.425,
+        "DEHAM": 9.539,
+        "INMAA": 9.543,
+        "INNSA": 11.836,
+        "LKCMB": 11.643,
+        "MYPKG": 12.16,
+        "NLRTM": 16.811,
+        "SGSIN": 10.748,
+        "USLAX": 13.594
+      },
+      "clipped_negative_hours": 1
+    },
+    "disruption_active": {
+      "type": "binary",
+      "unit": "0/1",
+      "min": 0.0,
+      "p01": 0.0,
+      "median": 0.0,
+      "p99": 1.0,
+      "max": 1.0,
+      "mean": 0.154,
+      "std": 0.361,
+      "n_unique": 2,
+      "share_zero": 0.846,
+      "between_port_variance_share": 0.03,
+      "median_within_port_std": 0.352,
+      "per_port_mean": {
+        "AEJEA": 0.153,
+        "CNSHA": 0.226,
+        "DEHAM": 0.108,
+        "INMAA": 0.032,
+        "INNSA": 0.267,
+        "LKCMB": 0.136,
+        "MYPKG": 0.127,
+        "NLRTM": 0.165,
+        "SGSIN": 0.125,
+        "USLAX": 0.201
+      },
+      "per_port_std": {
+        "AEJEA": 0.36,
+        "CNSHA": 0.418,
+        "DEHAM": 0.311,
+        "INMAA": 0.175,
+        "INNSA": 0.443,
+        "LKCMB": 0.343,
+        "MYPKG": 0.333,
+        "NLRTM": 0.371,
+        "SGSIN": 0.331,
+        "USLAX": 0.401
+      },
+      "prevalence": 0.154,
+      "per_port_prevalence": {
+        "AEJEA": 0.1529,
+        "CNSHA": 0.2259,
+        "DEHAM": 0.1082,
+        "INMAA": 0.0318,
+        "INNSA": 0.2671,
+        "LKCMB": 0.1365,
+        "MYPKG": 0.1271,
+        "NLRTM": 0.1647,
+        "SGSIN": 0.1247,
+        "USLAX": 0.2012
+      },
+      "episodes": 42
+    },
+    "disruption_hours_elapsed": {
+      "type": "count-like hours, zero-inflated",
+      "unit": "h",
+      "min": 0.0,
+      "p01": 0.0,
+      "median": 0.0,
+      "p99": 68.0,
+      "max": 96.0,
+      "mean": 3.833,
+      "std": 12.583,
+      "n_unique": 97,
+      "share_zero": 0.851,
+      "between_port_variance_share": 0.043,
+      "median_within_port_std": 9.698,
+      "per_port_mean": {
+        "AEJEA": 2.842,
+        "CNSHA": 5.78,
+        "DEHAM": 2.695,
+        "INMAA": 0.213,
+        "INNSA": 9.138,
+        "LKCMB": 2.596,
+        "MYPKG": 1.068,
+        "NLRTM": 4.804,
+        "SGSIN": 2.362,
+        "USLAX": 6.831
+      },
+      "per_port_std": {
+        "AEJEA": 9.342,
+        "CNSHA": 14.406,
+        "DEHAM": 10.054,
+        "INMAA": 1.433,
+        "INNSA": 20.046,
+        "LKCMB": 8.454,
+        "MYPKG": 3.581,
+        "NLRTM": 15.099,
+        "SGSIN": 8.355,
+        "USLAX": 18.287
+      },
+      "when_active": {
+        "n_hours": 1309,
+        "median": 17.0,
+        "p90": 60.0,
+        "max": 96.0
+      }
+    },
+    "vessels_at_anchor": {
+      "type": "count (vessels)",
+      "unit": "vessels",
+      "min": 0.0,
+      "p01": 0.0,
+      "median": 1.0,
+      "p99": 19.0,
+      "max": 33.0,
+      "mean": 2.038,
+      "std": 3.806,
+      "n_unique": 33,
+      "share_zero": 0.483,
+      "between_port_variance_share": 0.249,
+      "median_within_port_std": 2.086,
+      "per_port_mean": {
+        "AEJEA": 0.641,
+        "CNSHA": 4.211,
+        "DEHAM": 0.616,
+        "INMAA": 0.592,
+        "INNSA": 1.773,
+        "LKCMB": 1.186,
+        "MYPKG": 0.426,
+        "NLRTM": 6.649,
+        "SGSIN": 1.625,
+        "USLAX": 2.661
+      },
+      "per_port_std": {
+        "AEJEA": 0.955,
+        "CNSHA": 4.33,
+        "DEHAM": 0.97,
+        "INMAA": 0.975,
+        "INNSA": 2.462,
+        "LKCMB": 1.71,
+        "MYPKG": 0.698,
+        "NLRTM": 7.653,
+        "SGSIN": 2.69,
+        "USLAX": 3.485
+      },
+      "per_port_share_zero": {
+        "AEJEA": 0.569,
+        "CNSHA": 0.316,
+        "DEHAM": 0.599,
+        "INMAA": 0.614,
+        "INNSA": 0.418,
+        "LKCMB": 0.487,
+        "MYPKG": 0.669,
+        "NLRTM": 0.282,
+        "SGSIN": 0.479,
+        "USLAX": 0.399
+      },
+      "index_of_dispersion_median": 2.943
+    }
+  },
+  "feature_target_relationships": {
+    "n_windows": 7885,
+    "control": "EWMA (alpha 0.2) of the 12 input dwell hours, within port",
+    "features": {
+      "dwell": {
+        "pearson_pooled": 0.972,
+        "spearman_pooled": 0.924,
+        "pearson_within_port": 0.903,
+        "partial_given_last_dwell_within_port": null,
+        "partial_given_window_ewma_within_port": -0.019,
+        "partial_by_lag_given_ewma": {
+          "lag0": -0.019,
+          "lag1": -0.01,
+          "lag2": 0.007,
+          "lag3": 0.014,
+          "lag4": 0.015,
+          "lag5": 0.034,
+          "lag6": 0.014,
+          "lag7": 0.019,
+          "lag8": 0.019,
+          "lag9": 0.016,
+          "lag10": 0.021,
+          "lag11": -0.045
+        },
+        "partial_given_ewma_by_port": {
+          "AEJEA": {
+            "partial_r": -0.016,
+            "ci95_naive": [
+              -0.086,
+              0.054
+            ],
+            "n": 785
+          },
+          "CNSHA": {
+            "partial_r": -0.048,
+            "ci95_naive": [
+              -0.118,
+              0.022
+            ],
+            "n": 786
+          },
+          "DEHAM": {
+            "partial_r": -0.041,
+            "ci95_naive": [
+              -0.111,
+              0.028
+            ],
+            "n": 794
+          },
+          "INMAA": {
+            "partial_r": -0.037,
+            "ci95_naive": [
+              -0.106,
+              0.033
+            ],
+            "n": 792
+          },
+          "INNSA": {
+            "partial_r": 0.027,
+            "ci95_naive": [
+              -0.043,
+              0.096
+            ],
+            "n": 795
+          },
+          "LKCMB": {
+            "partial_r": -0.053,
+            "ci95_naive": [
+              -0.122,
+              0.017
+            ],
+            "n": 787
+          },
+          "MYPKG": {
+            "partial_r": 0.013,
+            "ci95_naive": [
+              -0.057,
+              0.083
+            ],
+            "n": 787
+          },
+          "NLRTM": {
+            "partial_r": 0.137,
+            "ci95_naive": [
+              0.067,
+              0.205
+            ],
+            "n": 788
+          },
+          "SGSIN": {
+            "partial_r": -0.021,
+            "ci95_naive": [
+              -0.091,
+              0.049
+            ],
+            "n": 784
+          },
+          "USLAX": {
+            "partial_r": -0.028,
+            "ci95_naive": [
+              -0.098,
+              0.042
+            ],
+            "n": 787
+          }
+        },
+        "by_port_range": [
+          -0.053,
+          0.137
+        ]
+      },
+      "utilization": {
+        "pearson_pooled": 0.027,
+        "spearman_pooled": 0.06,
+        "pearson_within_port": -0.059,
+        "partial_given_last_dwell_within_port": -0.045,
+        "partial_given_window_ewma_within_port": -0.197,
+        "partial_by_lag_given_ewma": {
+          "lag0": -0.197,
+          "lag1": -0.197,
+          "lag2": -0.201,
+          "lag3": -0.194,
+          "lag4": -0.189,
+          "lag5": -0.18,
+          "lag6": -0.177,
+          "lag7": -0.16,
+          "lag8": -0.155,
+          "lag9": -0.143,
+          "lag10": -0.14,
+          "lag11": -0.137
+        },
+        "partial_given_ewma_by_port": {
+          "AEJEA": {
+            "partial_r": -0.143,
+            "ci95_naive": [
+              -0.211,
+              -0.074
+            ],
+            "n": 785
+          },
+          "CNSHA": {
+            "partial_r": -0.184,
+            "ci95_naive": [
+              -0.25,
+              -0.115
+            ],
+            "n": 786
+          },
+          "DEHAM": {
+            "partial_r": -0.065,
+            "ci95_naive": [
+              -0.134,
+              0.004
+            ],
+            "n": 794
+          },
+          "INMAA": {
+            "partial_r": -0.061,
+            "ci95_naive": [
+              -0.131,
+              0.008
+            ],
+            "n": 792
+          },
+          "INNSA": {
+            "partial_r": -0.23,
+            "ci95_naive": [
+              -0.295,
+              -0.163
+            ],
+            "n": 795
+          },
+          "LKCMB": {
+            "partial_r": -0.168,
+            "ci95_naive": [
+              -0.235,
+              -0.099
+            ],
+            "n": 787
+          },
+          "MYPKG": {
+            "partial_r": -0.082,
+            "ci95_naive": [
+              -0.151,
+              -0.012
+            ],
+            "n": 787
+          },
+          "NLRTM": {
+            "partial_r": -0.37,
+            "ci95_naive": [
+              -0.429,
+              -0.308
+            ],
+            "n": 788
+          },
+          "SGSIN": {
+            "partial_r": -0.202,
+            "ci95_naive": [
+              -0.268,
+              -0.134
+            ],
+            "n": 784
+          },
+          "USLAX": {
+            "partial_r": -0.237,
+            "ci95_naive": [
+              -0.302,
+              -0.169
+            ],
+            "n": 787
+          }
+        },
+        "by_port_range": [
+          -0.37,
+          -0.061
+        ]
+      },
+      "labour_strike": {
+        "pearson_pooled": 0.17,
+        "spearman_pooled": 0.098,
+        "pearson_within_port": 0.192,
+        "partial_given_last_dwell_within_port": 0.059,
+        "partial_given_window_ewma_within_port": 0.119,
+        "partial_by_lag_given_ewma": {
+          "lag0": 0.119,
+          "lag1": 0.121,
+          "lag2": 0.124,
+          "lag3": 0.124,
+          "lag4": 0.125,
+          "lag5": 0.119,
+          "lag6": 0.119,
+          "lag7": 0.116,
+          "lag8": 0.113,
+          "lag9": 0.11,
+          "lag10": 0.107,
+          "lag11": 0.104
+        },
+        "partial_given_ewma_by_port": {
+          "AEJEA": {
+            "partial_r": null,
+            "ci95_naive": null,
+            "n": 785,
+            "note": "feature constant at this port in train + val"
+          },
+          "CNSHA": {
+            "partial_r": null,
+            "ci95_naive": null,
+            "n": 786,
+            "note": "feature constant at this port in train + val"
+          },
+          "DEHAM": {
+            "partial_r": 0.063,
+            "ci95_naive": [
+              -0.007,
+              0.132
+            ],
+            "n": 794
+          },
+          "INMAA": {
+            "partial_r": null,
+            "ci95_naive": null,
+            "n": 792,
+            "note": "feature constant at this port in train + val"
+          },
+          "INNSA": {
+            "partial_r": null,
+            "ci95_naive": null,
+            "n": 795,
+            "note": "feature constant at this port in train + val"
+          },
+          "LKCMB": {
+            "partial_r": null,
+            "ci95_naive": null,
+            "n": 787,
+            "note": "feature constant at this port in train + val"
+          },
+          "MYPKG": {
+            "partial_r": null,
+            "ci95_naive": null,
+            "n": 787,
+            "note": "feature constant at this port in train + val"
+          },
+          "NLRTM": {
+            "partial_r": 0.344,
+            "ci95_naive": [
+              0.281,
+              0.404
+            ],
+            "n": 788
+          },
+          "SGSIN": {
+            "partial_r": 0.176,
+            "ci95_naive": [
+              0.107,
+              0.243
+            ],
+            "n": 784
+          },
+          "USLAX": {
+            "partial_r": 0.126,
+            "ci95_naive": [
+              0.056,
+              0.194
+            ],
+            "n": 787
+          }
+        },
+        "by_port_range": [
+          0.063,
+          0.344
+        ]
+      },
+      "wind_gust": {
+        "pearson_pooled": -0.003,
+        "spearman_pooled": -0.021,
+        "pearson_within_port": 0.081,
+        "partial_given_last_dwell_within_port": 0.038,
+        "partial_given_window_ewma_within_port": 0.093,
+        "partial_by_lag_given_ewma": {
+          "lag0": 0.093,
+          "lag1": 0.093,
+          "lag2": 0.093,
+          "lag3": 0.089,
+          "lag4": 0.091,
+          "lag5": 0.082,
+          "lag6": 0.072,
+          "lag7": 0.071,
+          "lag8": 0.061,
+          "lag9": 0.052,
+          "lag10": 0.045,
+          "lag11": 0.04
+        },
+        "partial_given_ewma_by_port": {
+          "AEJEA": {
+            "partial_r": 0.192,
+            "ci95_naive": [
+              0.123,
+              0.258
+            ],
+            "n": 785
+          },
+          "CNSHA": {
+            "partial_r": 0.138,
+            "ci95_naive": [
+              0.068,
+              0.206
+            ],
+            "n": 786
+          },
+          "DEHAM": {
+            "partial_r": 0.07,
+            "ci95_naive": [
+              0.0,
+              0.139
+            ],
+            "n": 794
+          },
+          "INMAA": {
+            "partial_r": 0.123,
+            "ci95_naive": [
+              0.053,
+              0.191
+            ],
+            "n": 792
+          },
+          "INNSA": {
+            "partial_r": 0.068,
+            "ci95_naive": [
+              -0.001,
+              0.137
+            ],
+            "n": 795
+          },
+          "LKCMB": {
+            "partial_r": 0.124,
+            "ci95_naive": [
+              0.054,
+              0.192
+            ],
+            "n": 787
+          },
+          "MYPKG": {
+            "partial_r": 0.106,
+            "ci95_naive": [
+              0.036,
+              0.174
+            ],
+            "n": 787
+          },
+          "NLRTM": {
+            "partial_r": 0.079,
+            "ci95_naive": [
+              0.01,
+              0.148
+            ],
+            "n": 788
+          },
+          "SGSIN": {
+            "partial_r": 0.135,
+            "ci95_naive": [
+              0.066,
+              0.203
+            ],
+            "n": 784
+          },
+          "USLAX": {
+            "partial_r": 0.132,
+            "ci95_naive": [
+              0.063,
+              0.2
+            ],
+            "n": 787
+          }
+        },
+        "by_port_range": [
+          0.068,
+          0.192
+        ]
+      },
+      "disruption_active": {
+        "pearson_pooled": 0.165,
+        "spearman_pooled": 0.187,
+        "pearson_within_port": 0.221,
+        "partial_given_last_dwell_within_port": 0.08,
+        "partial_given_window_ewma_within_port": 0.176,
+        "partial_by_lag_given_ewma": {
+          "lag0": 0.176,
+          "lag1": 0.177,
+          "lag2": 0.183,
+          "lag3": 0.176,
+          "lag4": 0.174,
+          "lag5": 0.162,
+          "lag6": 0.156,
+          "lag7": 0.146,
+          "lag8": 0.134,
+          "lag9": 0.124,
+          "lag10": 0.126,
+          "lag11": 0.121
+        },
+        "partial_given_ewma_by_port": {
+          "AEJEA": {
+            "partial_r": 0.152,
+            "ci95_naive": [
+              0.083,
+              0.22
+            ],
+            "n": 785
+          },
+          "CNSHA": {
+            "partial_r": 0.192,
+            "ci95_naive": [
+              0.124,
+              0.259
+            ],
+            "n": 786
+          },
+          "DEHAM": {
+            "partial_r": 0.118,
+            "ci95_naive": [
+              0.049,
+              0.186
+            ],
+            "n": 794
+          },
+          "INMAA": {
+            "partial_r": 0.125,
+            "ci95_naive": [
+              0.056,
+              0.193
+            ],
+            "n": 792
+          },
+          "INNSA": {
+            "partial_r": 0.201,
+            "ci95_naive": [
+              0.134,
+              0.267
+            ],
+            "n": 795
+          },
+          "LKCMB": {
+            "partial_r": 0.193,
+            "ci95_naive": [
+              0.125,
+              0.259
+            ],
+            "n": 787
+          },
+          "MYPKG": {
+            "partial_r": 0.054,
+            "ci95_naive": [
+              -0.016,
+              0.123
+            ],
+            "n": 787
+          },
+          "NLRTM": {
+            "partial_r": 0.354,
+            "ci95_naive": [
+              0.291,
+              0.414
+            ],
+            "n": 788
+          },
+          "SGSIN": {
+            "partial_r": 0.228,
+            "ci95_naive": [
+              0.161,
+              0.294
+            ],
+            "n": 784
+          },
+          "USLAX": {
+            "partial_r": 0.235,
+            "ci95_naive": [
+              0.168,
+              0.3
+            ],
+            "n": 787
+          }
+        },
+        "by_port_range": [
+          0.054,
+          0.354
+        ]
+      },
+      "disruption_hours_elapsed": {
+        "pearson_pooled": 0.243,
+        "spearman_pooled": 0.203,
+        "pearson_within_port": 0.346,
+        "partial_given_last_dwell_within_port": 0.105,
+        "partial_given_window_ewma_within_port": 0.152,
+        "partial_by_lag_given_ewma": {
+          "lag0": 0.152,
+          "lag1": 0.15,
+          "lag2": 0.149,
+          "lag3": 0.148,
+          "lag4": 0.141,
+          "lag5": 0.135,
+          "lag6": 0.131,
+          "lag7": 0.125,
+          "lag8": 0.118,
+          "lag9": 0.111,
+          "lag10": 0.103,
+          "lag11": 0.102
+        },
+        "partial_given_ewma_by_port": {
+          "AEJEA": {
+            "partial_r": 0.169,
+            "ci95_naive": [
+              0.101,
+              0.237
+            ],
+            "n": 785
+          },
+          "CNSHA": {
+            "partial_r": 0.098,
+            "ci95_naive": [
+              0.029,
+              0.167
+            ],
+            "n": 786
+          },
+          "DEHAM": {
+            "partial_r": 0.128,
+            "ci95_naive": [
+              0.059,
+              0.196
+            ],
+            "n": 794
+          },
+          "INMAA": {
+            "partial_r": 0.135,
+            "ci95_naive": [
+              0.065,
+              0.202
+            ],
+            "n": 792
+          },
+          "INNSA": {
+            "partial_r": 0.212,
+            "ci95_naive": [
+              0.144,
+              0.277
+            ],
+            "n": 795
+          },
+          "LKCMB": {
+            "partial_r": 0.204,
+            "ci95_naive": [
+              0.136,
+              0.27
+            ],
+            "n": 787
+          },
+          "MYPKG": {
+            "partial_r": 0.051,
+            "ci95_naive": [
+              -0.019,
+              0.121
+            ],
+            "n": 787
+          },
+          "NLRTM": {
+            "partial_r": 0.327,
+            "ci95_naive": [
+              0.263,
+              0.388
+            ],
+            "n": 788
+          },
+          "SGSIN": {
+            "partial_r": 0.218,
+            "ci95_naive": [
+              0.15,
+              0.284
+            ],
+            "n": 784
+          },
+          "USLAX": {
+            "partial_r": 0.159,
+            "ci95_naive": [
+              0.09,
+              0.226
+            ],
+            "n": 787
+          }
+        },
+        "by_port_range": [
+          0.051,
+          0.327
+        ]
+      },
+      "vessels_at_anchor": {
+        "pearson_pooled": 0.684,
+        "spearman_pooled": 0.439,
+        "pearson_within_port": 0.855,
+        "partial_given_last_dwell_within_port": 0.38,
+        "partial_given_window_ewma_within_port": 0.109,
+        "partial_by_lag_given_ewma": {
+          "lag0": 0.109,
+          "lag1": 0.091,
+          "lag2": 0.056,
+          "lag3": 0.06,
+          "lag4": 0.066,
+          "lag5": 0.05,
+          "lag6": 0.025,
+          "lag7": 0.022,
+          "lag8": 0.034,
+          "lag9": 0.003,
+          "lag10": 0.006,
+          "lag11": 0.027
+        },
+        "partial_given_ewma_by_port": {
+          "AEJEA": {
+            "partial_r": 0.132,
+            "ci95_naive": [
+              0.062,
+              0.2
+            ],
+            "n": 785
+          },
+          "CNSHA": {
+            "partial_r": 0.101,
+            "ci95_naive": [
+              0.031,
+              0.17
+            ],
+            "n": 786
+          },
+          "DEHAM": {
+            "partial_r": 0.119,
+            "ci95_naive": [
+              0.05,
+              0.187
+            ],
+            "n": 794
+          },
+          "INMAA": {
+            "partial_r": 0.112,
+            "ci95_naive": [
+              0.043,
+              0.181
+            ],
+            "n": 792
+          },
+          "INNSA": {
+            "partial_r": 0.055,
+            "ci95_naive": [
+              -0.015,
+              0.124
+            ],
+            "n": 795
+          },
+          "LKCMB": {
+            "partial_r": 0.138,
+            "ci95_naive": [
+              0.069,
+              0.206
+            ],
+            "n": 787
+          },
+          "MYPKG": {
+            "partial_r": 0.067,
+            "ci95_naive": [
+              -0.003,
+              0.137
+            ],
+            "n": 787
+          },
+          "NLRTM": {
+            "partial_r": 0.108,
+            "ci95_naive": [
+              0.039,
+              0.177
+            ],
+            "n": 788
+          },
+          "SGSIN": {
+            "partial_r": 0.125,
+            "ci95_naive": [
+              0.056,
+              0.194
+            ],
+            "n": 784
+          },
+          "USLAX": {
+            "partial_r": 0.124,
+            "ci95_naive": [
+              0.055,
+              0.192
+            ],
+            "n": 787
+          }
+        },
+        "by_port_range": [
+          0.055,
+          0.138
+        ]
+      }
+    },
+    "grouped": {
+      "labour_strike": {
+        "0": {
+          "n": 7665.0,
+          "target_mean_h": 89.751,
+          "residual_mean_h": -0.042,
+          "residual_sd_h": 4.291
+        },
+        "1": {
+          "n": 220.0,
+          "target_mean_h": 114.048,
+          "residual_mean_h": 2.78,
+          "residual_sd_h": 4.422
+        },
+        "mann_whitney_p_residual": 5.11e-18
+      },
+      "disruption_active": {
+        "0": {
+          "n": 6649.0,
+          "target_mean_h": 88.752,
+          "residual_mean_h": -0.272,
+          "residual_sd_h": 4.24
+        },
+        "1": {
+          "n": 1236.0,
+          "target_mean_h": 99.452,
+          "residual_mean_h": 1.698,
+          "residual_sd_h": 4.364
+        },
+        "mann_whitney_p_residual": 1.94e-46
+      },
+      "disruption_hours_elapsed_bins": {
+        "0 (none)": {
+          "n": 6688.0,
+          "residual_mean_h": -0.266
+        },
+        "1-6": {
+          "n": 242.0,
+          "residual_mean_h": 1.389
+        },
+        "7-24": {
+          "n": 495.0,
+          "residual_mean_h": 1.77
+        },
+        "25-48": {
+          "n": 249.0,
+          "residual_mean_h": 1.618
+        },
+        ">48": {
+          "n": 211.0,
+          "residual_mean_h": 2.144
+        }
+      }
+    },
+    "note": "Naive per-port intervals assume independent windows; consecutive windows overlap and share episodes, so true uncertainty is wider."
+  },
+  "reconstruction": {
+    "windows_with_reconstructed_dwell_input_pct": {
+      "train": 41.8,
+      "val": 47.9,
+      "test": 42.0
+    },
+    "windows_with_any_reconstructed_input_pct": {
+      "train": 74.9,
+      "val": 75.6,
+      "test": 73.4
+    },
+    "reconstructed_dwell_hours_pct_by_port_split": {
+      "AEJEA": {
+        "train": 5.14,
+        "val": 4.0,
+        "test": 4.0
+      },
+      "CNSHA": {
+        "train": 5.14,
+        "val": 3.33,
+        "test": 6.0
+      },
+      "DEHAM": {
+        "train": 4.29,
+        "val": 2.67,
+        "test": 4.67
+      },
+      "INMAA": {
+        "train": 4.43,
+        "val": 4.0,
+        "test": 4.0
+      },
+      "INNSA": {
+        "train": 3.86,
+        "val": 4.67,
+        "test": 8.0
+      },
+      "LKCMB": {
+        "train": 4.57,
+        "val": 4.67,
+        "test": 4.0
+      },
+      "MYPKG": {
+        "train": 4.0,
+        "val": 8.0,
+        "test": 2.0
+      },
+      "NLRTM": {
+        "train": 4.71,
+        "val": 4.67,
+        "test": 6.67
+      },
+      "SGSIN": {
+        "train": 4.71,
+        "val": 7.33,
+        "test": 2.67
+      },
+      "USLAX": {
+        "train": 3.86,
+        "val": 10.0,
+        "test": 2.0
+      }
+    },
+    "windows_with_reconstructed_dwell_pct_by_port_split": {
+      "AEJEA": {
+        "train": 45.3,
+        "val": 38.6,
+        "test": 41.4
+      },
+      "CNSHA": {
+        "train": 46.7,
+        "val": 38.3,
+        "test": 52.7
+      },
+      "DEHAM": {
+        "train": 40.1,
+        "val": 31.9,
+        "test": 58.8
+      },
+      "INMAA": {
+        "train": 45.1,
+        "val": 44.8,
+        "test": 40.9
+      },
+      "INNSA": {
+        "train": 38.5,
+        "val": 45.5,
+        "test": 46.1
+      },
+      "LKCMB": {
+        "train": 43.4,
+        "val": 47.3,
+        "test": 40.2
+      },
+      "MYPKG": {
+        "train": 33.0,
+        "val": 61.9,
+        "test": 26.7
+      },
+      "NLRTM": {
+        "train": 46.4,
+        "val": 45.0,
+        "test": 56.6
+      },
+      "SGSIN": {
+        "train": 41.9,
+        "val": 48.0,
+        "test": 31.3
+      },
+      "USLAX": {
+        "train": 38.1,
+        "val": 80.0,
+        "test": 26.7
+      }
+    },
+    "daily_concentration_dev": {
+      "days": 36,
+      "mean_per_day": 10.92,
+      "max_per_day": 19,
+      "chi2_uniform_p": 0.141
+    },
+    "port_concentration_dev": {
+      "counts": {
+        "AEJEA": 42,
+        "CNSHA": 41,
+        "DEHAM": 34,
+        "INMAA": 37,
+        "INNSA": 34,
+        "LKCMB": 39,
+        "MYPKG": 40,
+        "NLRTM": 40,
+        "SGSIN": 44,
+        "USLAX": 42
+      },
+      "chi2_uniform_p": 0.978
+    },
+    "value_check_vs_local_observed_median": {
+      "n_reconstructed": 392,
+      "n_observed": 8098,
+      "reconstructed_mean_sd_h": [
+        -0.264,
+        4.201
+      ],
+      "observed_mean_sd_h": [
+        0.016,
+        4.223
+      ],
+      "ks_statistic": 0.053,
+      "ks_p": 0.235,
+      "levene_p_equal_spread": 0.857
+    },
+    "ewma_rmse_by_port_with_vs_without_reconstructed": {
+      "AEJEA": [
+        4.039,
+        4.317
+      ],
+      "CNSHA": [
+        4.413,
+        4.272
+      ],
+      "DEHAM": [
+        4.188,
+        4.147
+      ],
+      "INMAA": [
+        4.48,
+        4.29
+      ],
+      "INNSA": [
+        4.305,
+        4.171
+      ],
+      "LKCMB": [
+        4.107,
+        4.284
+      ],
+      "MYPKG": [
+        4.13,
+        4.341
+      ],
+      "NLRTM": [
+        4.471,
+        4.739
+      ],
+      "SGSIN": [
+        4.624,
+        4.484
+      ],
+      "USLAX": [
+        4.181,
+        4.391
+      ]
+    },
+    "target_behaviour_dev": {
+      "any reconstructed dwell input": {
+        "False": {
+          "n": 4508.0,
+          "target_mean_h": 89.72,
+          "ewma_rmse_h": 4.295,
+          "persistence_rmse_h": 5.577
+        },
+        "True": {
+          "n": 3377.0,
+          "target_mean_h": 91.376,
+          "ewma_rmse_h": 4.352,
+          "persistence_rmse_h": 5.594
+        },
+        "mann_whitney_p_abs_ewma_error": 0.65
+      },
+      "dwell at hour t reconstructed": {
+        "False": {
+          "n": 7528.0,
+          "target_mean_h": 90.41,
+          "ewma_rmse_h": 4.312,
+          "persistence_rmse_h": 5.582
+        },
+        "True": {
+          "n": 357.0,
+          "target_mean_h": 90.838,
+          "ewma_rmse_h": 4.463,
+          "persistence_rmse_h": 5.626
+        },
+        "mann_whitney_p_abs_ewma_error": 0.908
+      }
+    }
+  },
+  "ports": {
+    "table": [
+      {
+        "port": "AEJEA",
+        "windows_train": 653,
+        "windows_val": 132,
+        "target_mean_train_h": 105.605,
+        "target_sd_train_h": 4.605,
+        "acf_lag1": 0.278,
+        "acf_lag12": 0.149,
+        "noise_sd_h": 3.829,
+        "signal_share": 0.297,
+        "disruption_hours_pct": 15.3,
+        "strike_hours_pct": 0.0,
+        "anchor_mean": 0.64,
+        "utilization_mean_pct": 67.7,
+        "utilization_at_100_pct": 7.8,
+        "reconstructed_dwell_pct_dev": 4.94
+      },
+      {
+        "port": "CNSHA",
+        "windows_train": 653,
+        "windows_val": 133,
+        "target_mean_train_h": 82.489,
+        "target_sd_train_h": 15.279,
+        "acf_lag1": 0.938,
+        "acf_lag12": 0.928,
+        "noise_sd_h": 4.035,
+        "signal_share": 0.93,
+        "disruption_hours_pct": 22.6,
+        "strike_hours_pct": 0.0,
+        "anchor_mean": 4.21,
+        "utilization_mean_pct": 69.6,
+        "utilization_at_100_pct": 13.5,
+        "reconstructed_dwell_pct_dev": 4.82
+      },
+      {
+        "port": "DEHAM",
+        "windows_train": 659,
+        "windows_val": 135,
+        "target_mean_train_h": 68.489,
+        "target_sd_train_h": 4.375,
+        "acf_lag1": 0.239,
+        "acf_lag12": 0.189,
+        "noise_sd_h": 3.877,
+        "signal_share": 0.221,
+        "disruption_hours_pct": 10.8,
+        "strike_hours_pct": 7.6,
+        "anchor_mean": 0.62,
+        "utilization_mean_pct": 81.6,
+        "utilization_at_100_pct": 10.0,
+        "reconstructed_dwell_pct_dev": 4.0
+      },
+      {
+        "port": "INMAA",
+        "windows_train": 658,
+        "windows_val": 134,
+        "target_mean_train_h": 70.114,
+        "target_sd_train_h": 4.998,
+        "acf_lag1": 0.295,
+        "acf_lag12": 0.265,
+        "noise_sd_h": 3.935,
+        "signal_share": 0.361,
+        "disruption_hours_pct": 3.2,
+        "strike_hours_pct": 0.0,
+        "anchor_mean": 0.59,
+        "utilization_mean_pct": 80.5,
+        "utilization_at_100_pct": 6.0,
+        "reconstructed_dwell_pct_dev": 4.35
+      },
+      {
+        "port": "INNSA",
+        "windows_train": 663,
+        "windows_val": 132,
+        "target_mean_train_h": 85.716,
+        "target_sd_train_h": 10.06,
+        "acf_lag1": 0.854,
+        "acf_lag12": 0.811,
+        "noise_sd_h": 3.547,
+        "signal_share": 0.872,
+        "disruption_hours_pct": 26.7,
+        "strike_hours_pct": 0.0,
+        "anchor_mean": 1.77,
+        "utilization_mean_pct": 78.1,
+        "utilization_at_100_pct": 20.6,
+        "reconstructed_dwell_pct_dev": 4.0
+      },
+      {
+        "port": "LKCMB",
+        "windows_train": 656,
+        "windows_val": 131,
+        "target_mean_train_h": 107.3,
+        "target_sd_train_h": 6.122,
+        "acf_lag1": 0.635,
+        "acf_lag12": 0.583,
+        "noise_sd_h": 3.947,
+        "signal_share": 0.584,
+        "disruption_hours_pct": 13.6,
+        "strike_hours_pct": 0.0,
+        "anchor_mean": 1.19,
+        "utilization_mean_pct": 80.8,
+        "utilization_at_100_pct": 20.5,
+        "reconstructed_dwell_pct_dev": 4.59
+      },
+      {
+        "port": "MYPKG",
+        "windows_train": 661,
+        "windows_val": 126,
+        "target_mean_train_h": 67.815,
+        "target_sd_train_h": 4.068,
+        "acf_lag1": 0.063,
+        "acf_lag12": 0.061,
+        "noise_sd_h": 3.822,
+        "signal_share": 0.11,
+        "disruption_hours_pct": 12.7,
+        "strike_hours_pct": 0.0,
+        "anchor_mean": 0.43,
+        "utilization_mean_pct": 63.8,
+        "utilization_at_100_pct": 1.3,
+        "reconstructed_dwell_pct_dev": 4.71
+      },
+      {
+        "port": "NLRTM",
+        "windows_train": 657,
+        "windows_val": 131,
+        "target_mean_train_h": 132.973,
+        "target_sd_train_h": 31.501,
+        "acf_lag1": 0.971,
+        "acf_lag12": 0.964,
+        "noise_sd_h": 3.539,
+        "signal_share": 0.987,
+        "disruption_hours_pct": 16.5,
+        "strike_hours_pct": 10.1,
+        "anchor_mean": 6.65,
+        "utilization_mean_pct": 81.7,
+        "utilization_at_100_pct": 41.5,
+        "reconstructed_dwell_pct_dev": 4.71
+      },
+      {
+        "port": "SGSIN",
+        "windows_train": 657,
+        "windows_val": 127,
+        "target_mean_train_h": 82.362,
+        "target_sd_train_h": 10.807,
+        "acf_lag1": 0.857,
+        "acf_lag12": 0.819,
+        "noise_sd_h": 4.354,
+        "signal_share": 0.831,
+        "disruption_hours_pct": 12.5,
+        "strike_hours_pct": 6.6,
+        "anchor_mean": 1.62,
+        "utilization_mean_pct": 81.1,
+        "utilization_at_100_pct": 23.4,
+        "reconstructed_dwell_pct_dev": 5.18
+      },
+      {
+        "port": "USLAX",
+        "windows_train": 662,
+        "windows_val": 125,
+        "target_mean_train_h": 100.683,
+        "target_sd_train_h": 13.898,
+        "acf_lag1": 0.918,
+        "acf_lag12": 0.903,
+        "noise_sd_h": 3.826,
+        "signal_share": 0.924,
+        "disruption_hours_pct": 20.1,
+        "strike_hours_pct": 4.4,
+        "anchor_mean": 2.66,
+        "utilization_mean_pct": 74.3,
+        "utilization_at_100_pct": 23.5,
+        "reconstructed_dwell_pct_dev": 4.94
+      }
+    ],
+    "window_share_per_port_train": 0.101,
+    "target_sum_of_squares_share_top_port": [
+      "NLRTM",
+      0.476
+    ]
+  },
+  "distribution_shift": {
+    "train_vs_val": {
+      "dwell": {
+        "train_mean": 90.245,
+        "val_mean": 90.931,
+        "ks_statistic": 0.051,
+        "ks_p": 0.00298,
+        "per_port_smd": {
+          "AEJEA": -0.139,
+          "CNSHA": 1.359,
+          "DEHAM": 0.287,
+          "INMAA": -0.218,
+          "INNSA": -0.178,
+          "LKCMB": 0.85,
+          "MYPKG": -0.08,
+          "NLRTM": 0.013,
+          "SGSIN": -0.558,
+          "USLAX": -0.795
+        },
+        "mean_abs_per_port_smd": 0.448
+      },
+      "utilization": {
+        "train_mean": 75.951,
+        "val_mean": 75.758,
+        "ks_statistic": 0.052,
+        "ks_p": 0.00274,
+        "per_port_smd": {
+          "AEJEA": -0.014,
+          "CNSHA": -0.695,
+          "DEHAM": 0.141,
+          "INMAA": 0.102,
+          "INNSA": -0.146,
+          "LKCMB": -0.133,
+          "MYPKG": 0.442,
+          "NLRTM": 0.395,
+          "SGSIN": -0.16,
+          "USLAX": -0.011
+        },
+        "mean_abs_per_port_smd": 0.224
+      },
+      "labour_strike": {
+        "train_mean": 0.032,
+        "val_mean": 0.014,
+        "ks_statistic": 0.018,
+        "ks_p": 0.819,
+        "per_port_smd": {
+          "AEJEA": null,
+          "CNSHA": null,
+          "DEHAM": 0.318,
+          "INMAA": null,
+          "INNSA": null,
+          "LKCMB": null,
+          "MYPKG": null,
+          "NLRTM": -0.374,
+          "SGSIN": -0.295,
+          "USLAX": -0.236
+        },
+        "mean_abs_per_port_smd": 0.306
+      },
+      "wind_gust": {
+        "train_mean": 26.32,
+        "val_mean": 27.917,
+        "ks_statistic": 0.055,
+        "ks_p": 0.00104,
+        "per_port_smd": {
+          "AEJEA": -0.469,
+          "CNSHA": 0.12,
+          "DEHAM": -0.284,
+          "INMAA": -0.398,
+          "INNSA": 1.193,
+          "LKCMB": 1.761,
+          "MYPKG": 0.353,
+          "NLRTM": 0.696,
+          "SGSIN": -0.019,
+          "USLAX": -0.413
+        },
+        "mean_abs_per_port_smd": 0.571
+      },
+      "disruption_active": {
+        "train_mean": 0.169,
+        "val_mean": 0.083,
+        "ks_statistic": 0.086,
+        "ks_p": 2.33e-08,
+        "per_port_smd": {
+          "AEJEA": -0.477,
+          "CNSHA": -0.614,
+          "DEHAM": 0.128,
+          "INMAA": -0.2,
+          "INNSA": -0.181,
+          "LKCMB": 0.367,
+          "MYPKG": -0.073,
+          "NLRTM": -0.037,
+          "SGSIN": -0.422,
+          "USLAX": -0.568
+        },
+        "mean_abs_per_port_smd": 0.307
+      },
+      "disruption_hours_elapsed": {
+        "train_mean": 4.346,
+        "val_mean": 1.438,
+        "ks_statistic": 0.085,
+        "ks_p": 2.68e-08,
+        "per_port_smd": {
+          "AEJEA": -0.339,
+          "CNSHA": -0.45,
+          "DEHAM": 0.932,
+          "INMAA": -0.164,
+          "INNSA": -0.35,
+          "LKCMB": 0.009,
+          "MYPKG": -0.217,
+          "NLRTM": -0.289,
+          "SGSIN": -0.314,
+          "USLAX": -0.418
+        },
+        "mean_abs_per_port_smd": 0.348
+      },
+      "vessels_at_anchor": {
+        "train_mean": 2.004,
+        "val_mean": 2.197,
+        "ks_statistic": 0.069,
+        "ks_p": 1.27e-05,
+        "per_port_smd": {
+          "AEJEA": -0.322,
+          "CNSHA": 1.119,
+          "DEHAM": 0.422,
+          "INMAA": -0.267,
+          "INNSA": -0.134,
+          "LKCMB": 1.002,
+          "MYPKG": -0.135,
+          "NLRTM": 0.089,
+          "SGSIN": -0.524,
+          "USLAX": -0.747
+        },
+        "mean_abs_per_port_smd": 0.476
+      },
+      "target": {
+        "train_mean_h": 90.328,
+        "val_mean_h": 90.941,
+        "per_port_mean_shift_in_train_sd": {
+          "AEJEA": -0.161,
+          "CNSHA": 1.338,
+          "DEHAM": 0.221,
+          "INMAA": -0.233,
+          "INNSA": -0.159,
+          "LKCMB": 0.933,
+          "MYPKG": -0.088,
+          "NLRTM": -0.012,
+          "SGSIN": -0.585,
+          "USLAX": -0.804
+        },
+        "scaled_y_mean": 0.06,
+        "scaled_y_train_mean": 0.008
+      }
+    },
+    "test_descriptive_only": {
+      "dwell": {
+        "train_mean": 90.245,
+        "test_mean": 86.066,
+        "ks_statistic": 0.075,
+        "ks_p": 1.59e-06,
+        "per_port_smd": {
+          "AEJEA": -0.218,
+          "CNSHA": -0.283,
+          "DEHAM": -0.191,
+          "INMAA": -0.191,
+          "INNSA": 0.05,
+          "LKCMB": -0.342,
+          "MYPKG": 0.997,
+          "NLRTM": -0.677,
+          "SGSIN": -0.556,
+          "USLAX": -0.709
+        },
+        "mean_abs_per_port_smd": 0.421
+      },
+      "utilization": {
+        "train_mean": 75.951,
+        "test_mean": 75.835,
+        "ks_statistic": 0.071,
+        "ks_p": 7.63e-06,
+        "per_port_smd": {
+          "AEJEA": 0.005,
+          "CNSHA": 1.096,
+          "DEHAM": 0.346,
+          "INMAA": 0.16,
+          "INNSA": -1.157,
+          "LKCMB": 0.097,
+          "MYPKG": -0.616,
+          "NLRTM": -0.014,
+          "SGSIN": -0.401,
+          "USLAX": 0.127
+        },
+        "mean_abs_per_port_smd": 0.402
+      },
+      "labour_strike": {
+        "train_mean": 0.032,
+        "test_mean": 0.085,
+        "ks_statistic": 0.053,
+        "ks_p": 0.00196,
+        "per_port_smd": {
+          "AEJEA": null,
+          "CNSHA": null,
+          "DEHAM": -0.259,
+          "INMAA": null,
+          "INNSA": null,
+          "LKCMB": null,
+          "MYPKG": null,
+          "NLRTM": 0.012,
+          "SGSIN": -0.295,
+          "USLAX": -0.236
+        },
+        "mean_abs_per_port_smd": 0.2
+      },
+      "wind_gust": {
+        "train_mean": 26.32,
+        "test_mean": 23.024,
+        "ks_statistic": 0.093,
+        "ks_p": 9.78e-10,
+        "per_port_smd": {
+          "AEJEA": -0.398,
+          "CNSHA": -0.387,
+          "DEHAM": -0.527,
+          "INMAA": -0.721,
+          "INNSA": 0.08,
+          "LKCMB": 0.043,
+          "MYPKG": -0.337,
+          "NLRTM": -0.217,
+          "SGSIN": -0.217,
+          "USLAX": 0.122
+        },
+        "mean_abs_per_port_smd": 0.305
+      },
+      "disruption_active": {
+        "train_mean": 0.169,
+        "test_mean": 0.113,
+        "ks_statistic": 0.056,
+        "ks_p": 0.000875,
+        "per_port_smd": {
+          "AEJEA": -0.477,
+          "CNSHA": -0.614,
+          "DEHAM": -0.336,
+          "INMAA": -0.2,
+          "INNSA": 0.219,
+          "LKCMB": -0.132,
+          "MYPKG": 1.051,
+          "NLRTM": -0.108,
+          "SGSIN": -0.422,
+          "USLAX": -0.413
+        },
+        "mean_abs_per_port_smd": 0.397
+      },
+      "disruption_hours_elapsed": {
+        "train_mean": 4.346,
+        "test_mean": 2.27,
+        "ks_statistic": 0.055,
+        "ks_p": 0.00115,
+        "per_port_smd": {
+          "AEJEA": -0.339,
+          "CNSHA": -0.45,
+          "DEHAM": -0.261,
+          "INMAA": -0.164,
+          "INNSA": -0.087,
+          "LKCMB": -0.25,
+          "MYPKG": 2.852,
+          "NLRTM": -0.273,
+          "SGSIN": -0.314,
+          "USLAX": -0.403
+        },
+        "mean_abs_per_port_smd": 0.539
+      },
+      "vessels_at_anchor": {
+        "train_mean": 2.004,
+        "test_mean": 0.935,
+        "ks_statistic": 0.103,
+        "ks_p": 6.53e-12,
+        "per_port_smd": {
+          "AEJEA": -0.23,
+          "CNSHA": -0.253,
+          "DEHAM": -0.218,
+          "INMAA": -0.189,
+          "INNSA": -0.016,
+          "LKCMB": -0.253,
+          "MYPKG": 1.282,
+          "NLRTM": -0.667,
+          "SGSIN": -0.524,
+          "USLAX": -0.681
+        },
+        "mean_abs_per_port_smd": 0.431
+      },
+      "target": {
+        "train_mean_h": 90.328,
+        "test_mean_h": 85.957,
+        "per_port_mean_shift_in_train_sd": {
+          "AEJEA": -0.221,
+          "CNSHA": -0.394,
+          "DEHAM": -0.191,
+          "INMAA": -0.198,
+          "INNSA": 0.079,
+          "LKCMB": -0.347,
+          "MYPKG": 1.064,
+          "NLRTM": -0.687,
+          "SGSIN": -0.564,
+          "USLAX": -0.713
+        },
+        "scaled_y_mean": -0.209,
+        "scaled_y_train_mean": 0.008
+      }
+    },
+    "strike_hours_pct_by_port_split": {
+      "AEJEA": {
+        "train": 0.0,
+        "val": 0.0,
+        "test": 0.0
+      },
+      "CNSHA": {
+        "train": 0.0,
+        "val": 0.0,
+        "test": 0.0
+      },
+      "DEHAM": {
+        "train": 6.3,
+        "val": 14.0,
+        "test": 0.0
+      },
+      "INMAA": {
+        "train": 0.0,
+        "val": 0.0,
+        "test": 0.0
+      },
+      "INNSA": {
+        "train": 0.0,
+        "val": 0.0,
+        "test": 34.0
+      },
+      "LKCMB": {
+        "train": 0.0,
+        "val": 0.0,
+        "test": 0.0
+      },
+      "MYPKG": {
+        "train": 0.0,
+        "val": 0.0,
+        "test": 38.0
+      },
+      "NLRTM": {
+        "train": 12.3,
+        "val": 0.0,
+        "test": 12.7
+      },
+      "SGSIN": {
+        "train": 8.0,
+        "val": 0.0,
+        "test": 0.0
+      },
+      "USLAX": {
+        "train": 5.3,
+        "val": 0.0,
+        "test": 0.0
+      }
+    },
+    "disruption_hours_pct_by_port_split": {
+      "AEJEA": {
+        "train": 18.6,
+        "val": 0.0,
+        "test": 0.0
+      },
+      "CNSHA": {
+        "train": 27.4,
+        "val": 0.0,
+        "test": 0.0
+      },
+      "DEHAM": {
+        "train": 10.1,
+        "val": 14.0,
+        "test": 0.0
+      },
+      "INMAA": {
+        "train": 3.9,
+        "val": 0.0,
+        "test": 0.0
+      },
+      "INNSA": {
+        "train": 28.1,
+        "val": 20.0,
+        "test": 38.0
+      },
+      "LKCMB": {
+        "train": 11.6,
+        "val": 23.3,
+        "test": 7.3
+      },
+      "MYPKG": {
+        "train": 13.1,
+        "val": 10.7,
+        "test": 48.7
+      },
+      "NLRTM": {
+        "train": 16.7,
+        "val": 15.3,
+        "test": 12.7
+      },
+      "SGSIN": {
+        "train": 15.1,
+        "val": 0.0,
+        "test": 0.0
+      },
+      "USLAX": {
+        "train": 24.4,
+        "val": 0.0,
+        "test": 6.7
+      }
+    },
+    "test_note": "Test statistics are descriptive warnings only; no feature or modelling decision in this EDA uses them."
+  },
+  "baseline_rmse_h_from_dataset_stage": {
+    "test": {
+      "ewma_alpha_0.2": 4.234,
+      "persistence": 5.372,
+      "trailing_mean_12h": 4.304
+    },
+    "train": {
+      "ewma_alpha_0.2": 4.324,
+      "persistence": 5.569,
+      "trailing_mean_12h": 4.383
+    },
+    "val": {
+      "ewma_alpha_0.2": 4.296,
+      "persistence": 5.659,
+      "trailing_mean_12h": 4.326
+    }
+  },
+  "recommendations": [
+    {
+      "priority": 1,
+      "recommendation": "Judge every model against EWMA (alpha 0.2) on the same test windows, in hours, overall and per port; the attainable gain is small (hourly noise SD 3.5\u20134.4 h vs EWMA RMSE 4.30 h on validation).",
+      "evidence": "strong"
+    },
+    {
+      "priority": 2,
+      "recommendation": "Keep the 12-hour window and a small model (1 recurrent layer, 16\u201364 units, dropout, early stopping on validation RMSE). Do not add depth, attention or graph structure without validation evidence.",
+      "evidence": "strong"
+    },
+    {
+      "priority": 3,
+      "recommendation": "Report errors separately for disruption / strike hours vs normal hours and for high-signal ports (NLRTM, USLAX, CNSHA, INNSA, SGSIN) vs noise-dominated ports (MYPKG, DEHAM, AEJEA, INMAA).",
+      "evidence": "strong"
+    },
+    {
+      "priority": 4,
+      "recommendation": "Treat labour_strike as fragile: only 4 strike episodes at 4 ports in train + val, while the test period contains strikes at INNSA and MYPKG, which never strike in development data. Run an ablation without it.",
+      "evidence": "strong"
+    },
+    {
+      "priority": 5,
+      "recommendation": "Use the default 8-channel loader input (with dwell_reconstructed); reconstruction showed no measurable effect, so a 7-channel ablation is a check, not a requirement. Use a port embedding or per-port reporting; keep per-port dwell scaling and compute the loss in scaled units but evaluate in hours.",
+      "evidence": "moderate"
+    }
+  ]
+}

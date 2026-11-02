@@ -1,0 +1,11 @@
+Random Forest - validation
+
+              precision    recall  f1-score   support
+
+     On-Time      0.709     0.663     0.685       374
+     At-Risk      0.459     0.667     0.544       345
+    Critical      0.765     0.363     0.492       251
+
+    accuracy                          0.587       970
+   macro avg      0.644     0.564     0.574       970
+weighted avg      0.634     0.587     0.585       970

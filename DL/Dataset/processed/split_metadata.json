@@ -1,0 +1,92 @@
+{
+  "rule": "split by the global index of the target hour; same cut-offs for all ports; a window is kept only if all its input hours are in the target's split",
+  "bounds_hour_index": {
+    "train": [
+      0,
+      700
+    ],
+    "val": [
+      700,
+      850
+    ],
+    "test": [
+      850,
+      1000
+    ]
+  },
+  "bounds_utc": {
+    "train": [
+      "2025-01-01 00:00:00+00:00",
+      "2025-01-30 03:00:00+00:00"
+    ],
+    "val": [
+      "2025-01-30 04:00:00+00:00",
+      "2025-02-05 09:00:00+00:00"
+    ],
+    "test": [
+      "2025-02-05 10:00:00+00:00",
+      "2025-02-11 15:00:00+00:00"
+    ]
+  },
+  "kept_windows": {
+    "train": 6579,
+    "val": 1306,
+    "test": 1318
+  },
+  "kept_windows_per_port": {
+    "train": {
+      "AEJEA": 653,
+      "CNSHA": 653,
+      "DEHAM": 659,
+      "INMAA": 658,
+      "INNSA": 663,
+      "LKCMB": 656,
+      "MYPKG": 661,
+      "NLRTM": 657,
+      "SGSIN": 657,
+      "USLAX": 662
+    },
+    "val": {
+      "AEJEA": 132,
+      "CNSHA": 133,
+      "DEHAM": 135,
+      "INMAA": 134,
+      "INNSA": 132,
+      "LKCMB": 131,
+      "MYPKG": 126,
+      "NLRTM": 131,
+      "SGSIN": 127,
+      "USLAX": 125
+    },
+    "test": {
+      "AEJEA": 133,
+      "CNSHA": 129,
+      "DEHAM": 131,
+      "INMAA": 132,
+      "INNSA": 128,
+      "LKCMB": 132,
+      "MYPKG": 135,
+      "NLRTM": 129,
+      "SGSIN": 134,
+      "USLAX": 135
+    }
+  },
+  "excluded": {
+    "embargo": 240,
+    "reconstructed_target": 437
+  },
+  "first_and_last_kept_hour": {
+    "train": [
+      0,
+      699
+    ],
+    "val": [
+      700,
+      849
+    ],
+    "test": [
+      850,
+      999
+    ]
+  }
+}

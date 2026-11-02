@@ -1,0 +1,11 @@
+Majority-class reference - validation
+
+              precision    recall  f1-score   support
+
+     On-Time      0.386     1.000     0.557       374
+     At-Risk      0.000     0.000     0.000       345
+    Critical      0.000     0.000     0.000       251
+
+    accuracy                          0.386       970
+   macro avg      0.129     0.333     0.186       970
+weighted avg      0.149     0.386     0.215       970

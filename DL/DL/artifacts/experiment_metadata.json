@@ -1,0 +1,192 @@
+{
+  "environment": {
+    "python": "3.9.6",
+    "torch": "2.5.1",
+    "numpy": "2.0.2",
+    "pandas": "2.3.3",
+    "platform": "macOS-26.6.2-arm64-arm-64bit",
+    "device": "cpu",
+    "git_commit_at_run": "2896edcaf665f1a4a66b2490804604f32466d0ee"
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4
+  ],
+  "selection_tolerance_h": 0.05,
+  "experiments": {
+    "A_lstm": {
+      "name": "A_lstm",
+      "cell": "lstm",
+      "hidden_size": 32,
+      "num_layers": 1,
+      "dropout": 0.1,
+      "port_embedding_dim": 0,
+      "residual_ewma_alpha": null,
+      "loss_weighting": "none",
+      "mask_channels": [
+        "dwell"
+      ],
+      "drop_features": [],
+      "lr": 0.001,
+      "weight_decay": 0.0,
+      "batch_size": 64,
+      "max_epochs": 150,
+      "patience": 15,
+      "grad_clip": 1.0,
+      "lr_factor": 0.5,
+      "lr_patience": 5,
+      "min_lr": 1e-05,
+      "num_threads": 4,
+      "seed": 0,
+      "notes": "LSTM, 8 channels, no port embedding"
+    },
+    "A_w_lstm_hour_weighted": {
+      "name": "A_w_lstm_hour_weighted",
+      "cell": "lstm",
+      "hidden_size": 32,
+      "num_layers": 1,
+      "dropout": 0.1,
+      "port_embedding_dim": 0,
+      "residual_ewma_alpha": null,
+      "loss_weighting": "hours",
+      "mask_channels": [
+        "dwell"
+      ],
+      "drop_features": [],
+      "lr": 0.001,
+      "weight_decay": 0.0,
+      "batch_size": 64,
+      "max_epochs": 150,
+      "patience": 15,
+      "grad_clip": 1.0,
+      "lr_factor": 0.5,
+      "lr_patience": 5,
+      "min_lr": 1e-05,
+      "num_threads": 4,
+      "seed": 0,
+      "notes": "A with hour-weighted loss"
+    },
+    "B_lstm_port_embedding": {
+      "name": "B_lstm_port_embedding",
+      "cell": "lstm",
+      "hidden_size": 32,
+      "num_layers": 1,
+      "dropout": 0.1,
+      "port_embedding_dim": 4,
+      "residual_ewma_alpha": null,
+      "loss_weighting": "none",
+      "mask_channels": [
+        "dwell"
+      ],
+      "drop_features": [],
+      "lr": 0.001,
+      "weight_decay": 0.0,
+      "batch_size": 64,
+      "max_epochs": 150,
+      "patience": 15,
+      "grad_clip": 1.0,
+      "lr_factor": 0.5,
+      "lr_patience": 5,
+      "min_lr": 1e-05,
+      "num_threads": 4,
+      "seed": 0,
+      "notes": "A + 4-d port embedding"
+    },
+    "B_w_lstm_port_embedding_hour_weighted": {
+      "name": "B_w_lstm_port_embedding_hour_weighted",
+      "cell": "lstm",
+      "hidden_size": 32,
+      "num_layers": 1,
+      "dropout": 0.1,
+      "port_embedding_dim": 4,
+      "residual_ewma_alpha": null,
+      "loss_weighting": "hours",
+      "mask_channels": [
+        "dwell"
+      ],
+      "drop_features": [],
+      "lr": 0.001,
+      "weight_decay": 0.0,
+      "batch_size": 64,
+      "max_epochs": 150,
+      "patience": 15,
+      "grad_clip": 1.0,
+      "lr_factor": 0.5,
+      "lr_patience": 5,
+      "min_lr": 1e-05,
+      "num_threads": 4,
+      "seed": 0,
+      "notes": "B with hour-weighted loss"
+    },
+    "C_w_lstm_ewma_residual_hour_weighted": {
+      "name": "C_w_lstm_ewma_residual_hour_weighted",
+      "cell": "lstm",
+      "hidden_size": 32,
+      "num_layers": 1,
+      "dropout": 0.1,
+      "port_embedding_dim": 0,
+      "residual_ewma_alpha": 0.2,
+      "loss_weighting": "hours",
+      "mask_channels": [
+        "dwell"
+      ],
+      "drop_features": [],
+      "lr": 0.001,
+      "weight_decay": 0.0,
+      "batch_size": 64,
+      "max_epochs": 150,
+      "patience": 15,
+      "grad_clip": 1.0,
+      "lr_factor": 0.5,
+      "lr_patience": 5,
+      "min_lr": 1e-05,
+      "num_threads": 4,
+      "seed": 0,
+      "notes": "A_w predicting a correction to the window EWMA (alpha 0.2, the dataset baseline's definition)"
+    },
+    "GRU_challenger": {
+      "name": "GRU_challenger",
+      "cell": "gru",
+      "hidden_size": 37,
+      "num_layers": 1,
+      "dropout": 0.1,
+      "port_embedding_dim": 0,
+      "residual_ewma_alpha": null,
+      "loss_weighting": "none",
+      "mask_channels": [
+        "dwell"
+      ],
+      "drop_features": [],
+      "lr": 0.001,
+      "weight_decay": 0.0,
+      "batch_size": 64,
+      "max_epochs": 150,
+      "patience": 15,
+      "grad_clip": 1.0,
+      "lr_factor": 0.5,
+      "lr_patience": 5,
+      "min_lr": 1e-05,
+      "num_threads": 4,
+      "seed": 0,
+      "notes": "GRU with a comparable parameter budget"
+    }
+  },
+  "dataset_reference": {
+    "feature_schema.json": {
+      "path": "dl/dataset/feature_schema.json",
+      "sha256": "d5a21baa1236e711f5a0160539dac05e4c060b60c28d311235df2d5cc97acc7e"
+    },
+    "scalers.json": {
+      "path": "dl/dataset/scalers.json",
+      "sha256": "c4305c1c9effc9d9395ce86dd7dc628cc403ae8221bc35e2826aaf1992967631"
+    },
+    "split_metadata.json": {
+      "path": "dl/dataset/split_metadata.json",
+      "sha256": "6526bccaf636e2fff19e025a8ff9af03af6b9166352641a2d857ab632bae59a1"
+    }
+  },
+  "test_split_used_for": "final evaluation only (dl.evaluation.evaluate_test), after selection.json was written"
+}

@@ -1,0 +1,9 @@
+# CargoMind DL workflow. Install into the project venv:  .venv/bin/python -m pip install -r DL/DL/requirements.txt
+# Versions are those used to build the dataset, run the EDA and train/evaluate the models (Python 3.9.6, macOS arm64, CPU).
+torch==2.5.1
+numpy==2.0.2
+pandas==2.3.3
+scipy==1.13.1
+matplotlib==3.9.4
+seaborn==0.13.2
+statsmodels==0.14.6

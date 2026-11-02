@@ -1,0 +1,51 @@
+{
+  "model": "One-Class SVM",
+  "features": [
+    "o_port_utilization_pct",
+    "o_util_max24",
+    "o_util_change24",
+    "o_anchor_mean24",
+    "o_container_dwell_hours",
+    "o_vessel_time_in_port_hours",
+    "o_arrivals_sum24",
+    "wx_o_gust_max24",
+    "wx_o_precip_sum24",
+    "wx_o_pressure_change24",
+    "o_labour_disrupted_share24",
+    "wx_o_thunderstorm_hours24",
+    "dis_o_active_any",
+    "dis_o_active_hours_elapsed",
+    "dis_o_started_72h_n"
+  ],
+  "port_relative_features": [
+    "o_port_utilization_pct",
+    "o_util_max24",
+    "o_util_change24",
+    "o_anchor_mean24",
+    "o_container_dwell_hours",
+    "o_vessel_time_in_port_hours",
+    "o_arrivals_sum24",
+    "wx_o_gust_max24",
+    "wx_o_precip_sum24",
+    "wx_o_pressure_change24"
+  ],
+  "fit_on": "On-Time shipments of the training period",
+  "n_fit_rows": 3000,
+  "n_train_normal": 3352,
+  "best_params": {
+    "gamma": 0.01,
+    "kernel": "rbf",
+    "nu": 0.2
+  },
+  "selection": "max PR-AUC (positive = At-Risk or Critical) on the validation block, model fitted on the fold's On-Time rows",
+  "best_validation": {
+    "val_pr_auc_delayed": 0.7547019655396363,
+    "val_roc_auc_delayed": 0.6527698022467071,
+    "val_pr_auc_critical": 0.4901360227716256
+  },
+  "threshold": 75.86657194388096,
+  "threshold_rule": "95% quantile of anomaly scores of training On-Time shipments",
+  "grid_size": 35,
+  "seed": 42,
+  "seconds": 2.2
+}

@@ -1,0 +1,180 @@
+{
+  "lag_hours": 1,
+  "n_shipments_integrated": 9850,
+  "n_dropped_unobserved_outcome": 295,
+  "n_observed": 9555,
+  "n_reconstructed_eta_replaced": 194,
+  "prediction_cutoff": "departure_ts - 1 h",
+  "test_start": "2025-02-01T12:00:00+00:00",
+  "train_end_exclusive": "2025-01-29T12:00:00+00:00",
+  "purge_gap_hours": 72,
+  "train": {
+    "n": 6452,
+    "departure_from": "2025-01-02T00:00:00+00:00",
+    "departure_to": "2025-01-29T11:00:00+00:00",
+    "class_counts": {
+      "On-Time": 3352,
+      "At-Risk": 1982,
+      "Critical": 1118
+    },
+    "class_share_pct": {
+      "On-Time": 52.0,
+      "At-Risk": 30.7,
+      "Critical": 17.3
+    },
+    "n_air": 323
+  },
+  "purge (unused)": {
+    "n": 709,
+    "departure_from": "2025-01-29T12:00:00+00:00",
+    "departure_to": "2025-02-01T11:00:00+00:00",
+    "class_counts": {
+      "On-Time": 438,
+      "At-Risk": 178,
+      "Critical": 93
+    },
+    "class_share_pct": {
+      "On-Time": 61.8,
+      "At-Risk": 25.1,
+      "Critical": 13.1
+    },
+    "n_air": 34
+  },
+  "test": {
+    "n": 2394,
+    "departure_from": "2025-02-01T12:00:00+00:00",
+    "departure_to": "2025-02-11T15:00:00+00:00",
+    "class_counts": {
+      "On-Time": 1481,
+      "At-Risk": 698,
+      "Critical": 215
+    },
+    "class_share_pct": {
+      "On-Time": 61.9,
+      "At-Risk": 29.2,
+      "Critical": 9.0
+    },
+    "n_air": 128
+  },
+  "train_labels_not_yet_arrived_at_test_start": 2038,
+  "cv_folds": [
+    {
+      "fold": 0,
+      "n_train": 2840,
+      "n_val": 965,
+      "train_to": "2025-01-13T23:00:00+00:00",
+      "val_from": "2025-01-17T00:00:00+00:00",
+      "val_to": "2025-01-21T01:00:00+00:00",
+      "val_class_share_pct": {
+        "On-Time": 43.7,
+        "At-Risk": 33.2,
+        "Critical": 23.1
+      }
+    },
+    {
+      "fold": 1,
+      "n_train": 3800,
+      "n_val": 970,
+      "train_to": "2025-01-18T01:00:00+00:00",
+      "val_from": "2025-01-21T02:00:00+00:00",
+      "val_to": "2025-01-25T10:00:00+00:00",
+      "val_class_share_pct": {
+        "On-Time": 43.3,
+        "At-Risk": 30.7,
+        "Critical": 26.0
+      }
+    },
+    {
+      "fold": 2,
+      "n_train": 4814,
+      "n_val": 970,
+      "train_to": "2025-01-22T10:00:00+00:00",
+      "val_from": "2025-01-25T11:00:00+00:00",
+      "val_to": "2025-01-29T11:00:00+00:00",
+      "val_class_share_pct": {
+        "On-Time": 38.6,
+        "At-Risk": 35.6,
+        "Critical": 25.9
+      }
+    }
+  ],
+  "validation_set": "cv fold 2 validation block",
+  "n_features": 51,
+  "features": {
+    "route": [
+      "origin_port_id",
+      "destination_port_id",
+      "hub_port_id",
+      "route_type",
+      "route_distance_km",
+      "planned_transit_hours"
+    ],
+    "carrier": [
+      "carrier"
+    ],
+    "shipment_attributes": [
+      "shipping_mode",
+      "cargo_type",
+      "priority_rank",
+      "container_teu"
+    ],
+    "calendar": [
+      "dep_hour_local",
+      "dep_dow_utc",
+      "hol_o_days_to_nearest_cap14",
+      "hol_o_within_2d",
+      "hol_h_days_in_voyage_sched"
+    ],
+    "origin_congestion": [
+      "o_port_utilization_pct",
+      "o_util_max24",
+      "o_util_change24",
+      "o_vessel_time_in_port_hours",
+      "o_arrivals_sum24",
+      "o_labour_disrupted_share24",
+      "o_customs_mean24",
+      "o_equip_min24"
+    ],
+    "container_dwell": [
+      "o_container_dwell_hours"
+    ],
+    "anchor_queue": [
+      "o_anchor_mean24"
+    ],
+    "weather": [
+      "wx_o_gust_max24",
+      "wx_o_precip_sum24",
+      "wx_o_thunderstorm_hours24",
+      "wx_o_pressure_change24"
+    ],
+    "disruptions": [
+      "dis_o_active_any",
+      "dis_o_active_weather",
+      "dis_o_active_strike",
+      "dis_o_active_congestion",
+      "dis_o_active_equipment_failure",
+      "dis_o_active_cyber",
+      "dis_o_active_hours_elapsed",
+      "dis_o_started_72h_n"
+    ],
+    "destination_state": [
+      "d_util_mean24",
+      "d_anchor_mean24",
+      "dis_d_active_any"
+    ],
+    "hub_state": [
+      "h_util_mean24",
+      "h_anchor_mean24",
+      "h_container_dwell_hours",
+      "wx_h_gust_max24",
+      "dis_h_active_any"
+    ],
+    "historical_delay_rates": [
+      "hist_carrier_pct_delayed",
+      "hist_carrier_mean_delay_h",
+      "hist_origin_port_id_pct_delayed",
+      "hist_destination_port_id_pct_delayed",
+      "hist_route_id_pct_delayed"
+    ]
+  }
+}

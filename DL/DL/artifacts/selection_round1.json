@@ -1,0 +1,32 @@
+{
+  "rule": "choose B only if its mean validation RMSE is lower than A's by more than 0.05 h; otherwise A",
+  "chosen_experiment": "A_lstm",
+  "reason": "B mean val RMSE 4.4377 vs A 4.4463 (B \u2212 A = -0.0086 h); |difference| or sign does not clear the 0.05 h tolerance -> simpler A",
+  "best_seed": 3,
+  "best_seed_val_rmse_h": 4.352086159688357,
+  "summary": [
+    {
+      "experiment": "A_lstm",
+      "seeds": 5,
+      "val_rmse_mean": 4.446279964474743,
+      "val_rmse_sd": 0.06614326674577475,
+      "val_rmse_min": 4.352086159688357,
+      "val_rmse_max": 4.5187727524016115,
+      "val_mae_mean": 3.574534004377876,
+      "best_epoch_mean": 2.4,
+      "n_parameters": 5409
+    },
+    {
+      "experiment": "B_lstm_port_embedding",
+      "seeds": 5,
+      "val_rmse_mean": 4.437693838295749,
+      "val_rmse_sd": 0.07199870128754293,
+      "val_rmse_min": 4.323290539314034,
+      "val_rmse_max": 4.515186443864145,
+      "val_mae_mean": 3.5421244680267043,
+      "best_epoch_mean": 5.2,
+      "n_parameters": 5453
+    }
+  ],
+  "decided_without_test_data": true
+}

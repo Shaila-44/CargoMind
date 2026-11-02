@@ -1,0 +1,69 @@
+{
+  "telemetry_weather_join": {
+    "telemetry_keys": 10000,
+    "weather_keys": 10000,
+    "keys_in_both": 10000,
+    "telemetry_only": 0,
+    "weather_only": 0,
+    "common_hour_grid_for_all_ports": true
+  },
+  "graph": {
+    "nodes": 10,
+    "directed_routes": 90,
+    "ordered_pairs_possible": 90,
+    "complete_directed_graph": true,
+    "direct_routes": 52,
+    "transshipment_routes": 38,
+    "hubs": [
+      "AEJEA",
+      "LKCMB",
+      "MYPKG",
+      "SGSIN"
+    ],
+    "direct_out_degree": {
+      "AEJEA": 4,
+      "CNSHA": 6,
+      "DEHAM": 7,
+      "INMAA": 5,
+      "INNSA": 5,
+      "LKCMB": 5,
+      "MYPKG": 6,
+      "NLRTM": 2,
+      "SGSIN": 7,
+      "USLAX": 5
+    },
+    "direct_symmetric_share": 0.5769230769230769,
+    "distance_km_range": [
+      388.4,
+      19970.5
+    ],
+    "dwell_level_corr_between_ports_median": -0.02133572001286701,
+    "dwell_level_corr_max_abs": 0.8167082505719928,
+    "dwell_change_corr_between_ports_max_abs": 0.09780416032241282,
+    "dwell_change_lagged_corr_max_abs_lags_1_6_24": 0.13491774415279895,
+    "dwell_deviation_from_24h_mean_corr_median": 0.015105429341386806
+  },
+  "split_cuts": {
+    "train_end": "2025-01-30T04:00:00.000000000",
+    "val_end": "2025-02-05T10:00:00.000000000",
+    "hours": 1000
+  },
+  "lineage": [
+    {
+      "table": "port_hourly_telemetry",
+      "raw_rows": 10000,
+      "raw_rows_unmapped_port": 0,
+      "raw_duplicate_keys_dropped": 120,
+      "processed_rows": 10000,
+      "processed_hours_absent_from_raw": 120
+    },
+    {
+      "table": "weather_hourly",
+      "raw_rows": 10000,
+      "raw_rows_unmapped_port": 0,
+      "raw_duplicate_keys_dropped": 100,
+      "processed_rows": 10000,
+      "processed_hours_absent_from_raw": 100
+    }
+  ]
+}

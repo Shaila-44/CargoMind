@@ -1,0 +1,79 @@
+{
+  "n_train": 6452,
+  "n_purge": 709,
+  "n_test": 2394,
+  "train_departure_range": [
+    "2025-01-02 00:00:00+00:00",
+    "2025-01-29 11:00:00+00:00"
+  ],
+  "purge_departure_range": [
+    "2025-01-29 12:00:00+00:00",
+    "2025-02-01 11:00:00+00:00"
+  ],
+  "test_departure_range": [
+    "2025-02-01 12:00:00+00:00",
+    "2025-02-11 15:00:00+00:00"
+  ],
+  "test_start": "2025-02-01 12:00:00+00:00",
+  "train_end_exclusive": "2025-01-29 12:00:00+00:00",
+  "train_strictly_before_purge_before_test": true,
+  "observed_gap_last_train_to_first_test_departure_h": 73.0,
+  "purge_gap_at_least_72h": true,
+  "shipment_id_overlap_train_test": 0,
+  "shipment_id_overlap_purge_any": 0,
+  "test_fraction_of_observed": 0.25054945054945055,
+  "rebuilt_split_matches_stored_splits_csv": true,
+  "train_arrivals_after_test_start": 2038,
+  "folds": [
+    {
+      "fold": 0,
+      "n_train": 2840,
+      "n_val": 965,
+      "train_to": "2025-01-13 23:00:00+00:00",
+      "val_from": "2025-01-17 00:00:00+00:00",
+      "val_to": "2025-01-21 01:00:00+00:00",
+      "gap_h": 73.0,
+      "indices_inside_training_period": true,
+      "val_critical_share": 0.23108808290155441,
+      "fold_train_labels_not_arrived_at_val_start": 1754,
+      "fold_train_labels_not_arrived_share": 0.6176056338028169
+    },
+    {
+      "fold": 1,
+      "n_train": 3800,
+      "n_val": 970,
+      "train_to": "2025-01-18 01:00:00+00:00",
+      "val_from": "2025-01-21 02:00:00+00:00",
+      "val_to": "2025-01-25 10:00:00+00:00",
+      "gap_h": 73.0,
+      "indices_inside_training_period": true,
+      "val_critical_share": 0.2597938144329897,
+      "fold_train_labels_not_arrived_at_val_start": 1944,
+      "fold_train_labels_not_arrived_share": 0.511578947368421
+    },
+    {
+      "fold": 2,
+      "n_train": 4814,
+      "n_val": 970,
+      "train_to": "2025-01-22 10:00:00+00:00",
+      "val_from": "2025-01-25 11:00:00+00:00",
+      "val_to": "2025-01-29 11:00:00+00:00",
+      "gap_h": 73.0,
+      "indices_inside_training_period": true,
+      "val_critical_share": 0.25876288659793817,
+      "fold_train_labels_not_arrived_at_val_start": 2023,
+      "fold_train_labels_not_arrived_share": 0.42023265475695887
+    }
+  ],
+  "cv_results_n_candidates": {
+    "logistic_regression": 20,
+    "random_forest": 30,
+    "xgboost": 40,
+    "lightgbm": 40
+  },
+  "test_labels_known_by_test_end_share": 0.20551378446115287,
+  "test_label_arrival_range": [
+    "2025-02-02 06:12:00+00:00",
+    "2025-03-13 16:30:00+00:00"
+  ]
+}

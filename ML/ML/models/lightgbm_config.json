@@ -1,0 +1,141 @@
+{
+  "model": "LightGBM",
+  "estimator": "LGBMClassifier",
+  "preprocessing": "boosting",
+  "features": [
+    "origin_port_id",
+    "destination_port_id",
+    "hub_port_id",
+    "route_type",
+    "route_distance_km",
+    "planned_transit_hours",
+    "carrier",
+    "shipping_mode",
+    "cargo_type",
+    "priority_rank",
+    "container_teu",
+    "dep_hour_local",
+    "dep_dow_utc",
+    "hol_o_days_to_nearest_cap14",
+    "hol_o_within_2d",
+    "hol_h_days_in_voyage_sched",
+    "o_port_utilization_pct",
+    "o_util_max24",
+    "o_util_change24",
+    "o_vessel_time_in_port_hours",
+    "o_arrivals_sum24",
+    "o_labour_disrupted_share24",
+    "o_customs_mean24",
+    "o_equip_min24",
+    "o_container_dwell_hours",
+    "o_anchor_mean24",
+    "wx_o_gust_max24",
+    "wx_o_precip_sum24",
+    "wx_o_thunderstorm_hours24",
+    "wx_o_pressure_change24",
+    "dis_o_active_any",
+    "dis_o_active_weather",
+    "dis_o_active_strike",
+    "dis_o_active_congestion",
+    "dis_o_active_equipment_failure",
+    "dis_o_active_cyber",
+    "dis_o_active_hours_elapsed",
+    "dis_o_started_72h_n",
+    "d_util_mean24",
+    "d_anchor_mean24",
+    "dis_d_active_any",
+    "h_util_mean24",
+    "h_anchor_mean24",
+    "h_container_dwell_hours",
+    "wx_h_gust_max24",
+    "dis_h_active_any",
+    "hist_carrier_pct_delayed",
+    "hist_carrier_mean_delay_h",
+    "hist_origin_port_id_pct_delayed",
+    "hist_destination_port_id_pct_delayed",
+    "hist_route_id_pct_delayed"
+  ],
+  "best_params": {
+    "model__colsample_bytree": 0.5166280203969238,
+    "model__learning_rate": 0.03429128575337157,
+    "model__max_depth": 6,
+    "model__min_child_samples": 80,
+    "model__n_estimators": 418,
+    "model__num_leaves": 15,
+    "model__reg_alpha": 0.08124179335742085,
+    "model__reg_lambda": 0.02449319710438321,
+    "model__subsample": 0.9180744779074814
+  },
+  "search_space": {
+    "model__n_estimators": "randint(150, 800)",
+    "model__learning_rate": "loguniform(0.01, 0.2)",
+    "model__num_leaves": "[7, 15, 31, 63]",
+    "model__max_depth": "[-1, 4, 6, 8]",
+    "model__min_child_samples": "[10, 20, 40, 80, 160]",
+    "model__subsample": "uniform(0.6, 0.4)",
+    "model__colsample_bytree": "uniform(0.4, 0.6)",
+    "model__reg_lambda": "loguniform(0.001, 20)",
+    "model__reg_alpha": "loguniform(0.001, 5)"
+  },
+  "n_iter": 40,
+  "tuning_metric": "f1_macro",
+  "cv_scores_best": {
+    "f1_macro": {
+      "cv_mean": 0.6245543392954542,
+      "cv_std": 0.01567376284163164,
+      "per_fold": [
+        0.6272273050433974,
+        0.6041615791615792,
+        0.642274133681386
+      ]
+    },
+    "f1_weighted": {
+      "cv_mean": 0.6310721713600256,
+      "cv_std": 0.010364844744783375,
+      "per_fold": [
+        0.629108178885181,
+        0.6194743400928968,
+        0.644633995101999
+      ]
+    },
+    "accuracy": {
+      "cv_mean": 0.6247778786745722,
+      "cv_std": 0.01212787967892047,
+      "per_fold": [
+        0.6207253886010363,
+        0.6123711340206186,
+        0.6412371134020619
+      ]
+    },
+    "recall_critical": {
+      "cv_mean": 0.5769814896581372,
+      "cv_std": 0.06490424973112449,
+      "per_fold": [
+        0.6412556053811659,
+        0.4880952380952381,
+        0.601593625498008
+      ]
+    },
+    "recall_at_risk": {
+      "cv_mean": 0.6412459877443828,
+      "cv_std": 0.010761865175215544,
+      "per_fold": [
+        0.65,
+        0.6476510067114094,
+        0.6260869565217392
+      ]
+    },
+    "neg_log_loss": {
+      "cv_mean": -0.799263799072906,
+      "cv_std": 0.027577543279738298,
+      "per_fold": [
+        -0.817407385724099,
+        -0.8200899828961359,
+        -0.760294028598483
+      ]
+    }
+  },
+  "n_train": 6452,
+  "seed": 42,
+  "tuning_seconds": 41.0
+}

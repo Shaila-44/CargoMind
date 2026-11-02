@@ -1,0 +1,33 @@
+# Ignore large master/combined datasets and other CSVs
+master_dataset.csv
+combined_dataset.csv
+datasets/combined_dataset.csv
+*.csv
+
+# Explicitly allow the shared source dataset (ML/Dataset: Raw + Processed)
+!ML/Dataset/**/*.csv
+!ML/Dataset/*.csv
+
+# macOS & IDE
+.DS_Store
+**/.DS_Store
+.claude/
+
+# v2 integrated dataset: deliverable CSVs are small (~27 MB total) and are tracked; downloaded raw sources are not
+!integrated_synthetic_v2/*.csv
+!integrated_synthetic_v2/answer_key/*.csv
+integrated_synthetic_v2/raw_sources/
+
+# Python virtual environments
+.venv/
+venv/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+.venv/
+
+# Editable-install metadata (pip install -e .)
+*.egg-info/
+build/

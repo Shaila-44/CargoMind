@@ -1,0 +1,134 @@
+[
+  {
+    "model": "LSTM (B_w_lstm_port_embedding_hour_weighted, best-val seed 2)",
+    "blocks": "day",
+    "n_blocks": 7,
+    "point": -0.12606994529629123,
+    "ci95": [
+      -0.17802693896983954,
+      -0.04117615068342489
+    ],
+    "share_model_better": 0.998
+  },
+  {
+    "model": "LSTM (B_w_lstm_port_embedding_hour_weighted, best-val seed 2)",
+    "blocks": "port_day",
+    "n_blocks": 70,
+    "point": -0.12606994529629123,
+    "ci95": [
+      -0.2713022889433579,
+      0.0681230660228691
+    ],
+    "share_model_better": 0.915
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_0",
+    "blocks": "day",
+    "n_blocks": 7,
+    "point": -0.07336954557041953,
+    "ci95": [
+      -0.12326521886603439,
+      -0.01986025501708084
+    ],
+    "share_model_better": 0.994
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_0",
+    "blocks": "port_day",
+    "n_blocks": 70,
+    "point": -0.07336954557041953,
+    "ci95": [
+      -0.22566723077674075,
+      0.11064112285790564
+    ],
+    "share_model_better": 0.8215
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_1",
+    "blocks": "day",
+    "n_blocks": 7,
+    "point": -0.11634189073634538,
+    "ci95": [
+      -0.17234672671771392,
+      -0.02922154864797063
+    ],
+    "share_model_better": 0.9965
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_1",
+    "blocks": "port_day",
+    "n_blocks": 70,
+    "point": -0.11634189073634538,
+    "ci95": [
+      -0.26631314227725317,
+      0.08325442308421485
+    ],
+    "share_model_better": 0.897
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_2",
+    "blocks": "day",
+    "n_blocks": 7,
+    "point": -0.12606994529629123,
+    "ci95": [
+      -0.17802693896983954,
+      -0.04117615068342489
+    ],
+    "share_model_better": 0.998
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_2",
+    "blocks": "port_day",
+    "n_blocks": 70,
+    "point": -0.12606994529629123,
+    "ci95": [
+      -0.2713022889433579,
+      0.0681230660228691
+    ],
+    "share_model_better": 0.915
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_3",
+    "blocks": "day",
+    "n_blocks": 7,
+    "point": -0.14065057664570713,
+    "ci95": [
+      -0.18967408863973134,
+      -0.07080823547432134
+    ],
+    "share_model_better": 1.0
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_3",
+    "blocks": "port_day",
+    "n_blocks": 70,
+    "point": -0.14065057664570713,
+    "ci95": [
+      -0.2692374842497668,
+      0.024926420216532054
+    ],
+    "share_model_better": 0.9595
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_4",
+    "blocks": "day",
+    "n_blocks": 7,
+    "point": 0.0023308012722100813,
+    "ci95": [
+      -0.14651114413471247,
+      0.23677902478812618
+    ],
+    "share_model_better": 0.5245
+  },
+  {
+    "model": "B_w_lstm_port_embedding_hour_weighted seed_4",
+    "blocks": "port_day",
+    "n_blocks": 70,
+    "point": 0.0023308012722100813,
+    "ci95": [
+      -0.1711188937225265,
+      0.25731084343595956
+    ],
+    "share_model_better": 0.555
+  }
+]

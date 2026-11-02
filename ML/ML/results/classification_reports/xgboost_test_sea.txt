@@ -1,0 +1,11 @@
+XGBoost - test_sea
+
+              precision    recall  f1-score   support
+
+     On-Time      0.843     0.745     0.791      1353
+     At-Risk      0.515     0.638     0.570       698
+    Critical      0.563     0.540     0.551       215
+
+    accuracy                          0.692      2266
+   macro avg      0.640     0.641     0.637      2266
+weighted avg      0.715     0.692     0.700      2266

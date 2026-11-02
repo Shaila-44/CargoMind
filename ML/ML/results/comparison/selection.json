@@ -1,0 +1,8 @@
+{
+  "best_overall_supervised": "Logistic Regression",
+  "best_critical_detector": "Logistic Regression",
+  "most_interpretable": "Logistic Regression",
+  "best_anomaly_detector": "Isolation Forest",
+  "test_best_macro_f1": "Logistic Regression",
+  "test_best_critical_recall": "Logistic Regression"
+}

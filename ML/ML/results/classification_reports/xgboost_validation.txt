@@ -1,0 +1,11 @@
+XGBoost - validation
+
+              precision    recall  f1-score   support
+
+     On-Time      0.742     0.701     0.721       374
+     At-Risk      0.507     0.606     0.552       345
+    Critical      0.678     0.554     0.610       251
+
+    accuracy                          0.629       970
+   macro avg      0.643     0.620     0.628       970
+weighted avg      0.642     0.629     0.632       970

@@ -1,0 +1,6 @@
+{
+  "split": "validation only",
+  "n_windows": 1306,
+  "ewma_val_rmse_h": 4.296424764898026,
+  "note": "test split not loaded; existing test results are diagnostic only and were not used"
+}

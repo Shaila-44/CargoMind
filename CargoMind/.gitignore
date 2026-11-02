@@ -1,0 +1,40 @@
+# Large or generated datasets
+master_dataset.csv
+combined_dataset.csv
+datasets/combined_dataset.csv
+*.csv
+
+# Allow shared source datasets
+!ML/Dataset/**/*.csv
+!ML/Dataset/*.csv
+
+# Allow integrated synthetic v2 deliverables
+!integrated_synthetic_v2/*.csv
+!integrated_synthetic_v2/answer_key/*.csv
+
+# Ignore downloaded raw sources
+integrated_synthetic_v2/raw_sources/
+
+# Environment files and secrets
+.env
+.env.*
+!.env.example
+
+# Python environments and caches
+.venv/
+venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+
+# macOS and IDE
+.DS_Store
+**/.DS_Store
+.claude/
+
+# Temporary experiment outputs
+**/runs/
+**/checkpoints/
+**/logs/

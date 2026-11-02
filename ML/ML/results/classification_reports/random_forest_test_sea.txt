@@ -1,0 +1,11 @@
+Random Forest - test_sea
+
+              precision    recall  f1-score   support
+
+     On-Time      0.820     0.769     0.794      1353
+     At-Risk      0.513     0.605     0.555       698
+    Critical      0.569     0.460     0.509       215
+
+    accuracy                          0.689      2266
+   macro avg      0.634     0.611     0.619      2266
+weighted avg      0.702     0.689     0.693      2266

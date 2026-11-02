@@ -1,0 +1,133 @@
+{
+  "model": "Random Forest",
+  "estimator": "RandomForestClassifier",
+  "preprocessing": "forest",
+  "features": [
+    "origin_port_id",
+    "destination_port_id",
+    "hub_port_id",
+    "route_type",
+    "route_distance_km",
+    "planned_transit_hours",
+    "carrier",
+    "shipping_mode",
+    "cargo_type",
+    "priority_rank",
+    "container_teu",
+    "dep_hour_local",
+    "dep_dow_utc",
+    "hol_o_days_to_nearest_cap14",
+    "hol_o_within_2d",
+    "hol_h_days_in_voyage_sched",
+    "o_port_utilization_pct",
+    "o_util_max24",
+    "o_util_change24",
+    "o_vessel_time_in_port_hours",
+    "o_arrivals_sum24",
+    "o_labour_disrupted_share24",
+    "o_customs_mean24",
+    "o_equip_min24",
+    "o_container_dwell_hours",
+    "o_anchor_mean24",
+    "wx_o_gust_max24",
+    "wx_o_precip_sum24",
+    "wx_o_thunderstorm_hours24",
+    "wx_o_pressure_change24",
+    "dis_o_active_any",
+    "dis_o_active_weather",
+    "dis_o_active_strike",
+    "dis_o_active_congestion",
+    "dis_o_active_equipment_failure",
+    "dis_o_active_cyber",
+    "dis_o_active_hours_elapsed",
+    "dis_o_started_72h_n",
+    "d_util_mean24",
+    "d_anchor_mean24",
+    "dis_d_active_any",
+    "h_util_mean24",
+    "h_anchor_mean24",
+    "h_container_dwell_hours",
+    "wx_h_gust_max24",
+    "dis_h_active_any",
+    "hist_carrier_pct_delayed",
+    "hist_carrier_mean_delay_h",
+    "hist_origin_port_id_pct_delayed",
+    "hist_destination_port_id_pct_delayed",
+    "hist_route_id_pct_delayed"
+  ],
+  "best_params": {
+    "model__n_estimators": 500,
+    "model__min_samples_leaf": 5,
+    "model__max_features": "sqrt",
+    "model__max_depth": null,
+    "model__class_weight": "balanced_subsample"
+  },
+  "search_space": {
+    "model__n_estimators": "[300, 500, 800]",
+    "model__max_depth": "[None, 8, 12, 16, 24]",
+    "model__min_samples_leaf": "[1, 2, 5, 10, 20, 40]",
+    "model__max_features": "['sqrt', 0.2, 0.35, 0.5]",
+    "model__class_weight": "['balanced', 'balanced_subsample']"
+  },
+  "n_iter": 30,
+  "tuning_metric": "f1_macro",
+  "cv_scores_best": {
+    "f1_macro": {
+      "cv_mean": 0.5829351016292939,
+      "cv_std": 0.006795864480578554,
+      "per_fold": [
+        0.5857476902908978,
+        0.5894876181281979,
+        0.5735699964687858
+      ]
+    },
+    "f1_weighted": {
+      "cv_mean": 0.5948803629792442,
+      "cv_std": 0.010913023637667963,
+      "per_fold": [
+        0.589775957562584,
+        0.6100460470222901,
+        0.5848190843528582
+      ]
+    },
+    "accuracy": {
+      "cv_mean": 0.5924149350996207,
+      "cv_std": 0.009019633905851442,
+      "per_fold": [
+        0.5854922279792746,
+        0.6051546391752577,
+        0.5865979381443299
+      ]
+    },
+    "recall_critical": {
+      "cv_mean": 0.49309469597822914,
+      "cv_std": 0.1505564266244267,
+      "per_fold": [
+        0.7040358744394619,
+        0.4126984126984127,
+        0.36254980079681276
+      ]
+    },
+    "recall_at_risk": {
+      "cv_mean": 0.6037308911260254,
+      "cv_std": 0.07595628098731633,
+      "per_fold": [
+        0.496875,
+        0.6476510067114094,
+        0.6666666666666666
+      ]
+    },
+    "neg_log_loss": {
+      "cv_mean": -0.8491075268381499,
+      "cv_std": 0.012463641014897699,
+      "per_fold": [
+        -0.8634356021575904,
+        -0.8330528641018284,
+        -0.8508341142550307
+      ]
+    }
+  },
+  "n_train": 6452,
+  "seed": 42,
+  "tuning_seconds": 102.7
+}

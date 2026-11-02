@@ -1,0 +1,48 @@
+# CargoMind: two independent modelling workflows (ML/ and DL/) under one repository.
+#
+# This file only makes the existing Python packages importable from their stage folders, so no script
+# needs sys.path manipulation. Install once into the project virtualenv (from the repository root):
+#
+#     .venv/bin/python -m pip install -e . --no-deps
+#
+# Runtime dependencies are pinned in requirements.txt (ML/ML/requirements.txt, DL/DL/requirements.txt).
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cargomind"
+version = "1.0.0"
+description = "CargoMind: shipment delay-risk classification (ML) and next-hour port dwell forecasting (DL); synthetic-data research prototype"
+requires-python = ">=3.9"
+
+[tool.setuptools]
+packages = [
+    # ML workflow: ML/EDA -> ML/ML -> ML/Evaluation
+    "cargomind_eda",
+    "cargomind_ml",
+    "cargomind_eval",
+    # DL workflow: DL/Dataset -> DL/DL -> DL/Evaluation
+    "cargomind_dl_audit",
+    "cargomind_dl",
+    "dl",
+    "dl.models",
+    "dl.training",
+    "dl.inference",
+    "dl.evaluation",
+    "dl.evaluation_engineer",
+    "dl.tests",
+]
+
+[tool.setuptools.package-dir]
+cargomind_eda = "ML/EDA/src/cargomind_eda"
+cargomind_ml = "ML/ML/src/cargomind_ml"
+cargomind_eval = "ML/Evaluation/src/cargomind_eval"
+cargomind_dl_audit = "DL/Dataset/data_audit/src/cargomind_dl_audit"
+cargomind_dl = "DL/DL/src/cargomind_dl"
+# the `dl` package: modelling stage in DL/DL, evaluation stage in DL/Evaluation
+dl = "DL/DL"
+"dl.evaluation" = "DL/Evaluation/evaluation"
+"dl.evaluation_engineer" = "DL/Evaluation/evaluation_engineer"
+"dl.tests" = "DL/Evaluation/tests"

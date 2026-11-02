@@ -1,0 +1,8 @@
+[
+  {
+    "utc": "2026-11-01T17:29:31+00:00",
+    "experiment": "B_w_lstm_port_embedding_hour_weighted",
+    "selection_sha_basis": "best mean 4.2119 h (C_w_lstm_ewma_residual_hour_weighted); B_w_lstm_port_embedding_hour_weighted mean 4.2544 h",
+    "invocation": 1
+  }
+]

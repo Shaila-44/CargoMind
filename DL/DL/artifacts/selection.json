@@ -1,0 +1,65 @@
+{
+  "rule": "lowest mean validation RMSE over 5 seeds; among candidates within 0.05 h of it, the simplest in the order ['A_lstm', 'A_w_lstm_hour_weighted', 'B_lstm_port_embedding', 'B_w_lstm_port_embedding_hour_weighted', 'C_w_lstm_ewma_residual_hour_weighted']",
+  "chosen_experiment": "B_w_lstm_port_embedding_hour_weighted",
+  "reason": "best mean 4.2119 h (C_w_lstm_ewma_residual_hour_weighted); B_w_lstm_port_embedding_hour_weighted mean 4.2544 h",
+  "best_seed": 2,
+  "best_seed_val_rmse_h": 4.230783209809121,
+  "summary": [
+    {
+      "experiment": "A_lstm",
+      "seeds": 5,
+      "val_rmse_mean": 4.446279964474743,
+      "val_rmse_sd": 0.06614326674577475,
+      "val_rmse_min": 4.352086159688357,
+      "val_rmse_max": 4.5187727524016115,
+      "val_mae_mean": 3.574534004377876,
+      "best_epoch_mean": 2.4,
+      "n_parameters": 5409
+    },
+    {
+      "experiment": "A_w_lstm_hour_weighted",
+      "seeds": 5,
+      "val_rmse_mean": 4.280870365434883,
+      "val_rmse_sd": 0.018979868590041166,
+      "val_rmse_min": 4.267048671157425,
+      "val_rmse_max": 4.3137927571102646,
+      "val_mae_mean": 3.440419521776472,
+      "best_epoch_mean": 6.2,
+      "n_parameters": 5409
+    },
+    {
+      "experiment": "B_lstm_port_embedding",
+      "seeds": 5,
+      "val_rmse_mean": 4.437693838295749,
+      "val_rmse_sd": 0.07199870128754293,
+      "val_rmse_min": 4.323290539314034,
+      "val_rmse_max": 4.515186443864145,
+      "val_mae_mean": 3.5421244680267043,
+      "best_epoch_mean": 5.2,
+      "n_parameters": 5453
+    },
+    {
+      "experiment": "B_w_lstm_port_embedding_hour_weighted",
+      "seeds": 5,
+      "val_rmse_mean": 4.2543683097922385,
+      "val_rmse_sd": 0.015396563274805314,
+      "val_rmse_min": 4.230783209809121,
+      "val_rmse_max": 4.268174204596388,
+      "val_mae_mean": 3.424013858746295,
+      "best_epoch_mean": 11.8,
+      "n_parameters": 5453
+    },
+    {
+      "experiment": "C_w_lstm_ewma_residual_hour_weighted",
+      "seeds": 5,
+      "val_rmse_mean": 4.211873004350549,
+      "val_rmse_sd": 0.008383846629660806,
+      "val_rmse_min": 4.2025150277134875,
+      "val_rmse_max": 4.224994261099599,
+      "val_mae_mean": 3.389858038663035,
+      "best_epoch_mean": 7.8,
+      "n_parameters": 5409
+    }
+  ],
+  "decided_without_test_data": true
+}

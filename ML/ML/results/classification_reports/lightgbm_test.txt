@@ -1,0 +1,11 @@
+LightGBM - test
+
+              precision    recall  f1-score   support
+
+     On-Time      0.860     0.770     0.813      1481
+     At-Risk      0.512     0.652     0.573       698
+    Critical      0.575     0.479     0.523       215
+
+    accuracy                          0.710      2394
+   macro avg      0.649     0.634     0.636      2394
+weighted avg      0.733     0.710     0.717      2394

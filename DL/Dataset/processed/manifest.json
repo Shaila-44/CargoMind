@@ -1,0 +1,36 @@
+{
+  "seed": 42,
+  "versions": {
+    "python": "3.9.6",
+    "numpy": "2.0.2",
+    "pandas": "2.3.3"
+  },
+  "sources_sha256": {
+    "Dataset/Processed/disruption_events.csv": "25ab6a4413c834ba1b79ea897be77eb557bc2260bb7ce2cade001ca3a5fee39c",
+    "Dataset/Processed/port_hourly_telemetry.csv": "28edf753c6456498ac779f5a69138e853f55def247e0ae5021cce3686eb1250b",
+    "Dataset/Processed/port_metadata.csv": "4dc2b834911e6b1e768ed1601b0ef560f321d19a276af561d14f6a8a4326a168",
+    "Dataset/Processed/port_network.csv": "82509725953d95ce5712784473125fa2430990fe07c05e6fc5daf2199a8c9242",
+    "Dataset/Processed/port_traffic_history.csv": "e43e5cf12ac779b5345e5dc6e2a99f16f9501e8587a87145bd437f18dab62445",
+    "Dataset/Processed/public_holidays.csv": "7f19c19f35860ea5483ba1727435dec2c98493b746526a697c263ee1f71ad543",
+    "Dataset/Processed/shipment_records.csv": "68ed7e11777e4612100b59ed384b7cfa969ad60829709ec61c8016e2cbd983b4",
+    "Dataset/Processed/weather_hourly.csv": "cec844ff003c34b15b7aa86e6876f6b79d923e477635ad2fe3a4a22ae11903ed",
+    "Dataset/Raw/disruption_events.csv": "6a6f3e1c7c9df1e358640e7355f3c833763bf888e36d7c8ac523373c021c459b",
+    "dl/data_audit/lineage/cell_lineage_port_hourly_telemetry.csv": "48f472063b20ecfa972349f9059e258416e6eba48500b8b664c9f92d43b454ce",
+    "dl/data_audit/lineage/cell_lineage_weather_hourly.csv": "93844c5b7da9599d2dc88909f0102a33528f0c049f0365d1c9552ee45fddd31c"
+  },
+  "outputs_sha256": {
+    "baseline_metrics.csv": "503d6ff6b0400f69ce9d8e02d0b0a81546ef66bad8bef024dadb8a8e7d26405a",
+    "disruption_events_with_reconstructed_end.csv": "f6a89e4956ec219e23de5f8b662c2a47d66960677a872b0a55e0dbc89c0ad7e8",
+    "feature_schema.json": "d5a21baa1236e711f5a0160539dac05e4c060b60c28d311235df2d5cc97acc7e",
+    "hourly_panel.csv": "f31a619685e63c96295c78bf3ceb5ca5fd88a469c21cdcbbef12fbda7f76ef1f",
+    "integrity_checks.csv": "afdba144e0b01c6112e29c30d667994e535aa95185a0409b3b06b8dd44759cbd",
+    "provenance_summary.csv": "247907e00168f7bf9bac8a2e51760001df7d9e4ee2b68789e6e00b1314b2063d",
+    "scalers.json": "c4305c1c9effc9d9395ce86dd7dc628cc403ae8221bc35e2826aaf1992967631",
+    "sequence_counts.csv": "b39d5f0f0f88a5254b71b21f4da14623ec0f2a6b82726642cd8cfb164b495771",
+    "split_metadata.json": "6526bccaf636e2fff19e025a8ff9af03af6b9166352641a2d857ab632bae59a1",
+    "test.npz": "1924a5ef04db6c8f4c17e3fc7fa1ac5548b7b977959e0aece343339db037db65",
+    "train.npz": "d5d515dc79efead10ad9a3565f96f6b414ff612d726b290c26bb37b571de2b05",
+    "val.npz": "f3bd0818ac0103c8006b043f83a158887714ccf6ac0bfe2276dde8e95502a5eb",
+    "windows.csv": "21256b4d8d8e65ad3bcaf76bb4d9427ff1c659b27047048324fe95a5097e979c"
+  }
+}

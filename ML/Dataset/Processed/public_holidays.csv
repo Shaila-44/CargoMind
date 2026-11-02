@@ -1,0 +1,33 @@
+country_code,subdivision_code,holiday_date,holiday_name,holiday_type,holiday_period_days,port_closed,data_source,is_synthetic
+IN,,2025-01-26,Republic Day,public,1,,public_calendar_manual_entry,False
+IN,IN-TN,2025-01-14,Pongal,public,3,,public_calendar_manual_entry,False
+IN,IN-TN,2025-01-15,Thiruvalluvar Day,public,3,,public_calendar_manual_entry,False
+IN,IN-TN,2025-01-16,Uzhavar Thirunal,public,3,,public_calendar_manual_entry,False
+IN,IN-MH,2025-02-19,Chhatrapati Shivaji Maharaj Jayanti,public,1,,public_calendar_manual_entry,False
+IN,,2025-02-26,Maha Shivaratri,public,1,,public_calendar_manual_entry,False
+SG,,2025-01-01,New Year's Day,public,1,,public_calendar_manual_entry,False
+SG,,2025-01-29,Chinese New Year,public,2,,public_calendar_manual_entry,False
+SG,,2025-01-30,Chinese New Year (Day 2),public,2,,public_calendar_manual_entry,False
+CN,,2025-01-01,New Year's Day,public,1,,public_calendar_manual_entry,False
+CN,,2025-01-28,Spring Festival,public,8,False,public_calendar_manual_entry,False
+CN,,2025-01-29,Spring Festival,public,8,False,public_calendar_manual_entry,False
+CN,,2025-01-30,Spring Festival,public,8,False,public_calendar_manual_entry,False
+CN,,2025-01-31,Spring Festival,public,8,False,public_calendar_manual_entry,False
+CN,,2025-02-01,Spring Festival,public,8,False,public_calendar_manual_entry,False
+CN,,2025-02-02,Spring Festival,public,8,False,public_calendar_manual_entry,False
+CN,,2025-02-03,Spring Festival,public,8,False,public_calendar_manual_entry,False
+CN,,2025-02-04,Spring Festival,public,8,False,public_calendar_manual_entry,False
+AE,,2025-01-01,New Year's Day,public,1,,public_calendar_manual_entry,False
+NL,,2025-01-01,Nieuwjaarsdag,public,1,,public_calendar_manual_entry,False
+US,,2025-01-01,New Year's Day,public,1,,public_calendar_manual_entry,False
+US,,2025-01-20,Martin Luther King Jr. Day,public,1,,public_calendar_manual_entry,False
+US,,2025-02-17,Washington's Birthday,public,1,,public_calendar_manual_entry,False
+DE,,2025-01-01,Neujahr,public,1,,public_calendar_manual_entry,False
+LK,,2025-01-13,Duruthu Full Moon Poya Day,public,1,,public_calendar_manual_entry,False
+LK,,2025-01-14,Tamil Thai Pongal Day,public,1,,public_calendar_manual_entry,False
+LK,,2025-02-04,Independence Day,public,1,,public_calendar_manual_entry,False
+LK,,2025-02-12,Navam Full Moon Poya Day,public,1,,public_calendar_manual_entry,False
+MY,,2025-01-29,Chinese New Year,public,2,,public_calendar_manual_entry,False
+MY,,2025-01-30,Chinese New Year (Day 2),public,2,,public_calendar_manual_entry,False
+MY,MY-10,2025-02-11,Thaipusam,public,1,,public_calendar_manual_entry,False
+MY,MY-10,2025-01-01,New Year's Day,public,1,,public_calendar_manual_entry,False

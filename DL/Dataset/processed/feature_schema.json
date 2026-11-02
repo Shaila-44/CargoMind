@@ -1,0 +1,174 @@
+{
+  "task": "next-hour container_dwell_hours regression, one sample per (port, hour t)",
+  "window_hours": 12,
+  "horizon_hours": 1,
+  "arrays": {
+    "X": {
+      "shape": "[N, 12, 7]",
+      "dtype": "float32",
+      "axis_1": "input hours t-11 .. t (oldest first)",
+      "axis_2": [
+        "dwell",
+        "utilization",
+        "labour_strike",
+        "wind_gust",
+        "disruption_active",
+        "disruption_hours_elapsed",
+        "vessels_at_anchor"
+      ]
+    },
+    "provenance": {
+      "shape": "[N, 12, 5]",
+      "dtype": "int8",
+      "axis_2": [
+        "dwell",
+        "utilization",
+        "labour_strike",
+        "wind_gust",
+        "vessels_at_anchor"
+      ],
+      "codes": {
+        "observed": 0,
+        "converted": 1,
+        "reconstructed": 2
+      }
+    },
+    "aux_flags": {
+      "shape": "[N, 12, 2]",
+      "dtype": "int8",
+      "axis_2": [
+        "disruption_end_reconstructed",
+        "wind_gust_clipped"
+      ]
+    },
+    "y": {
+      "shape": "[N]",
+      "dtype": "float32",
+      "meaning": "dwell at hour t+1, per-port z-score (scalers.json['dwell'])"
+    },
+    "y_hours": {
+      "shape": "[N]",
+      "meaning": "dwell at hour t+1 in hours (for evaluation)"
+    },
+    "last_dwell_hours": {
+      "shape": "[N]",
+      "meaning": "dwell at hour t in hours"
+    },
+    "port_index": {
+      "shape": "[N]",
+      "meaning": "index into ports (for an embedding / per-port de-scaling)",
+      "ports": [
+        "AEJEA",
+        "CNSHA",
+        "DEHAM",
+        "INMAA",
+        "INNSA",
+        "LKCMB",
+        "MYPKG",
+        "NLRTM",
+        "SGSIN",
+        "USLAX"
+      ]
+    },
+    "target_hour_index": {
+      "shape": "[N]",
+      "meaning": "global hour index of the target (0 = 2025-01-01 00:00 UTC)"
+    },
+    "window_id": {
+      "shape": "[N]",
+      "meaning": "row in windows.csv"
+    }
+  },
+  "features": [
+    {
+      "name": "dwell",
+      "position": 0,
+      "source": "port_hourly_telemetry.container_dwell_hours",
+      "unit": "h",
+      "definition": "Average container dwell time at the port in hour t (also the target, one hour later).",
+      "scaling": "per-port z-score",
+      "provenance_tracked": true
+    },
+    {
+      "name": "utilization",
+      "position": 1,
+      "source": "port_hourly_telemetry.port_utilization_pct",
+      "unit": "% of nominal capacity",
+      "definition": "Throughput / capacity in hour t; censored at 100 when the port is saturated.",
+      "scaling": "fixed: value / 100 (bounded 0-1, no fitting)",
+      "provenance_tracked": true
+    },
+    {
+      "name": "labour_strike",
+      "position": 2,
+      "source": "port_hourly_telemetry.labour_status",
+      "unit": "0/1",
+      "definition": "1 if labour_status == 'strike' in hour t ('reduced' carries no signal and is treated as 0).",
+      "scaling": "none (0/1)",
+      "provenance_tracked": true
+    },
+    {
+      "name": "wind_gust",
+      "position": 3,
+      "source": "weather_hourly.wind_gusts_10m_kmh (same port_id, ts_hour)",
+      "unit": "km/h",
+      "definition": "Maximum 10 m wind gust in hour t; 2 negative values clipped to 0.",
+      "scaling": "global z-score",
+      "provenance_tracked": true
+    },
+    {
+      "name": "disruption_active",
+      "position": 4,
+      "source": "disruption_events (event_start <= t < event_end, same port)",
+      "unit": "0/1",
+      "definition": "1 if a logged disruption is ongoing at hour t.",
+      "scaling": "none (0/1)",
+      "provenance_tracked": false
+    },
+    {
+      "name": "disruption_hours_elapsed",
+      "position": 5,
+      "source": "disruption_events",
+      "unit": "h",
+      "definition": "Hours since the ongoing disruption episode began (earliest start among overlapping ongoing events); 0 if none.",
+      "scaling": "log1p, then global z-score",
+      "provenance_tracked": false
+    },
+    {
+      "name": "vessels_at_anchor",
+      "position": 6,
+      "source": "port_hourly_telemetry.vessels_at_anchor",
+      "unit": "vessels",
+      "definition": "Vessels waiting at anchor in hour t.",
+      "scaling": "log1p, then per-port z-score",
+      "provenance_tracked": true
+    }
+  ],
+  "excluded_features": {
+    "throughput_teu": "exact multiple of utilization (utilization = throughput / capacity x 100); port-specific scale",
+    "customs_hold_hours": "hour-to-hour white noise, no relation to next-hour dwell (audit partial r 0.01); most reconstructed signal (6.1 %)",
+    "temperature_2m_c": "no within-port relation to next-hour dwell (audit partial r 0.05)",
+    "equipment_availability_pct": "no measurable next-hour signal (audit partial r -0.00)",
+    "wind_speed_10m_kmh": "replaced by wind gusts (r = 0.98, same signal)",
+    "port_traffic_history": "daily aggregate of the same telemetry; same-day values leak later hours"
+  },
+  "reconstructed_input_policy": {
+    "values": "kept exactly as in Dataset/Processed; not re-imputed (re-imputation would invent new values or use the future)",
+    "flag": "provenance == 2 marks a value with no raw observation; provenance == 1 marks a raw value after a unit/format fix",
+    "default_model_input": "X concatenated with the dwell reconstructed flag (provenance[..., 0] == 2) -> [N, 12, 8]; see dataset.load_split",
+    "sensitivity": "windows.csv n_reconstructed_input_cells == 0 selects windows with fully observed inputs"
+  },
+  "target_policy": "windows whose target hour is reconstructed are excluded from training and evaluation",
+  "baselines": {
+    "ewma_alpha": 0.2,
+    "alpha_selected_on": "training windows (RMSE)",
+    "alpha_grid_rmse": {
+      "0.05": 5.023120763740666,
+      "0.1": 4.536763695762739,
+      "0.15": 4.365908369007659,
+      "0.2": 4.323723677879572,
+      "0.3": 4.3673731713773565,
+      "0.5": 4.595597277530923
+    }
+  }
+}

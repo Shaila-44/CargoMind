@@ -1,0 +1,56 @@
+event_id,port_id,event_start,event_end,event_type,severity,affected_capacity_pct,event_description,source_url,data_source,is_synthetic
+EVT00001,USLAX,2025-01-01 12:00:00+00:00,2025-01-03 01:00:00+00:00,strike,high,55.36857855962881,Dock workers' union strike; berth operations reduced,,synthetic,True
+EVT00002,NLRTM,2025-01-01 21:00:00+00:00,2025-01-02 11:00:00+00:00,weather,high,84.21508947390494,High winds suspended crane operations,,synthetic,True
+EVT00003,CNSHA,2025-01-02 06:00:00+00:00,2025-01-03 04:00:00+00:00,weather,high,85.0,High winds suspended crane operations,,synthetic,True
+EVT00004,AEJEA,2025-01-02 16:00:00+00:00,2025-01-05 05:00:00+00:00,congestion,medium,34.42269512239845,Yard congestion after vessel bunching,,synthetic,True
+EVT00005,INNSA,2025-01-04 07:00:00+00:00,2025-01-04 13:00:00+00:00,weather,medium,48.650158006277614,High winds suspended crane operations,,synthetic,True
+EVT00006,SGSIN,2025-01-04 09:00:00+00:00,2025-01-05 12:00:00+00:00,congestion,medium,32.62264721880618,Yard congestion after vessel bunching,,synthetic,True
+EVT00007,AEJEA,2025-01-04 14:00:00+00:00,2025-01-05 06:00:00+00:00,weather,high,79.23273796809849,High winds suspended crane operations,,synthetic,True
+EVT00008,MYPKG,2025-01-05 00:00:00+00:00,2025-01-06 03:00:00+00:00,equipment_failure,low,21.155774470523184,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00009,SGSIN,2025-01-05 23:00:00+00:00,2025-01-08 07:00:00+00:00,strike,high,55.90327539004334,Dock workers' union strike; berth operations reduced,,synthetic,True
+EVT00010,INNSA,2025-01-07 01:00:00+00:00,2025-01-10 19:00:00+00:00,congestion,medium,43.1991550513184,Yard congestion after vessel bunching,,synthetic,True
+EVT00011,LKCMB,2025-01-07 18:00:00+00:00,2025-01-08 19:00:00+00:00,equipment_failure,medium,33.12032952154426,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00012,LKCMB,2025-01-07 20:00:00+00:00,2025-01-08 20:00:00+00:00,congestion,medium,42.60534214798944,Yard congestion after vessel bunching,,synthetic,True
+EVT00013,SGSIN,2025-01-08 00:00:00+00:00,2025-01-08 09:00:00+00:00,weather,high,55.252402150468754,High winds suspended crane operations,,synthetic,True
+EVT00014,AEJEA,2025-01-11 00:00:00+00:00,2025-01-11 14:00:00+00:00,weather,high,82.05927855162624,High winds suspended crane operations,,synthetic,True
+EVT00015,DEHAM,2025-01-12 17:00:00+00:00,2025-01-13 13:00:00+00:00,weather,medium,47.764740396895846,High winds suspended crane operations,,synthetic,True
+EVT00016,MYPKG,2025-01-14 06:00:00+00:00,2025-01-14 21:00:00+00:00,equipment_failure,low,22.68065941860413,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00017,INMAA,2025-01-15 17:00:00+00:00,2025-01-16 10:00:00+00:00,weather,high,73.40154117574683,High winds suspended crane operations,,synthetic,True
+EVT00018,SGSIN,2025-01-16 22:00:00+00:00,2025-01-17 10:00:00+00:00,weather,high,85.0,High winds suspended crane operations,,synthetic,True
+EVT00019,CNSHA,2025-01-17 06:00:00+00:00,2025-01-19 10:00:00+00:00,congestion,medium,38.14810449096706,Yard congestion after vessel bunching,,synthetic,True
+EVT00020,NLRTM,2025-01-17 13:00:00+00:00,2025-01-18 10:00:00+00:00,weather,high,77.55159367993986,High winds suspended crane operations,,synthetic,True
+EVT00021,USLAX,2025-01-17 16:00:00+00:00,2025-01-18 16:00:00+00:00,weather,high,71.63443381361725,High winds suspended crane operations,,synthetic,True
+EVT00022,MYPKG,2025-01-18 00:00:00+00:00,2025-01-18 15:00:00+00:00,weather,medium,45.805867181795016,High winds suspended crane operations,,synthetic,True
+EVT00023,NLRTM,2025-01-18 06:00:00+00:00,2025-01-21 20:00:00+00:00,strike,high,76.32327794822905,Dock workers' union strike; berth operations reduced,,synthetic,True
+EVT00024,USLAX,2025-01-18 06:00:00+00:00,2025-01-22 07:00:00+00:00,congestion,medium,42.1966395680856,Yard congestion after vessel bunching,,synthetic,True
+EVT00025,SGSIN,2025-01-18 17:00:00+00:00,2025-01-19 02:00:00+00:00,weather,high,54.81312760971287,High winds suspended crane operations,,synthetic,True
+EVT00026,CNSHA,2025-01-18 21:00:00+00:00,2025-01-19 23:00:00+00:00,equipment_failure,medium,35.86220870120605,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00027,INNSA,2025-01-19 21:00:00+00:00,2025-01-20 19:00:00+00:00,equipment_failure,low,16.869838815569533,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00028,CNSHA,2025-01-20 00:00:00+00:00,2025-01-20 15:00:00+00:00,weather,medium,49.54249688869281,High winds suspended crane operations,,synthetic,True
+EVT00029,AEJEA,2025-01-21 00:00:00+00:00,2025-01-21 17:00:00+00:00,weather,high,60.04666338468265,High winds suspended crane operations,,synthetic,True
+EVT00030,CNSHA,2025-01-21 13:00:00+00:00,2025-01-24 18:00:00+00:00,congestion,medium,37.89870171662288,Yard congestion after vessel bunching,,synthetic,True
+EVT00031,CNSHA,2025-01-21 14:00:00+00:00,2025-01-22 00:00:00+00:00,weather,high,82.18964185284307,High winds suspended crane operations,,synthetic,True
+EVT00032,INNSA,2025-01-22 04:00:00+00:00,2025-01-25 11:00:00+00:00,congestion,medium,34.487009767112596,Yard congestion after vessel bunching,,synthetic,True
+EVT00033,LKCMB,2025-01-22 11:00:00+00:00,2025-01-24 18:00:00+00:00,congestion,medium,38.776270128720896,Yard congestion after vessel bunching,,synthetic,True
+EVT00034,USLAX,2025-01-23 02:00:00+00:00,2025-01-24 01:00:00+00:00,weather,high,85.0,High winds suspended crane operations,,synthetic,True
+EVT00035,MYPKG,2025-01-24 00:00:00+00:00,2025-01-24 16:00:00+00:00,cyber,medium,38.314111124615415,Terminal operating system outage,,synthetic,True
+EVT00036,DEHAM,2025-01-25 02:00:00+00:00,2025-01-25 09:00:00+00:00,equipment_failure,low,21.09397887381074,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00037,MYPKG,2025-01-25 10:00:00+00:00,2025-01-26 05:00:00+00:00,weather,high,52.29755565654015,High winds suspended crane operations,,synthetic,True
+EVT00038,CNSHA,2025-01-25 18:00:00+00:00,2025-01-26 07:00:00+00:00,weather,high,56.304907772677375,High winds suspended crane operations,,synthetic,True
+EVT00039,AEJEA,2025-01-27 18:00:00+00:00,2025-01-28 17:00:00+00:00,weather,high,85.0,High winds suspended crane operations,,synthetic,True
+EVT00040,DEHAM,2025-01-28 08:00:00+00:00,2025-01-31 01:00:00+00:00,strike,medium,33.00164107101052,Dock workers' union strike; berth operations reduced,,synthetic,True
+EVT00041,INMAA,2025-01-28 10:00:00+00:00,2025-01-28 20:00:00+00:00,equipment_failure,medium,33.729543331836695,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00042,AEJEA,2025-01-29 07:00:00+00:00,2025-01-29 21:00:00+00:00,equipment_failure,low,18.09340847239325,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00043,NLRTM,2025-01-30 11:00:00+00:00,2025-01-31 02:00:00+00:00,weather,high,69.84134123314928,High winds suspended crane operations,,synthetic,True
+EVT00044,LKCMB,2025-01-30 18:00:00+00:00,2025-01-31 22:00:00+00:00,weather,high,85.0,High winds suspended crane operations,,synthetic,True
+EVT00045,INNSA,2025-02-02 04:00:00+00:00,2025-02-03 10:00:00+00:00,weather,high,85.0,High winds suspended crane operations,,synthetic,True
+EVT00046,MYPKG,2025-02-02 08:00:00+00:00,2025-02-02 16:00:00+00:00,equipment_failure,medium,34.48393450059818,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00047,LKCMB,2025-02-02 15:00:00+00:00,2025-02-02 22:00:00+00:00,weather,high,50.596074175099304,High winds suspended crane operations,,synthetic,True
+EVT00048,NLRTM,2025-02-02 22:00:00+00:00,2025-02-03 06:00:00+00:00,weather,high,85.0,High winds suspended crane operations,,synthetic,True
+EVT00049,MYPKG,2025-02-05 02:00:00+00:00,2025-02-06 02:00:00+00:00,equipment_failure,medium,32.757628653081994,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00050,INNSA,2025-02-06 20:00:00+00:00,2025-02-07 02:00:00+00:00,weather,high,65.79792238390803,High winds suspended crane operations,,synthetic,True
+EVT00051,USLAX,2025-02-07 21:00:00+00:00,2025-02-08 07:00:00+00:00,weather,high,51.94665524904303,High winds suspended crane operations,,synthetic,True
+EVT00052,MYPKG,2025-02-09 07:00:00+00:00,2025-02-11 16:00:00+00:00,strike,high,53.07490526764664,Dock workers' union strike; berth operations reduced,,synthetic,True
+EVT00053,INNSA,2025-02-09 13:00:00+00:00,2025-02-11 16:00:00+00:00,strike,high,71.31808345891534,Dock workers' union strike; berth operations reduced,,synthetic,True
+EVT00054,LKCMB,2025-02-10 15:00:00+00:00,2025-02-11 02:00:00+00:00,equipment_failure,medium,39.72352926010751,Quay crane / straddle carrier breakdown,,synthetic,True
+EVT00055,NLRTM,2025-02-10 21:00:00+00:00,2025-02-11 16:00:00+00:00,strike,high,67.101212464625,Dock workers' union strike; berth operations reduced,,synthetic,True

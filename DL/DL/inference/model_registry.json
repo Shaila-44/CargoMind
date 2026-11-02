@@ -1,0 +1,73 @@
+{
+  "default_model": "transformer_t_w",
+  "seed_rule": "best validation RMSE among the 5 seeds of each configuration",
+  "selection_note": "research phase frozen; no model is a decisive winner; EWMA (alpha 0.2) is the operational fallback",
+  "models": {
+    "transformer_t_w": {
+      "experiment": "T_w_transformer_hour_weighted",
+      "architecture": "transformer",
+      "status": "leading research candidate (lowest validation RMSE; within the 0.05 h tie threshold of gru and c_w_lstm)",
+      "seed": 1,
+      "checkpoint": "DL/DL/artifacts/transformer/runs/T_w_transformer_hour_weighted/seed_1.pt",
+      "checkpoint_sha256": "86d1578f81180296db708a2878c25b4da28dc69522e24cc8ea91ea3530355074",
+      "val_rmse_h_this_seed": 4.154465973672719,
+      "val_rmse_h_5_seed_mean": 4.16237818916718,
+      "val_rmse_h_5_seed_sd": 0.007363119201120613
+    },
+    "gru": {
+      "experiment": "GRU__B_w_lstm_port_embedding_hour_weighted",
+      "architecture": "gru",
+      "status": "competitive alternative",
+      "seed": 0,
+      "checkpoint": "DL/DL/artifacts/runs/GRU__B_w_lstm_port_embedding_hour_weighted/seed_0.pt",
+      "checkpoint_sha256": "97264a0394e07c103b16715e35acbb0b6871194dfadc747ed5deaf799d85e9c9",
+      "val_rmse_h_this_seed": 4.192630494156321,
+      "val_rmse_h_5_seed_mean": 4.202294772014298,
+      "val_rmse_h_5_seed_sd": 0.00816779750414769
+    },
+    "c_w_lstm": {
+      "experiment": "C_w_lstm_ewma_residual_hour_weighted",
+      "architecture": "lstm (EWMA residual)",
+      "status": "competitive alternative",
+      "seed": 2,
+      "checkpoint": "DL/DL/artifacts/runs/C_w_lstm_ewma_residual_hour_weighted/seed_2.pt",
+      "checkpoint_sha256": "f2dab76ee5ef33451eb0c2fe2c033bc73834bd3876b29a59f49c08d06052ad4a",
+      "val_rmse_h_this_seed": 4.2025150277134875,
+      "val_rmse_h_5_seed_mean": 4.211873004350549,
+      "val_rmse_h_5_seed_sd": 0.008383846629661093
+    },
+    "transformer_t": {
+      "experiment": "T_transformer",
+      "architecture": "transformer",
+      "status": "evaluated candidate",
+      "seed": 2,
+      "checkpoint": "DL/DL/artifacts/transformer/runs/T_transformer/seed_2.pt",
+      "checkpoint_sha256": "fd4cc9ba8277800154f0a9a4e85b56f29f95ab8c67d433bb18c72346e5d3cb7c",
+      "val_rmse_h_this_seed": 4.235265005648865,
+      "val_rmse_h_5_seed_mean": 4.258837839188836,
+      "val_rmse_h_5_seed_sd": 0.0209329902502022
+    },
+    "basic_lstm": {
+      "experiment": "A_lstm",
+      "architecture": "lstm",
+      "status": "evaluated candidate (worse than EWMA)",
+      "seed": 3,
+      "checkpoint": "DL/DL/artifacts/runs/A_lstm/seed_3.pt",
+      "checkpoint_sha256": "92d8f3040c16f19d8798b28ade4e5c53e6c363f6143ecd790137e3902be5d49c",
+      "val_rmse_h_this_seed": 4.352086159688357,
+      "val_rmse_h_5_seed_mean": 4.446279964474744,
+      "val_rmse_h_5_seed_sd": 0.06614326674577478
+    },
+    "lstm_b_w_original_selection": {
+      "experiment": "B_w_lstm_port_embedding_hour_weighted",
+      "architecture": "lstm + port embedding",
+      "status": "superseded (original selection; failed the independent evaluation)",
+      "seed": 2,
+      "checkpoint": "DL/DL/artifacts/runs/B_w_lstm_port_embedding_hour_weighted/seed_2.pt",
+      "checkpoint_sha256": "70abacb0dca03c51b2eb8fad2edd737548ccbc87f03fd5784c8e1f1327d7ce66",
+      "val_rmse_h_this_seed": 4.230783209809121,
+      "val_rmse_h_5_seed_mean": 4.2543683097922385,
+      "val_rmse_h_5_seed_sd": 0.015396563274805364
+    }
+  }
+}

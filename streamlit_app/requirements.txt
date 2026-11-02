@@ -1,0 +1,4 @@
+# CargoMind Streamlit application (scaffold). Model code is NOT duplicated here: the app imports the ML and DL
+# workflows as installed packages, so install the repository requirements first (root requirements.txt).
+-r ../requirements.txt
+streamlit==1.50.0

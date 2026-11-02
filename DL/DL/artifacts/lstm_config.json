@@ -1,0 +1,83 @@
+{
+  "model_config": {
+    "input_size": 8,
+    "cell": "lstm",
+    "hidden_size": 32,
+    "num_layers": 1,
+    "dropout": 0.1,
+    "n_ports": 10,
+    "port_embedding_dim": 4,
+    "residual_ewma_alpha": null,
+    "dwell_channel": 0
+  },
+  "input_channels": [
+    "dwell",
+    "utilization",
+    "labour_strike",
+    "wind_gust",
+    "disruption_active",
+    "disruption_hours_elapsed",
+    "vessels_at_anchor",
+    "dwell_reconstructed"
+  ],
+  "target": "next-hour container_dwell_hours, per-port z-score; invert with cargomind_dl.dataset.to_hours",
+  "train_config": {
+    "name": "B_w_lstm_port_embedding_hour_weighted",
+    "cell": "lstm",
+    "hidden_size": 32,
+    "num_layers": 1,
+    "dropout": 0.1,
+    "port_embedding_dim": 4,
+    "residual_ewma_alpha": null,
+    "loss_weighting": "hours",
+    "mask_channels": [
+      "dwell"
+    ],
+    "drop_features": [],
+    "lr": 0.001,
+    "weight_decay": 0.0,
+    "batch_size": 64,
+    "max_epochs": 150,
+    "patience": 15,
+    "grad_clip": 1.0,
+    "lr_factor": 0.5,
+    "lr_patience": 5,
+    "min_lr": 1e-05,
+    "num_threads": 4,
+    "seed": 2,
+    "notes": "B with hour-weighted loss"
+  },
+  "best_epoch": 13,
+  "best_val_rmse_h": 4.230783209809121,
+  "port_embedding": {
+    "used": true,
+    "dim": 4,
+    "port_order": [
+      "AEJEA",
+      "CNSHA",
+      "DEHAM",
+      "INMAA",
+      "INNSA",
+      "LKCMB",
+      "MYPKG",
+      "NLRTM",
+      "SGSIN",
+      "USLAX"
+    ]
+  },
+  "dataset_reference": {
+    "feature_schema.json": {
+      "path": "dl/dataset/feature_schema.json",
+      "sha256": "d5a21baa1236e711f5a0160539dac05e4c060b60c28d311235df2d5cc97acc7e"
+    },
+    "scalers.json": {
+      "path": "dl/dataset/scalers.json",
+      "sha256": "c4305c1c9effc9d9395ce86dd7dc628cc403ae8221bc35e2826aaf1992967631"
+    },
+    "split_metadata.json": {
+      "path": "dl/dataset/split_metadata.json",
+      "sha256": "6526bccaf636e2fff19e025a8ff9af03af6b9166352641a2d857ab632bae59a1"
+    }
+  },
+  "inference": "from dl.models import load_checkpoint; model, meta = load_checkpoint('dl/artifacts/lstm_best.pt'); x from cargomind_dl.dataset.load_split (channels as listed); hours = cargomind_dl.dataset.to_hours(model(x, port_index), port_index)"
+}

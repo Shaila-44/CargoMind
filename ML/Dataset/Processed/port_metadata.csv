@@ -1,0 +1,11 @@
+port_id,port_name,country_code,subdivision_code,region,latitude,longitude,port_type,capacity_teu_per_hour,local_timezone,data_source,is_synthetic
+INMAA,Chennai Port,IN,IN-TN,South Asia,13.0827,80.292,container,180.0,Asia/Kolkata,synthetic,True
+INNSA,Jawaharlal Nehru Port (Nhava Sheva),IN,IN-MH,South Asia,18.949,72.9512,container,650.0,Asia/Kolkata,synthetic,True
+SGSIN,Port of Singapore,SG,,Southeast Asia,1.2644,103.84,container,4300.0,Asia/Singapore,synthetic,True
+CNSHA,Port of Shanghai,CN,CN-SH,East Asia,31.2304,121.49,container,5600.0,Asia/Shanghai,synthetic,True
+AEJEA,Jebel Ali Port,AE,AE-DU,Middle East,25.011,55.061,container,1700.0,Asia/Dubai,synthetic,True
+NLRTM,Port of Rotterdam,NL,NL-ZH,Europe,51.95,4.14,mixed,1700.0,Europe/Amsterdam,synthetic,True
+USLAX,Port of Los Angeles,US,US-CA,North America,33.74,-118.26,container,1100.0,America/Los_Angeles,synthetic,True
+DEHAM,Port of Hamburg,DE,DE-HH,Europe,53.54,9.98,mixed,960.0,Europe/Berlin,synthetic,True
+LKCMB,Port of Colombo,LK,LK-1,South Asia,6.95,79.84,container,900.0,Asia/Colombo,synthetic,True
+MYPKG,Port Klang,MY,MY-10,Southeast Asia,3.0,101.39,container,1500.0,Asia/Kuala_Lumpur,synthetic,True

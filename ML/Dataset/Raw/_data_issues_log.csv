@@ -1,0 +1,137 @@
+table,column,issue,rows_affected
+port_metadata,latitude/longitude,lat and lon swapped (Hamburg),1
+port_metadata,country_code,lowercase country code,1
+port_metadata,capacity_teu_per_hour,missing capacity,1
+port_metadata,local_timezone,ambiguous abbreviation 'IST' instead of IANA zone,1
+port_metadata,subdivision_code,placeholder '-' instead of blank for 'no subdivision',1
+port_metadata,port_type,casing/whitespace,1
+port_metadata,capacity_teu_per_hour,number stored as text with thousands separator,1
+port_metadata,(rows),duplicate port with different name spelling,1
+port_metadata,is_synthetic,boolean written as TRUE/True/1/yes,11
+port_network,route_distance_km,missing,4
+port_network,route_distance_km,value in miles stored as text ('4520 mi'),3
+port_network,route_distance_km,negative distance,1
+port_network,route_type,inconsistent spelling / casing of categories,11
+port_network,transshipment_port_id,hub port filled on a direct route,2
+port_network,planned_transit_hours,value in days stored as text,3
+port_network,(rows),exact duplicate rows,2
+port_hourly_telemetry,(rows),rows missing entirely (gaps in the hourly series),120
+port_hourly_telemetry,(rows),exact duplicate rows,120
+port_hourly_telemetry,ts_hour,timestamp format: DD/MM/YYYY HH:MM,600
+port_hourly_telemetry,ts_hour,timestamp format: ISO 8601 with T and Z,752
+port_hourly_telemetry,ts_hour,timestamp format: Unix epoch seconds,173
+port_hourly_telemetry,ts_hour,timestamp format: IST local time with NO timezone marker (silently 5.5 h off),170
+port_hourly_telemetry,port_id,lowercase port code (e.g. 'inmaa'),200
+port_hourly_telemetry,port_id,trailing whitespace in port code,98
+port_hourly_telemetry,port_id,misspelled port code (e.g. 'INMMA'),29
+port_hourly_telemetry,port_id,port name instead of code (e.g. 'Chennai'),29
+port_hourly_telemetry,throughput_teu,missing (empty),200
+port_hourly_telemetry,throughput_teu,negative throughput,30
+port_hourly_telemetry,port_utilization_pct,impossible utilization > 100% (sensor error),50
+port_hourly_telemetry,port_utilization_pct,stored as a fraction (0.82) instead of percent,100
+port_hourly_telemetry,container_dwell_hours,number with unit suffix ('84.2h'),200
+port_hourly_telemetry,container_dwell_hours,sentinel value -999,49
+port_hourly_telemetry,container_dwell_hours,missing (empty),293
+port_hourly_telemetry,vessel_arrivals,integer stored as '3.0',100
+port_hourly_telemetry,vessel_arrivals,missing (empty),99
+port_hourly_telemetry,vessels_at_anchor,missing (empty),200
+port_hourly_telemetry,customs_hold_hours,"missing, written as 'N/A'",500
+port_hourly_telemetry,vessel_time_in_port_hours,extreme outlier (> 900 h),30
+port_hourly_telemetry,labour_status,inconsistent spelling / casing of categories,601
+port_hourly_telemetry,labour_status,missing (empty),200
+port_hourly_telemetry,equipment_availability_pct,number with '%' sign,200
+port_hourly_telemetry,equipment_availability_pct,value > 100%,29
+port_hourly_telemetry,*_is_synthetic,boolean written as TRUE/True/1,10000
+weather_hourly,(rows),rows missing entirely (gaps in the hourly series),100
+weather_hourly,(rows),exact duplicate rows,100
+weather_hourly,temperature_2m_c,"Fahrenheit values in a Celsius column (Colombo, 1-7 Jan)",164
+weather_hourly,visibility_m,entire ports with no visibility data (source gap),2998
+weather_hourly,ts_hour,timestamp format: ISO 8601 with T and Z,6000
+weather_hourly,ts_hour,timestamp format: Unix epoch seconds,120
+weather_hourly,ts_hour,timestamp format: DD/MM/YYYY HH:MM,78
+weather_hourly,port_id,lowercase port code (e.g. 'inmaa'),100
+weather_hourly,port_id,trailing whitespace in port code,99
+weather_hourly,port_id,misspelled port code (e.g. 'INMMA'),20
+weather_hourly,port_id,port name instead of code (e.g. 'Chennai'),98
+weather_hourly,temperature_2m_c,sentinel value -9999,98
+weather_hourly,precipitation_mm,sentinel value -9999,100
+weather_hourly,surface_pressure_hpa,sentinel value -9999,100
+weather_hourly,precipitation_mm,negative rainfall,20
+weather_hourly,relative_humidity_2m_pct,humidity > 100%,30
+weather_hourly,wind_speed / wind_gusts,columns swapped (speed > gust),50
+weather_hourly,weather_condition,inconsistent spelling / casing of categories,318
+weather_hourly,weather_condition,label contradicts weather_code,100
+weather_hourly,wind_gusts_10m_kmh,missing (empty),150
+weather_hourly,relative_humidity_2m_pct,"missing, written as 'NaN'",100
+port_traffic_history,period_granularity,monthly totals mixed in with daily rows (do not sum together),10
+port_traffic_history,traffic_deviation_pct,fraction instead of percent,22
+port_traffic_history,avg_vessel_stay_hours,missing (empty),17
+port_traffic_history,import_volume_t,"missing, written as '-'",13
+port_traffic_history,period_start,date as '05-Jan-2025',22
+port_traffic_history,data_source,inconsistent casing,43
+port_traffic_history,port_id,lowercase port code (e.g. 'inmaa'),9
+port_traffic_history,port_id,trailing whitespace in port code,0
+port_traffic_history,port_id,misspelled port code (e.g. 'INMMA'),0
+port_traffic_history,port_id,port name instead of code (e.g. 'Chennai'),0
+port_traffic_history,(rows),exact duplicate rows,8
+disruption_events,event_start,timestamp format: DD/MM/YYYY HH:MM,8
+disruption_events,event_start,timestamp format: MM-DD-YYYY hh:mm AM/PM,5
+disruption_events,event_end,timestamp format: DD/MM/YYYY HH:MM,6
+disruption_events,event_end,missing end time,3
+disruption_events,event_start/event_end,start and end swapped (end before start),2
+disruption_events,severity,inconsistent spelling / casing of categories,17
+disruption_events,event_type,inconsistent spelling / casing of categories,14
+disruption_events,affected_capacity_pct,out of range (125) / fraction (0.45),2
+disruption_events,port_id,lowercase port code (e.g. 'inmaa'),3
+disruption_events,port_id,trailing whitespace in port code,2
+disruption_events,port_id,misspelled port code (e.g. 'INMMA'),0
+disruption_events,port_id,port name instead of code (e.g. 'Chennai'),2
+disruption_events,(rows),exact duplicate rows,1
+public_holidays,holiday_date,date as DD/MM/YYYY,5
+public_holidays,holiday_date,"date as 'January 29, 2025'",3
+public_holidays,subdivision_code,placeholder text (NATIONAL / N/A / ALL) instead of blank for national holidays,6
+public_holidays,country_code,lowercase country code,4
+public_holidays,(rows),same holiday listed twice under different names,1
+shipment_records,(rows),exact duplicate rows (same shipment_id),150
+shipment_records,departure_ts,timestamp format: DD/MM/YYYY HH:MM,1000
+shipment_records,departure_ts,timestamp format: MM-DD-YYYY hh:mm AM/PM,450
+shipment_records,departure_ts,timestamp format: ISO 8601 with T and Z,428
+shipment_records,departure_ts,timestamp format: converted to IST with +05:30 offset (same instant),406
+shipment_records,departure_ts,timestamp format: Unix epoch seconds,231
+shipment_records,expected_arrival_ts,timestamp format: DD/MM/YYYY HH:MM,500
+shipment_records,expected_arrival_ts,"timestamp format: date only, time lost",190
+shipment_records,actual_arrival_ts,timestamp format: DD/MM/YYYY HH:MM,800
+shipment_records,actual_arrival_ts,timestamp format: ISO 8601 with T and Z,460
+shipment_records,departure_ts/expected_arrival_ts,values swapped (arrival before departure),50
+shipment_records,expected_arrival_ts,missing (empty),199
+shipment_records,actual_arrival_ts,missing (empty),300
+shipment_records,origin_port_id,lowercase port code (e.g. 'inmaa'),200
+shipment_records,origin_port_id,trailing whitespace in port code,98
+shipment_records,origin_port_id,misspelled port code (e.g. 'INMMA'),49
+shipment_records,origin_port_id,port name instead of code (e.g. 'Chennai'),48
+shipment_records,destination_port_id,lowercase port code (e.g. 'inmaa'),200
+shipment_records,destination_port_id,trailing whitespace in port code,98
+shipment_records,destination_port_id,misspelled port code (e.g. 'INMMA'),49
+shipment_records,destination_port_id,port name instead of code (e.g. 'Chennai'),48
+shipment_records,route_id,missing (empty),100
+shipment_records,carrier,inconsistent spelling / casing of categories,799
+shipment_records,carrier,missing (empty),200
+shipment_records,shipping_mode,inconsistent spelling / casing of categories,1500
+shipment_records,shipping_mode,missing (empty),100
+shipment_records,cargo_type,inconsistent spelling / casing of categories,1000
+shipment_records,cargo_type,missing (empty),300
+shipment_records,shipment_priority,inconsistent spelling / casing of categories,1200
+shipment_records,shipment_priority,missing (empty),200
+shipment_records,container_teu,placeholder 9999,30
+shipment_records,container_teu,negative TEU,30
+shipment_records,container_teu,number with unit text ('12 TEU'),50
+shipment_records,container_teu,missing (empty),198
+shipment_records,actual_delay_hours,recorded in days instead of hours (disagrees with timestamps),97
+shipment_records,actual_delay_hours,sign flipped (disagrees with timestamps),48
+shipment_records,actual_delay_hours,number with unit text ('36.5 hrs'),96
+shipment_records,actual_delay_hours,missing although actual_arrival_ts is present (recompute),95
+shipment_records,delay_status,inconsistent spelling / casing of categories,1000
+shipment_records,delay_status,ambiguous label 'Late' (could be At-Risk or Critical),100
+shipment_records,delay_status,label contradicts actual_delay_hours,99
+shipment_records,delay_status,missing (shipment not yet arrived / unrecorded),300
+shipment_records,is_synthetic,boolean written as TRUE/True/1/yes,10000

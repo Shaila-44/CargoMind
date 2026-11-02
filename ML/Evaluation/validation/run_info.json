@@ -1,0 +1,17 @@
+{
+  "n_test_day_blocks": 11,
+  "n_test_port_day_blocks": 110,
+  "versions": {
+    "python": "3.9.6",
+    "sklearn": "1.6.1",
+    "xgboost": "2.1.4",
+    "lightgbm": "4.6.0",
+    "shap": "0.46.0",
+    "numpy": "2.0.2",
+    "pandas": "2.3.3",
+    "scipy": "1.13.1",
+    "joblib": "1.5.3"
+  },
+  "checks_failed": [],
+  "seconds": 127
+}
