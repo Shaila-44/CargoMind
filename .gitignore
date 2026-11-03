@@ -18,6 +18,10 @@ datasets/combined_dataset.csv
 !integrated_synthetic_v2/answer_key/*.csv
 integrated_synthetic_v2/raw_sources/
 
+# Environment files and secrets
+.env
+.env.*
+
 # Python virtual environments
 .venv/
 venv/
