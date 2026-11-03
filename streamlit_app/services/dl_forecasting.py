@@ -15,13 +15,21 @@ EWMA (alpha 0.2) stays available as a benchmark (`model="ewma"`). The GNN is exp
 """
 from __future__ import annotations
 
+import pandas as pd
+
+from cargomind_dl.config import DATASET
 from dl.inference import (CONTRACT_VERSION, DEFAULT_MODEL, FALLBACK_MODEL, REQUIRED_COLUMNS, DwellPrediction, InputValidationError,
                           ModelLoadError, PredictionError, ewma_forecast, forecast, load_registry)
 from dl.inference.windows import actual_dwell, coverage, window_from_dataset
 
 __all__ = ["DEFAULT_MODEL", "FALLBACK_MODEL", "CONTRACT_VERSION", "REQUIRED_COLUMNS", "DwellPrediction", "InputValidationError",
            "ModelLoadError", "PredictionError", "ewma_forecast", "forecast", "available_models", "window_from_dataset", "actual_dwell",
-           "coverage"]
+           "coverage", "supported_ports"]
+
+
+def supported_ports() -> list[str]:
+    """Port ids present in the DL hourly panel (the only ports a dwell window can be built for)."""
+    return sorted(pd.read_csv(DATASET / "hourly_panel.csv", usecols=["port_id"])["port_id"].unique().tolist())
 
 
 def available_models() -> dict[str, dict]:

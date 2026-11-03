@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import pandas as pd
 
+from cargomind_eda.config import PROCESSED
 from cargomind_ml import inference as _ml
 from cargomind_ml.inference import (ANOMALY_DETECTOR, CONTRACT_VERSION, PRIMARY_CLASSIFIER, SHIPMENT_INPUT_COLUMNS,
                                     FeatureValidationError, ModelArtifactError, ShipmentInputError)
@@ -23,7 +24,8 @@ DEFAULT_CLASSIFIER = PRIMARY_CLASSIFIER  # "xgboost" (ML/ML/models/selection.jso
 DEFAULT_DETECTOR = ANOMALY_DETECTOR      # "isolation_forest"
 
 __all__ = ["DEFAULT_CLASSIFIER", "DEFAULT_DETECTOR", "CONTRACT_VERSION", "SHIPMENT_INPUT_COLUMNS", "FeatureValidationError",
-           "ModelArtifactError", "ShipmentInputError", "predict_shipments", "predict_features", "build_features", "selection"]
+           "ModelArtifactError", "ShipmentInputError", "predict_shipments", "predict_features", "build_features", "selection",
+           "supported_shipments", "SUPPORTED_DEPARTURE_START", "SUPPORTED_DEPARTURE_END"]
 
 
 def predict_shipments(shipments: pd.DataFrame, classifier: str = DEFAULT_CLASSIFIER, detector: str = DEFAULT_DETECTOR) -> list[dict]:
@@ -44,3 +46,15 @@ def build_features(shipments: pd.DataFrame) -> pd.DataFrame:
 def selection() -> dict:
     """The production model selection (ML/ML/models/selection.json)."""
     return _ml.load_selection()
+
+
+# Departures the feature tables cover (cutoff = departure - 1 h must fall in the coverage; see cargomind_ml.inference).
+SUPPORTED_DEPARTURE_START = pd.Timestamp("2025-01-02 00:00", tz="UTC")
+SUPPORTED_DEPARTURE_END = pd.Timestamp("2025-02-11 15:00", tz="UTC")
+
+
+def supported_shipments() -> pd.DataFrame:
+    """Synthetic shipments whose departure the ML service can score, as shipment attributes (SHIPMENT_INPUT_COLUMNS)."""
+    records = pd.read_csv(PROCESSED / "shipment_records.csv", usecols=SHIPMENT_INPUT_COLUMNS)
+    departures = pd.to_datetime(records["departure_ts"], utc=True, format="ISO8601")
+    return records[departures.between(SUPPORTED_DEPARTURE_START, SUPPORTED_DEPARTURE_END)].reset_index(drop=True)
