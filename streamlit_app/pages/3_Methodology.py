@@ -13,7 +13,6 @@ st.set_page_config(page_title="Methodology | CargoMind", layout="wide")
 ui.theme()
 ui.navbar("Methodology")
 ui.header("Methodology", "What each model does, how to read its outputs, and the limits of this demo.")
-ui.demo_banner()
 
 # --- System diagram ------------------------------------------------------------------------------------------------
 with ui.panel("diagram"):
@@ -43,24 +42,24 @@ ui.section("Models in use")
 with ui.row("models_a"):
     m1, m2 = st.columns(2, gap="medium")
 with m1, ui.panel("xgb_method"):
-    ui.card_head("XGBoost", "Delay classification", ui.badge("Provisional primary", "navy"))
+    ui.card_head("XGBoost", "Delay classification · provisional primary")
     ui.rows({"Output": "Delay class (On-Time, At-Risk, Critical) and raw probabilities",
              "Predicted class": "Highest raw probability",
-             "Calibration": ui.badge("None · raw probabilities", "amber"), "Alert threshold": ui.badge("None set", "neutral"),
+             "Calibration": "None · raw probabilities", "Alert threshold": "None set",
              "Challenger": "Logistic Regression"})
 with m2, ui.panel("iforest_method"):
-    ui.card_head("Isolation Forest", "Anomaly detection", ui.badge("Primary detector", "orange"))
+    ui.card_head("Isolation Forest", "Anomaly detection · primary detector")
     ui.rows({"Output": "Anomaly score and flag", "Question answered": "Did the origin's operating state look unusual?",
              "Compared with": "Normal on-time operating conditions",
              "Relation to delay": "Independent; an anomaly is not a delay prediction"})
 with ui.row("models_b"):
     m3, m4 = st.columns(2, gap="medium")
 with m3, ui.panel("tw_method"):
-    ui.card_head("Transformer T_w", "Next-hour dwell forecasting", ui.badge("Primary forecaster", "blue"))
+    ui.card_head("Transformer T_w", "Next-hour dwell forecasting · primary")
     ui.rows({"Input": "Last 12 observed hours of one port", "Output": "Forecast dwell time for the next hour, in hours",
              "Uncertainty": "Point forecast; no calibrated interval", "Selected on": "Validation data only"})
 with m4, ui.panel("cw_method"):
-    ui.card_head("C_w LSTM", "Forecast fallback", ui.badge("Automatic fallback", "orange"))
+    ui.card_head("C_w LSTM", "Next-hour dwell forecasting · automatic fallback")
     ui.rows({"Used when": "T_w cannot load or returns an invalid value", "Reported as": "Fallback used, with the reason",
              "Known weakness": "Weaker than EWMA in the first six hours of a disruption",
              "Test set": "Not scored on a test set"})
@@ -155,7 +154,7 @@ else:
 
 # --- Limits --------------------------------------------------------------------------------------------------------
 with ui.panel("limits"):
-    ui.card_head("Limits of this demo", "Read every output with these in mind", ui.badge("Synthetic · offline", "amber", ui.FLAG_COLOR))
+    ui.card_head("Limits of this demo", "Read every output with these in mind")
     st.markdown(
         """
 - **Synthetic, offline data only.** There is no live logistics, port, weather or telemetry feed.

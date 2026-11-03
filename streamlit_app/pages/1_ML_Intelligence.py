@@ -1,4 +1,4 @@
-"""ML Intelligence: XGBoost delay class and Isolation Forest anomaly, shown together but kept as two separate outputs."""
+"""Risk Prediction (file name kept for routing): XGBoost delay class and Isolation Forest anomaly, shown together but kept as two separate outputs."""
 from __future__ import annotations
 
 import logging
@@ -11,17 +11,11 @@ from services import ml_risk, port_ops
 
 log = logging.getLogger("cargomind.ml_page")
 
-st.set_page_config(page_title="ML Intelligence | CargoMind", layout="wide")
+st.set_page_config(page_title="Risk Prediction | CargoMind", layout="wide")
 ui.theme()
-ui.navbar("ML Intelligence")
-h_left, h_right = st.columns([1.6, 1], vertical_alignment="bottom")
-with h_left:
-    ui.header("ML Intelligence", "Delay outlook and unusual conditions at origin for one shipment: two independent model "
-                                 "outputs, shown side by side and never combined into one score.")
-with h_right:
-    st.markdown('<div style="text-align:right">' + ui.badge("Model A · XGBoost classifier", "navy") + " "
-                + ui.badge("Model B · Isolation Forest", "orange", ui.FLAG_COLOR) + "</div>", unsafe_allow_html=True)
-ui.demo_banner()
+ui.navbar("Risk Prediction")
+ui.header("Risk Prediction", "Delay outlook and unusual origin conditions for one shipment: two independent models, "
+                             "shown side by side and never combined into one score.")
 
 
 @st.cache_data(show_spinner=False)
@@ -69,10 +63,13 @@ except Exception:  # the file read failed; details go to the log, not the page
 names = _names()
 label = lambda p: f"{p} · {names[p]}" if p in names else p  # noqa: E731
 origins = sorted(shipments["origin_port_id"].unique())
-seed = st.session_state.pop("cm_ml_origin_seed", None)  # set by the Overview's "Open in ML Intelligence"
+seed = st.session_state.pop("cm_ml_origin_seed", None)  # set by the Overview's "Open shipment" / "Review" actions
+ship_seed = st.session_state.pop("cm_ml_shipment_seed", None)  # set by the Overview's "Open shipment"
 if seed in origins:
+    for key in ("dest", "carrier", "dates"):  # clear filters so the requested shipment is listed
+        st.session_state.pop(key, None)
     st.session_state["origin"] = seed
-    st.session_state["shipment"] = None
+    st.session_state["shipment"] = ship_seed
 
 # --- Shipment finder -----------------------------------------------------------------------------------------------
 with ui.panel("finder"):
@@ -170,7 +167,7 @@ with ui.panel("summary"):
                     f'<div class="cm-card-sub">{names.get(r0["origin_port_id"], "")} to {names.get(r0["destination_port_id"], "")}</div>',
                     unsafe_allow_html=True)
     with s2:
-        ui.context_bar({"Shipment": shipment_id, "Carrier": r0["carrier"], "Mode": r0["shipping_mode"], "Cargo": r0["cargo_type"],
+        ui.context_bar({"Carrier": r0["carrier"], "Mode": r0["shipping_mode"], "Cargo": r0["cargo_type"],
                         "Size": f"{r0['container_teu']:g} TEU", "Priority": r0["shipment_priority"],
                         "Departs": f"{r0['departure']:%a %d %b %Y, %H:%M} UTC",
                         "Expected arrival": f"{pd.Timestamp(r0['expected_arrival_ts']):%d %b %H:%M} UTC"})
@@ -180,22 +177,16 @@ with ui.row("models"):
     left, right = st.columns(2, gap="medium")
 
 with left, ui.panel("xgb"):
-    ui.card_head("Delay outlook", f"Model A · {classification['model_label']} · primary delay classifier", ui.badge("Classification", "navy"))
+    ui.card_head("Delay outlook", f"Model A · {classification['model_label']} · delay classification")
     st.markdown(f'<div style="display:flex;align-items:center;gap:0.6rem;margin:0.4rem 0 0.2rem 0">'
                 f'<span class="cm-card-sub" style="margin:0">Predicted class</span>{ui.class_chip(predicted)}</div>',
                 unsafe_allow_html=True)
     st.altair_chart(ui.probability_chart(classification["class_probabilities"]), use_container_width=True,
                     key=f"ml_probs_{shipment_id}")
-    st.caption(ui.UNCALIBRATED_NOTE)
-    ui.note("<b>Uncalibrated probabilities.</b> The predicted class is simply the highest raw probability. 0.6 does not mean "
-            "a 60 % real-world chance, and no alert threshold has been approved, so the app raises no alerts.")
-    ui.help_popover("XGBoost gives a raw probability for each delay class; the predicted class is simply the highest "
-                    "one. The probabilities are **not calibrated**: 0.6 does not mean a 60 % real-world chance. No "
-                    "alert threshold has been approved, so the app does not raise alerts.")
+    st.caption(ui.UNCALIBRATED_NOTE + " The predicted class is the highest raw probability.")
 
 with right, ui.panel("iforest"):
-    ui.card_head("Unusual conditions at origin", "Model B · Isolation Forest · anomaly detector",
-                 ui.badge("Anomaly detection", "orange"))
+    ui.card_head("Unusual conditions at origin", "Model B · Isolation Forest · anomaly detection")
     if anomaly is None:
         st.info("No anomaly result was produced for this shipment.")
     else:
@@ -215,9 +206,8 @@ with right, ui.panel("iforest"):
             ui.rows({"Dwell time": f"{ctx['dwell']:.1f} h", "Utilisation": f"{ctx['utilization']:.0f}%",
                      "Vessels at anchor": f"{ctx['vessels_at_anchor']:.0f}", "Wind gust": f"{ctx['wind_gust']:.0f} km/h",
                      "Disruption · strike": f"{'yes' if ctx['disruption_active'] else 'no'} · {'yes' if ctx['labour_strike'] else 'no'}"})
-    ui.help_popover("A separate model compares the origin port's operating state at departure with normal on-time "
-                    "conditions. Scores above the threshold are flagged. **An anomaly is not a delay prediction**, and it "
-                    "does not explain a delay.")
+    st.caption("Compares the origin's operating state at departure with normal on-time conditions. An anomaly is not a "
+               "delay prediction.")
 
 with ui.panel("reading"):
     ui.card_head("Reading both outputs together", "A plain-language note; it does not change either output")

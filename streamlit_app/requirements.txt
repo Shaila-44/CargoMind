@@ -2,3 +2,4 @@
 # workflows as installed packages, so install the repository requirements first (root requirements.txt).
 -r ../requirements.txt
 streamlit==1.50.0
+networkx  # Route Advisor graph search (already installed with torch; declared because the app uses it directly)
