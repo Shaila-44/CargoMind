@@ -11,6 +11,24 @@ The pages call the thin services in streamlit_app/services/ and never re-impleme
 
 Light / dark mode: menu (top right) > Settings > Theme. The custom panels and charts follow the active theme.
 """
+import sys
+from pathlib import Path
+
+# Fallback path resolution to ensure stage packages are discoverable on all deployment platforms
+_ROOT = Path(__file__).resolve().parent.parent
+_PACKAGE_DIRS = [
+    _ROOT / "ML" / "ML" / "src",
+    _ROOT / "ML" / "EDA" / "src",
+    _ROOT / "ML" / "Evaluation" / "src",
+    _ROOT / "DL" / "DL" / "src",
+    _ROOT / "DL",
+    _ROOT / "DL" / "Dataset" / "data_audit" / "src",
+    _ROOT / "DL" / "Evaluation",
+]
+for _p in _PACKAGE_DIRS:
+    if _p.exists() and str(_p) not in sys.path:
+        sys.path.insert(0, str(_p))
+
 import streamlit as st
 
 st.set_page_config(page_title="CargoMind", layout="wide")

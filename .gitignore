@@ -8,6 +8,9 @@ datasets/combined_dataset.csv
 !ML/Dataset/**/*.csv
 !ML/Dataset/*.csv
 
+# Explicitly allow DL processed dataset deliverables required by Streamlit and inference
+!DL/Dataset/processed/*.csv
+
 # macOS & IDE
 .DS_Store
 **/.DS_Store

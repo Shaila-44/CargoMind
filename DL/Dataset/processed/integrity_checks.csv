@@ -1,0 +1,11 @@
+check,passed,evidence
+target is the hour immediately after the last input hour,True,9203 windows
+every input hour lies in the target's split (no window straddles a boundary),True,embargo removed 240 windows
+all train hours < all val hours < all test hours (inputs and targets),True,"train ..699, val 700..849, test 850.."
+no reconstructed target in any kept window,True,437 excluded
+scaled target inverts to the stored dwell hours,True,max |Δ| 1.53e-05 h
+last input step is hour t's dwell (not t+1),True,
+200 random windows match an independent slice of the hourly panel,True,"inputs t-11..t, target t+1"
+scalers fitted on training-period hours only,True,"hour_index (0, 700)"
+all model inputs finite,True,"shape (9203, 12, 7)"
+dataset build is deterministic (two builds identical),True,"X, provenance, y, metadata, scalers"

@@ -1,0 +1,16 @@
+feature,source,split_hours,observed,converted,reconstructed
+dwell,port_hourly_telemetry.container_dwell_hours,train,6545,142,313
+dwell,port_hourly_telemetry.container_dwell_hours,val,1390,30,80
+dwell,port_hourly_telemetry.container_dwell_hours,test,1408,26,66
+utilization,port_hourly_telemetry.port_utilization_pct,train,6822,65,113
+utilization,port_hourly_telemetry.port_utilization_pct,val,1452,15,33
+utilization,port_hourly_telemetry.port_utilization_pct,test,1456,20,24
+labour_strike,port_hourly_telemetry.labour_status,train,6375,396,229
+labour_strike,port_hourly_telemetry.labour_status,val,1359,83,58
+labour_strike,port_hourly_telemetry.labour_status,test,1361,108,31
+wind_gust,weather_hourly.wind_gusts_10m_kmh,train,6788,40,172
+wind_gust,weather_hourly.wind_gusts_10m_kmh,val,1461,4,35
+wind_gust,weather_hourly.wind_gusts_10m_kmh,test,1452,6,42
+vessels_at_anchor,port_hourly_telemetry.vessels_at_anchor,train,6779,0,221
+vessels_at_anchor,port_hourly_telemetry.vessels_at_anchor,val,1448,0,52
+vessels_at_anchor,port_hourly_telemetry.vessels_at_anchor,test,1456,0,44

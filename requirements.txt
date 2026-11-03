@@ -1,7 +1,9 @@
-# CargoMind: everything needed to run both workflows and the (future) Streamlit app.
+# CargoMind: everything needed to run both workflows and the Streamlit app.
 # From the repository root, inside the project virtualenv (Python 3.9):
 #     .venv/bin/python -m pip install -r requirements.txt
 # The last line installs the repository's own packages in editable mode (see pyproject.toml).
+--extra-index-url https://download.pytorch.org/whl/cpu
 -r ML/ML/requirements.txt
 -r DL/DL/requirements.txt
+streamlit==1.50.0
 -e .
