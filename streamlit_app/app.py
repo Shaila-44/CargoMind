@@ -36,7 +36,7 @@ st.set_page_config(page_title="CargoMind", layout="wide")
 
 st.navigation([
     st.Page("overview.py", title="Overview", icon=":material/dashboard:", default=True),
-    st.Page("pages/1_ML_Intelligence.py", title="ML Intelligence", icon=":material/insights:"),
+    st.Page("pages/1_ML_Intelligence.py", title="Risk Prediction", icon=":material/insights:"),
+    st.Page("pages/4_Route_Advisor.py", title="Route Advisor", icon=":material/alt_route:"),
     st.Page("pages/2_Port_Forecast.py", title="Port Forecast", icon=":material/timeline:"),
-    st.Page("pages/3_Methodology.py", title="Methodology", icon=":material/menu_book:"),
 ], position="hidden").run()

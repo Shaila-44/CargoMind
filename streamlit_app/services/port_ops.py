@@ -15,7 +15,7 @@ import pandas as pd
 from cargomind_dl.config import DATASET
 from cargomind_eda.config import PROCESSED
 
-__all__ = ["panel", "ports", "port_names", "snapshot", "daily_trend", "shipment_outcomes"]
+__all__ = ["panel", "ports", "port_names", "snapshot", "daily_trend", "shipment_outcomes", "active_events"]
 
 
 @lru_cache(maxsize=1)
@@ -82,3 +82,27 @@ def shipment_outcomes(end_hour_utc, days: int = 7, origin_port_id: str | None = 
     if origin_port_id:
         s = s[s["origin_port_id"] == origin_port_id]
     return s["delay_status"].value_counts().reindex(["On-Time", "At-Risk", "Critical"], fill_value=0)
+
+
+@lru_cache(maxsize=1)
+def _events() -> pd.DataFrame:
+    e = pd.read_csv(PROCESSED / "disruption_events.csv",
+                    usecols=["event_id", "port_id", "event_start", "event_end", "event_type", "severity",
+                             "affected_capacity_pct", "event_description"])
+    for col in ("event_start", "event_end"):
+        e[col] = pd.to_datetime(e[col], utc=True, format="ISO8601")
+    return e
+
+
+def active_events(hour_utc) -> pd.DataFrame:
+    """Disruption events (synthetic event records) in progress at `hour_utc`, with hours elapsed since they started.
+
+    The event end time is used only to decide whether an event is still in progress; it is not returned, because it
+    would not be known at the replay hour.
+    """
+    ts = pd.Timestamp(hour_utc)
+    ts = ts.tz_localize("UTC") if ts.tzinfo is None else ts.tz_convert("UTC")
+    e = _events()
+    live = e[(e["event_start"] <= ts) & (e["event_end"] > ts)].drop(columns="event_end").copy()
+    live["hours_elapsed"] = ((ts - live["event_start"]).dt.total_seconds() / 3600).astype(int)
+    return live.reset_index(drop=True)

@@ -51,13 +51,20 @@ class PageJourneys(unittest.TestCase):
         at.run()
         return at
 
-    def test_every_page_renders_the_synthetic_banner_without_exceptions(self):
+    def test_every_page_keeps_the_synthetic_status_pill_without_a_warning_banner(self):
         for page in ("1_ML_Intelligence.py", "2_Port_Forecast.py", "3_Methodology.py"):
             with self.subTest(page=page):
                 at = self._run(page)
                 self.assertFalse(at.exception, at.exception)
-                markdown = [m.value for m in at.markdown]
-                self.assertTrue(any("Synthetic, offline demo" in m and 'role="status"' in m for m in markdown))
+                markdown = " ".join(m.value for m in at.markdown)
+                self.assertIn("Synthetic · offline", markdown)  # small header indicator stays
+                self.assertNotIn("Synthetic, offline demo", markdown)  # the long banner is gone
+
+    def test_risk_prediction_naming(self):
+        at = self._run("1_ML_Intelligence.py")
+        markdown = " ".join(m.value for m in at.markdown)
+        self.assertIn("Risk Prediction", markdown)
+        self.assertNotIn("ML Intelligence", markdown)
 
     def test_ml_page_asks_for_a_port_before_showing_results(self):
         at = self._run("1_ML_Intelligence.py")

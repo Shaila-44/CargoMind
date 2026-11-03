@@ -46,7 +46,6 @@ try:
 except Exception:
     log.exception("port history unavailable")
     ui.header("Port Forecast", "Next-hour port dwell time in hours, from the last 12 observed hours.")
-    ui.demo_banner()
     ui.error_box("Port history data is unavailable in this copy of the project. Forecasts cannot be produced.")
     st.stop()
 try:
@@ -67,7 +66,6 @@ with h_right:
                           help="EWMA is a simple benchmark for comparison. It is not the fallback.")
 with h_left:
     ui.header("Port Forecast", "Next-hour port dwell time in hours, from the last 12 observed hours.")
-ui.demo_banner()
 
 if port is None:
     st.info("Select a port above to see its next-hour forecast. "
@@ -133,26 +131,17 @@ with ui.row("hero"):
 
 with chart_col, ui.panel("chart"):
     ui.card_head(f"Dwell time · {port} {names.get(port, '')}",
-                 "Last 12 observed hours (solid line) and the next-hour forecast (diamond)",
-                 ui.badge("EWMA benchmark", "neutral") if benchmark else
-                 (ui.badge("Transformer T_w · primary", "navy") if not result["fallback_used"] else ui.badge("C_w LSTM · fallback", "orange")))
+                 "Last 12 observed hours (line) and the next-hour model estimate (diamond)")
     st.altair_chart(ui.style(alt.layer(band, area, line, dash, dots, marker, label).properties(height=380)), use_container_width=True,
                     key=f"fc_chart_{port}_{end_iso}_{benchmark}")
-    ui.help_popover("The solid line is **observed** history. The diamond is a **model estimate** for the next hour, "
-                    "joined by a dashed line. It is a single point forecast with no calibrated uncertainty. The Transformer "
-                    "T_w is the primary model; if it cannot produce a valid forecast, the C_w LSTM is used automatically "
-                    "and this page says so. EWMA is only a benchmark.")
+    st.caption("A single point forecast with no calibrated uncertainty.")
 
 with side_col, ui.panel("summary"):
     ui.card_head("Next-hour forecast", f"For {target:%a %d %b, %H:%M} UTC")
     ui.big(f"{forecast_hours:.1f}", "h", ui.badge(f"{forecast_hours - last_obs:+.1f} h vs last hour", "blue"))
-    st.markdown(f'<div class="cm-card-sub" style="margin-top:0.6rem">Model that produced this forecast</div>'
-                f'<div style="font-weight:600;color:{ui.INK};font-size:1rem">{model_name}</div>', unsafe_allow_html=True)
-    if benchmark:
-        fb = ui.badge("Not applicable (benchmark)", "neutral")
-    else:
-        fb = ui.badge("Used", "orange") if result["fallback_used"] else ui.badge("Not used", "green")
-    ui.rows({"Automatic fallback": fb,
+    fb = "Not applicable (benchmark)" if benchmark else ("Used" if result["fallback_used"] else "Not used")
+    ui.rows({"Model that produced this forecast": model_name,
+             "Automatic fallback": fb,
              "Last observed hour": f"{last_obs:.1f} h",
              "Observed at forecast hour": f"{observed_at_target:.1f} h" if observed_at_target is not None else "Not in the history",
              "Horizon": f"{result['forecast_horizon_hours']} h"})
@@ -161,12 +150,12 @@ with side_col, ui.panel("summary"):
                 f"Reason: {result['fallback_reason'] or 'not stated'}.", warn=True)
     elif benchmark:
         ui.note("EWMA (alpha 0.2) is shown for comparison only. It is a benchmark, not the fallback.")
-    st.markdown('<div class="cm-eyebrow" style="margin-top:0.8rem">Model chain</div>', unsafe_allow_html=True)
+    st.markdown('<div class="cm-card-sub" style="margin-top:0.4rem">Model chain</div>', unsafe_allow_html=True)
     active = "ewma" if benchmark else result["model_name"]
     chain = [(dl.DEFAULT_MODEL, "Transformer T_w", "primary"), (dl.FALLBACK_MODEL, "C_w LSTM", "automatic fallback"),
              ("ewma", "EWMA", "benchmark only")]
-    ui.rows({f"{name} <span style='color:#8a94a3'>· {role}</span>":
-             (ui.badge("active", "navy") if key == active else ui.badge("standby", "neutral") if key != "ewma" else ui.badge("on request", "neutral"))
+    ui.rows({f"{name} <span style='color:#9aa1ac'>· {role}</span>":
+             (ui.badge("active", "blue") if key == active else "standby" if key != "ewma" else "on request")
              for key, name, role in chain})
 
 # --- Context: input window | 7-day history -------------------------------------------------------------------------
