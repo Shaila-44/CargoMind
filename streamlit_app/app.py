@@ -9,7 +9,8 @@ The pages call the thin services in streamlit_app/services/ and never re-impleme
   * services/dl_forecasting.py -> DL workflow (DL/): next-hour port dwell-time forecast (Transformer T_w, C_w fallback)
   * services/port_ops.py       -> observed synthetic port history replayed at a chosen hour (no model, no live feed)
 
-Light / dark mode: menu (top right) > Settings > Theme. The custom panels and charts follow the active theme.
+Navigation is the pill bar drawn by components.ui.navbar on every page; Streamlit's own menu is hidden. The app uses one
+light design (theme in .streamlit/config.toml, components in components/ui.py).
 """
 import sys
 from pathlib import Path
@@ -38,4 +39,4 @@ st.navigation([
     st.Page("pages/1_ML_Intelligence.py", title="ML Intelligence", icon=":material/insights:"),
     st.Page("pages/2_Port_Forecast.py", title="Port Forecast", icon=":material/timeline:"),
     st.Page("pages/3_Methodology.py", title="Methodology", icon=":material/menu_book:"),
-]).run()
+], position="hidden").run()

@@ -62,14 +62,14 @@ class PageJourneys(unittest.TestCase):
     def test_ml_page_asks_for_a_port_before_showing_results(self):
         at = self._run("1_ML_Intelligence.py")
         self.assertFalse(at.exception)
-        self.assertTrue(any("Choose an origin port" in i.value for i in at.sidebar.info))
+        self.assertTrue(any("Choose an origin port" in i.value for i in at.info))
         self.assertEqual(len(at.metric), 0)
 
     def test_ml_page_shows_both_outputs_separately_for_a_selected_shipment(self):
         at = self._run("1_ML_Intelligence.py")
-        at.sidebar.selectbox[0].set_value("SGSIN").run()
-        first_id = at.sidebar.selectbox[1].options[0].split(" · ")[0]  # options are display labels; select by id
-        at.sidebar.selectbox[1].set_value(first_id).run()
+        at.selectbox[0].set_value("SGSIN").run()
+        first_id = at.selectbox[1].options[0].split(" · ")[0]  # options are display labels; select by id
+        at.selectbox[1].set_value(first_id).run()
         self.assertFalse(at.exception, at.exception)
         markdown = " ".join(m.value for m in at.markdown)
         self.assertIn("Predicted class", markdown)
@@ -82,15 +82,15 @@ class PageJourneys(unittest.TestCase):
 
     def test_ml_filters_narrow_the_shipment_list(self):
         at = self._run("1_ML_Intelligence.py")
-        at.sidebar.selectbox[0].set_value("SGSIN").run()
-        before = len(at.sidebar.selectbox[1].options)
-        at.sidebar.multiselect[0].select(at.sidebar.multiselect[0].options[0]).run()
+        at.selectbox[0].set_value("SGSIN").run()
+        before = len(at.selectbox[1].options)
+        at.multiselect[0].select(at.multiselect[0].options[0]).run()
         self.assertFalse(at.exception, at.exception)
-        self.assertLess(len(at.sidebar.selectbox[1].options), before)
+        self.assertLess(len(at.selectbox[1].options), before)
 
     def test_ml_batch_table_and_reset(self):
         at = self._run("1_ML_Intelligence.py")
-        at.sidebar.selectbox[0].set_value("SGSIN").run()
+        at.selectbox[0].set_value("SGSIN").run()
         at.toggle[0].set_value(True).run()
         self.assertFalse(at.exception, at.exception)
         self.assertEqual(len(at.dataframe), 1)
@@ -98,19 +98,21 @@ class PageJourneys(unittest.TestCase):
         self.assertIn("Predicted class (XGBoost)", columns)
         self.assertIn("Unusual conditions (Isolation Forest)", columns)
         self.assertNotIn("Risk score", columns)
-        at.sidebar.button[0].click().run()
-        self.assertIsNone(at.sidebar.selectbox[0].value)
+        at.button[0].click().run()
+        self.assertIsNone(at.selectbox[0].value)
 
     def test_forecast_page_names_the_producing_model(self):
         at = self._run("2_Port_Forecast.py")
         if at.error:  # port history missing in this copy: covered by the prompt/error test below
             self.skipTest("port history unavailable")
-        at.sidebar.selectbox[0].set_value("SGSIN").run()
+        at.selectbox[0].set_value("SGSIN").run()
         self.assertFalse(at.exception, at.exception)
-        metrics = {m.label: m.value for m in at.metric}
-        self.assertTrue(metrics["Forecast dwell (next hour)"].endswith(" h"))
-        self.assertIn(metrics["Model that produced this forecast"],
-                      ("Transformer T_w (primary)", "C_w LSTM (automatic fallback)"))
+        markdown = " ".join(m.value for m in at.markdown)
+        self.assertIn("Next-hour forecast", markdown)
+        self.assertIn("Model that produced this forecast", markdown)
+        self.assertTrue("Transformer T_w (primary)" in markdown or "C_w LSTM (automatic fallback)" in markdown)
+        self.assertIn("Automatic fallback", markdown)
+        self.assertIn("benchmark only", markdown)  # EWMA is labelled as a benchmark, not the fallback
 
     def test_forecast_page_asks_for_a_port_before_forecasting(self):
         at = self._run("2_Port_Forecast.py")

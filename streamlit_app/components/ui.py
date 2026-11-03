@@ -1,11 +1,15 @@
-"""Shared presentation helpers: theme, status strip, panels, charts and the ML interpretation text.
+"""Shared presentation layer: design tokens, navigation, cards, badges, pickers, charts and the ML interpretation text.
 
 No model or feature logic lives here. The interpretation only describes the two independent ML outputs side by side;
 it never changes either output and never combines them into one score. Probabilities and the anomaly score are always
 drawn on separate charts with separate scales.
 
-Light and dark mode follow Streamlit's own theme switch (menu > Settings > Theme); `palette()` reads the active mode so
-the custom panels and charts match the built-in widgets.
+Design system (light, frosted glass):
+  * tokens        -> the constants below and the CSS custom properties in `theme()`
+  * layout        -> `navbar()`, `header()`, `panel()` (frosted card), `tile()` (solid inner card), `section()`
+  * text blocks   -> `card_head()`, `kpi()`, `rows()`, `badge()`, `class_chip()`, `flag_chip()`, `seg_bar()`
+  * controls      -> `port_picker()`, `hour_picker()` (selection shared across pages via session state)
+  * charts        -> `style()` plus the chart builders; all use the same palette and font
 """
 from __future__ import annotations
 
@@ -17,126 +21,311 @@ import streamlit as st
 
 from services import ml_risk
 
+# --- Tokens --------------------------------------------------------------------------------------------------------
+INK, INK2, MUTED = "#1b2430", "#4f5b69", "#8a94a3"
+NAVY, BLUE, BLUE_SOFT, BLUE_PALE = "#0f2d52", "#2f7de1", "#8db8f0", "#dbe8f8"
+GRID, TRACK = "rgba(27, 36, 48, 0.07)", "#e4eaf1"
 CLASS_ORDER = ["On-Time", "At-Risk", "Critical"]
 # One meaning per colour across the whole app. Every use is paired with the class name, so colour is never the only cue.
-CLASS_COLORS = {"On-Time": "#16a34a", "At-Risk": "#d97706", "Critical": "#dc2626"}
-FLAG_COLOR = "#d97706"
-FONT = "Fira Sans, system-ui, -apple-system, Helvetica, Arial, sans-serif"  # chart text; sans-serif fallbacks
+CLASS_COLORS = {"On-Time": "#1f9d6b", "At-Risk": "#d99a12", "Critical": "#e04848"}
+FLAG_COLOR = "#e0841a"  # Isolation Forest flag; also used for disruptions in the observed history
+FONT = "Inter, system-ui, -apple-system, Helvetica, Arial, sans-serif"  # chart text
 UNCALIBRATED_NOTE = "Raw model probabilities, not calibrated: they are not real-world likelihoods, and no alert threshold is set."
 DEMO_NOTICE = "Synthetic, offline demo. No live port, shipment or weather feed; nothing here is current real-world status."
 
-_PALETTES = {
-    "dark": {"background": "radial-gradient(1200px 600px at 50% -10%, #1d4ed8 0%, rgba(29,78,216,0) 60%), "
-                           "linear-gradient(180deg, #0b2a5e 0%, #0a1d3f 55%, #071530 100%)",
-             "panel": "rgba(18, 52, 110, 0.55)", "border": "rgba(96, 165, 250, 0.38)", "text": "#eef4ff",
-             "muted": "#c3d3ee", "sidebar": "#0a1b3a", "accent": "#38bdf8", "chart_text": "#d5e2fb",
-             "grid": "rgba(148, 163, 184, 0.22)", "track": "rgba(148, 163, 184, 0.28)", "strip": "rgba(217, 119, 6, 0.16)",
-             "strip_border": "rgba(251, 191, 36, 0.55)", "map": "dark"},
-    "light": {"background": "linear-gradient(180deg, #eef4ff 0%, #f6f9ff 45%, #ffffff 100%)",
-              "panel": "#ffffff", "border": "#c9daf3", "text": "#0f2a57", "muted": "#3d5378", "sidebar": "#eaf1fc",
-              "accent": "#1d4ed8", "chart_text": "#334155", "grid": "rgba(15, 42, 87, 0.12)", "track": "#e2e8f0",
-              "strip": "#fff7e6", "strip_border": "#f2b84b", "map": "light"},
+NAV = [("Overview", "overview.py", ":material/home:"),
+       ("ML Intelligence", "pages/1_ML_Intelligence.py", ":material/insights:"),
+       ("Port Forecast", "pages/2_Port_Forecast.py", ":material/timeline:"),
+       ("Methodology", "pages/3_Methodology.py", ":material/menu_book:")]
+
+# Shared filter state (session keys that outlive page switches; widget keys are cleared when a page is left).
+SHARED_PORT, SHARED_HOUR = "cm_shared_port", "cm_shared_hour"
+
+_CSS = """
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root {
+  --cm-ink: #1b2430; --cm-ink2: #4f5b69; --cm-muted: #8a94a3; --cm-navy: #0f2d52; --cm-blue: #2f7de1;
+  --cm-blue-pale: #e3eefb; --cm-glass: rgba(255, 255, 255, 0.56); --cm-solid: rgba(255, 255, 255, 0.86);
+  --cm-line: rgba(255, 255, 255, 0.85); --cm-hair: rgba(27, 36, 48, 0.07);
+  --cm-shadow: 0 1px 2px rgba(16, 32, 56, 0.04), 0 12px 32px rgba(16, 32, 56, 0.06);
+  --cm-r-xl: 30px; --cm-r-lg: 22px; --cm-r-md: 16px; --cm-r-pill: 999px;
+  --cm-green: #1f9d6b; --cm-amber: #d99a12; --cm-red: #e04848; --cm-orange: #e0841a;
 }
+.stApp { background:
+    radial-gradient(1100px 560px at 88% -8%, rgba(196, 219, 242, 0.95), rgba(196, 219, 242, 0) 62%),
+    radial-gradient(900px 620px at -6% 104%, rgba(205, 222, 238, 0.95), rgba(205, 222, 238, 0) 60%),
+    radial-gradient(700px 300px at 30% 92%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, #eef2f6 0%, #e6ecf2 100%); background-attachment: fixed; }
+.stApp, .stApp p, .stApp li, .stApp label, .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp td, .stApp th, .stApp input,
+.stApp button, [class^="cm-"] { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+.stApp { color: var(--cm-ink); }
+header[data-testid="stHeader"] { background: transparent; height: 2.4rem; }
+section[data-testid="stSidebar"], div[data-testid="stSidebarCollapsedControl"] { display: none; }
+footer { visibility: hidden; }
+/* The whole app sits in one large frosted frame, as in the reference. */
+.block-container { max-width: 1380px; margin: 0.9rem auto 2rem auto; padding: 1.4rem 2rem 2.2rem 2rem !important;
+  background: rgba(255, 255, 255, 0.34); border: 1px solid var(--cm-line); border-radius: var(--cm-r-xl);
+  box-shadow: 0 30px 80px rgba(16, 32, 56, 0.08); backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px); }
+.stApp p { color: var(--cm-ink2); }
+div[data-testid="stCaptionContainer"], div[data-testid="stCaptionContainer"] p { font-size: 0.8rem; color: var(--cm-muted); }
+.stApp *:focus-visible { outline: 2px solid var(--cm-blue) !important; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { .stApp * { transition: none !important; animation: none !important; } }
+
+/* Navigation */
+.st-key-cm_nav { padding: 0.15rem 0 0.9rem 0; }
+.cm-brand { display: flex; align-items: center; line-height: 1.3; gap: 0.6rem; font-size: 1.55rem; font-weight: 500; color: var(--cm-ink);
+  letter-spacing: -0.02em; white-space: nowrap; }
+.cm-brand svg { flex: none; }
+.st-key-cm_nav_pills { gap: 0.4rem !important; width: auto !important; flex: 0 1 auto !important; flex-wrap: wrap; }
+[class*="st-key-cm_nav_link"], [class*="st-key-cm_nav_active"] { width: auto !important; flex: 0 0 auto !important; }
+.st-key-cm_nav > div, .st-key-cm_nav_pills > div { flex: 0 0 auto !important; width: auto !important; max-width: none !important; }
+.st-key-cm_nav { flex-wrap: wrap; row-gap: 0.6rem; }
+.st-key-cm_nav_pills [data-testid="stPageLink"] a, .cm-pill { display: inline-flex; align-items: center; gap: 0.35rem;
+  height: 2.65rem; padding: 0 1.1rem !important; border-radius: var(--cm-r-pill); background: var(--cm-glass);
+  border: 1px solid var(--cm-line); box-shadow: 0 1px 2px rgba(16, 32, 56, 0.04); transition: background 0.15s ease; }
+.st-key-cm_nav_pills [data-testid="stPageLink"] a:hover { background: rgba(255, 255, 255, 0.9); }
+.st-key-cm_nav_pills [data-testid="stPageLink"] a p, .st-key-cm_nav_pills [data-testid="stPageLink"] a span,
+.cm-pill { color: var(--cm-ink2) !important; font-size: 0.92rem !important; font-weight: 500; white-space: nowrap; }
+[class*="st-key-cm_nav_active"] [data-testid="stPageLink"] a, .cm-pill.active { background: var(--cm-navy) !important;
+  border-color: var(--cm-navy); box-shadow: 0 6px 16px rgba(15, 45, 82, 0.25); }
+[class*="st-key-cm_nav_active"] [data-testid="stPageLink"] a p, [class*="st-key-cm_nav_active"] [data-testid="stPageLink"] a span,
+.cm-pill.active { color: #fff !important; }
+.cm-status-pill { display: inline-flex; align-items: center; gap: 0.5rem; height: 2.65rem; padding: 0 1rem;
+  border-radius: var(--cm-r-pill); background: var(--cm-glass); border: 1px solid var(--cm-line); font-size: 0.85rem;
+  color: var(--cm-ink2); white-space: nowrap; }
+.cm-status-pill .dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--cm-orange);
+  box-shadow: 0 0 0 4px rgba(224, 132, 26, 0.15); }
+
+/* Page header */
+.cm-h1 { font-size: 2.35rem; font-weight: 600; letter-spacing: -0.03em; line-height: 1.15; color: var(--cm-ink); margin: 0.2rem 0 0.35rem 0; }
+.cm-lede { font-size: 1.02rem; color: var(--cm-ink2); margin: 0 0 0.2rem 0; }
+.cm-replay { display: inline-flex; align-items: center; gap: 0.45rem; color: var(--cm-navy); font-weight: 600; font-size: 0.92rem; }
+.cm-banner { display: flex; align-items: center; gap: 0.6rem; padding: 0.55rem 0.95rem; margin: 0.25rem 0 0.4rem 0;
+  border-radius: var(--cm-r-md); background: rgba(255, 248, 235, 0.72); border: 1px solid rgba(240, 196, 120, 0.55);
+  font-size: 0.84rem; color: #6b4e16; }
+.cm-banner b { color: #5a4010; font-weight: 600; }
+.cm-banner .dot { flex: none; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--cm-orange); }
+.cm-section { font-size: 0.74rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cm-muted);
+  margin: 0.9rem 0 0.1rem 0.2rem; }
+
+/* Cards: keyed containers. card_* = frosted panel, tile_* = solid inner card. */
+[class*="st-key-card_"] { background: var(--cm-glass); border: 1px solid var(--cm-line); border-radius: var(--cm-r-lg);
+  box-shadow: var(--cm-shadow); padding: 1.15rem 1.25rem 1.1rem 1.25rem; backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px); }
+[class*="st-key-tile_"] { background: var(--cm-solid); border: 1px solid var(--cm-line); border-radius: var(--cm-r-md);
+  box-shadow: 0 1px 2px rgba(16, 32, 56, 0.04); padding: 0.85rem 0.95rem; }
+[class*="st-key-card_xgb"] { border-top: 3px solid var(--cm-navy); }
+[class*="st-key-card_iforest"] { border-top: 3px solid var(--cm-orange); }
+/* Rows of cards stretch to equal height. */
+[class*="st-key-row_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"] { height: 100%; }
+[class*="st-key-row_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"] > div:last-child:has(> [class*="st-key-card_"]) { flex: 1 1 auto; }
+[class*="st-key-row_"] [data-testid="stColumn"] > [data-testid="stVerticalBlock"] > div:last-child > [class*="st-key-card_"] { height: 100%; }
+
+.cm-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.8rem; margin-bottom: 0.15rem; }
+.cm-card-title { font-size: 1.12rem; font-weight: 600; color: var(--cm-ink); letter-spacing: -0.01em; }
+.cm-card-sub { font-size: 0.8rem; color: var(--cm-muted); margin-top: 0.1rem; }
+.cm-eyebrow { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cm-muted); }
+.cm-big { font-size: 2.3rem; font-weight: 600; letter-spacing: -0.03em; color: var(--cm-ink); line-height: 1.1;
+  font-variant-numeric: tabular-nums; }
+.cm-big .unit { font-size: 1.05rem; font-weight: 500; color: var(--cm-muted); margin-left: 0.25rem; letter-spacing: 0; }
+.cm-kpi .label { font-size: 0.78rem; color: var(--cm-muted); }
+.cm-kpi .value { font-size: 1.55rem; font-weight: 600; color: var(--cm-ink); letter-spacing: -0.02em; margin-top: 0.15rem;
+  font-variant-numeric: tabular-nums; }
+.cm-kpi .value .unit { font-size: 0.85rem; font-weight: 500; color: var(--cm-muted); margin-left: 0.2rem; }
+.cm-kpi.accent .value { color: var(--cm-blue); }
+.cm-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(92px, 1fr)); gap: 0.4rem; }
+.cm-kpis .cm-kpi { padding: 0.1rem 0.2rem 0.1rem 0.75rem; border-left: 1px solid var(--cm-hair); }
+.cm-kpis .cm-kpi:first-child { border-left: none; padding-left: 0; }
+.cm-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.42rem 0;
+  border-bottom: 1px solid var(--cm-hair); font-size: 0.86rem; }
+.cm-row:last-child { border-bottom: none; }
+.cm-row .k { color: var(--cm-ink2); display: inline-flex; align-items: center; gap: 0.45rem; }
+.cm-row .k b { color: var(--cm-ink); min-width: 3.4rem; }
+.cm-row .v { color: var(--cm-ink); font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+.cm-badge { display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.18rem 0.6rem; border-radius: var(--cm-r-pill);
+  font-size: 0.75rem; font-weight: 600; white-space: nowrap; border: 1px solid transparent; }
+.cm-badge .dot { width: 0.45rem; height: 0.45rem; border-radius: 50%; display: inline-block; }
+.cm-badge.neutral { background: rgba(255, 255, 255, 0.8); color: var(--cm-ink2); border-color: var(--cm-hair); }
+.cm-badge.blue { background: var(--cm-blue-pale); color: #1d5fb8; }
+.cm-badge.navy { background: var(--cm-navy); color: #fff; }
+.cm-badge.green { background: #e3f4ec; color: #157a52; }
+.cm-badge.amber { background: #fbf0d9; color: #94660a; }
+.cm-badge.orange { background: #fcebd9; color: #a35a0c; }
+.cm-badge.red { background: #fbe3e3; color: #b42f2f; }
+.cm-chip { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.25rem 0.75rem; border-radius: var(--cm-r-pill);
+  font-size: 0.85rem; font-weight: 600; background: rgba(255, 255, 255, 0.85); border: 1px solid var(--cm-hair); color: var(--cm-ink); }
+.cm-chip .dot { width: 0.55rem; height: 0.55rem; border-radius: 50%; display: inline-block; }
+.cm-context { display: flex; flex-wrap: wrap; gap: 0.45rem; margin: 0.2rem 0 0.2rem 0; }
+.cm-context .item { padding: 0.32rem 0.8rem; border-radius: var(--cm-r-pill); background: var(--cm-glass); border: 1px solid var(--cm-line);
+  font-size: 0.83rem; color: var(--cm-ink); }
+.cm-context .item b { color: var(--cm-muted); font-weight: 500; margin-right: 0.35rem; }
+.cm-note { font-size: 0.8rem; color: var(--cm-ink2); background: rgba(227, 238, 251, 0.65); border-radius: 12px;
+  padding: 0.55rem 0.75rem; margin-top: 0.5rem; }
+.cm-note.warn { background: rgba(251, 240, 217, 0.8); color: #6b4e16; }
+/* List table (overview shipment list) */
+.cm-list-head, .cm-list-row { display: grid; grid-template-columns: 1.15fr 1fr 1fr 1.5fr 0.8fr; gap: 0.6rem; align-items: center; }
+.cm-list-head { font-size: 0.78rem; color: var(--cm-muted); padding: 0.55rem 0.9rem 0.45rem 0.9rem; }
+.cm-list-row { padding: 0.6rem 0.9rem; margin-bottom: 0.45rem; border-radius: var(--cm-r-md); background: var(--cm-solid);
+  border: 1px solid var(--cm-line); font-size: 0.84rem; color: var(--cm-ink); }
+.cm-list-row .id { font-weight: 600; }
+.cm-list-row .sub { font-size: 0.74rem; color: var(--cm-muted); }
+.cm-list-row .num { font-variant-numeric: tabular-nums; font-weight: 600; min-width: 2.4rem; }
+.cm-pbar { display: flex; align-items: center; gap: 0.55rem; }
+.cm-seg { display: flex; gap: 2px; flex: 1; max-width: 120px; }
+.cm-seg i { flex: 1; height: 10px; border-radius: 2px; background: #e3e9f0; }
+.cm-port-row { display: grid; grid-template-columns: 1.4fr 0.8fr 0.9fr 0.8fr 1fr; gap: 0.5rem; align-items: center;
+  padding: 0.48rem 0.2rem; border-bottom: 1px solid var(--cm-hair); font-size: 0.84rem; color: var(--cm-ink); }
+.cm-port-row.head { font-size: 0.76rem; color: var(--cm-muted); }
+.cm-port-row .num { font-variant-numeric: tabular-nums; }
+.cm-port-row.focus { background: rgba(227, 238, 251, 0.6); border-radius: 10px; }
+.cm-meter { position: relative; height: 8px; border-radius: 99px; background: #e3e9f0; margin: 0.9rem 0 0.35rem 0; }
+.cm-meter .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 99px;
+  background: linear-gradient(90deg, #8db8f0, #2f7de1); }
+.cm-meter .mark { position: absolute; top: -5px; width: 2px; height: 18px; background: var(--cm-ink2); border-radius: 2px; }
+.cm-meter .knob { position: absolute; top: -4px; width: 16px; height: 16px; margin-left: -8px; border-radius: 50%;
+  background: #fff; border: 4px solid var(--cm-blue); box-shadow: 0 2px 6px rgba(47, 125, 225, 0.35); }
+.cm-meter-legend { display: flex; justify-content: space-between; font-size: 0.74rem; color: var(--cm-muted); }
+/* Methodology flow diagram */
+.cm-flow { display: flex; align-items: stretch; gap: 0.5rem; flex-wrap: wrap; }
+.cm-flow .node { flex: 1 1 140px; background: var(--cm-solid); border: 1px solid var(--cm-line); border-radius: 14px;
+  padding: 0.65rem 0.8rem; font-size: 0.8rem; color: var(--cm-ink2); box-shadow: 0 1px 2px rgba(16, 32, 56, 0.04); }
+.cm-flow .node b { display: block; color: var(--cm-ink); font-size: 0.88rem; margin-bottom: 0.15rem; }
+.cm-flow .node.navy { border-left: 3px solid var(--cm-navy); }
+.cm-flow .node.orange { border-left: 3px solid var(--cm-orange); }
+.cm-flow .node.blue { border-left: 3px solid var(--cm-blue); }
+.cm-flow .node.dashed { background: transparent; border: 1px dashed #b8c3d0; }
+.cm-flow .arrow { flex: none; align-self: center; color: var(--cm-muted); font-size: 1.1rem; }
+.cm-lane-label { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cm-muted);
+  margin: 0.2rem 0 0.4rem 0; }
+
+/* Native widgets, restyled to match */
+div[data-baseweb="select"] > div, div[data-testid="stDateInput"] div[data-baseweb="input"] {
+  border-radius: var(--cm-r-pill) !important; background: rgba(255, 255, 255, 0.72) !important;
+  border: 1px solid var(--cm-line) !important; box-shadow: 0 1px 2px rgba(16, 32, 56, 0.05); min-height: 2.6rem; }
+div[data-testid="stDateInput"] input { background: transparent !important; }
+div[data-baseweb="select"] span, div[data-baseweb="select"] input { font-size: 0.9rem; }
+.stApp label p { font-size: 0.8rem !important; color: var(--cm-ink2) !important; }
+.stButton button, div[data-testid="stPopover"] button, a[data-testid="stPageLink-NavLink"] { border-radius: var(--cm-r-pill) !important; }
+.stButton button { background: rgba(255, 255, 255, 0.75); border: 1px solid var(--cm-line); color: var(--cm-ink); font-weight: 500; }
+.stButton button[kind="primary"] { background: var(--cm-navy); border-color: var(--cm-navy); color: #fff; }
+div[data-testid="stPopover"] button { background: transparent; border: 1px solid var(--cm-hair); font-size: 0.8rem; min-height: 2rem;
+  padding: 0.1rem 0.7rem; color: var(--cm-ink2); }
+div[data-testid="stButtonGroup"] button { border-radius: var(--cm-r-pill) !important; border: 1px solid var(--cm-line) !important;
+  background: rgba(255, 255, 255, 0.7) !important; font-size: 0.82rem; min-height: 2.1rem; padding: 0.15rem 0.85rem; }
+div[data-testid="stButtonGroup"] button[kind$="Active"] { background: var(--cm-navy) !important; color: #fff !important;
+  border-color: var(--cm-navy) !important; }
+div[data-testid="stButtonGroup"] button[kind$="Active"] p { color: #fff !important; }
+div[data-testid="stExpander"] details { border-radius: var(--cm-r-lg) !important; border: 1px solid var(--cm-line) !important;
+  background: var(--cm-glass); box-shadow: var(--cm-shadow); }
+div[data-testid="stExpander"] summary p { font-weight: 600; color: var(--cm-ink); }
+div[data-testid="stMetric"] { background: transparent; padding: 0; }
+div[data-testid="stMetricValue"] { font-size: 2rem; font-weight: 600; letter-spacing: -0.02em; color: var(--cm-ink); }
+div[data-testid="stAlert"] { border-radius: var(--cm-r-md); background: rgba(255, 255, 255, 0.7); border: 1px solid var(--cm-line); }
+div[data-testid="stDataFrame"] { border-radius: var(--cm-r-md); overflow: hidden; }
+div[data-testid="stToggle"] label p { font-size: 0.84rem !important; }
+div[data-testid="stDeckGlJsonChart"] { border-radius: var(--cm-r-md); overflow: hidden; }
+
+/* Narrow screens: Streamlit stacks columns below 640 px; tighten the frame and type. */
+@media (max-width: 900px) {
+  .block-container { padding: 1rem 1rem 1.6rem 1rem !important; margin: 0.4rem; border-radius: 22px; }
+  .cm-h1 { font-size: 1.8rem; }
+  .cm-list-head { display: none; }
+  .cm-list-row { grid-template-columns: 1fr 1fr; }
+  .cm-port-row { grid-template-columns: 1.3fr 0.8fr 0.8fr 0.8fr; }
+  .cm-port-row > :nth-child(5) { display: none; }
+}
+@media (max-width: 640px) {
+  .st-key-cm_nav > div { max-width: 100% !important; }
+  .st-key-cm_nav_pills { flex-wrap: nowrap !important; overflow-x: auto; max-width: 100%; padding-bottom: 0.3rem;
+    scrollbar-width: none; }
+  .cm-brand { line-height: 1.4; padding-bottom: 0.9rem; font-size: 1.35rem; }
+  .cm-big { font-size: 1.9rem; }
+}
+</style>
+"""
+
+_LOGO = ('<svg width="30" height="30" viewBox="0 0 32 32" fill="none" aria-hidden="true">'
+         '<circle cx="16" cy="16" r="14" stroke="#0f2d52" stroke-width="2.2"/>'
+         '<path d="M6 19c3.2 2.4 6.6 2.4 10 0s6.8-2.4 10 0" stroke="#2f7de1" stroke-width="2.2" stroke-linecap="round"/>'
+         '<path d="M16 7v9M11.5 11.5h9" stroke="#0f2d52" stroke-width="2.2" stroke-linecap="round"/></svg>')
 
 
 def mode() -> str:
-    """'light' or 'dark', following Streamlit's active theme (dark when unknown, e.g. in tests)."""
-    try:
-        return "light" if st.context.theme.type == "light" else "dark"
-    except Exception:
-        return "dark"
+    """The app uses one light design (set in .streamlit/config.toml)."""
+    return "light"
 
 
 def palette() -> dict[str, str]:
-    return _PALETTES[mode()]
+    """Colours for charts and the map, kept for callers that read them by role."""
+    return {"text": INK, "muted": INK2, "accent": BLUE, "chart_text": INK2, "grid": GRID, "track": TRACK, "map": "light"}
 
 
 def theme() -> None:
-    """Apply the shared look. Call once near the top of every page."""
-    p = palette()
-    st.markdown(f"""
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Fira+Sans:wght@400;500;600;700&display=swap');
-  :root {{ --cm-accent: {p['accent']}; --cm-panel: {p['panel']}; --cm-border: {p['border']}; --cm-text: {p['text']};
-          --cm-muted: {p['muted']}; }}
-  .stApp {{ background: {p['background']}; background-attachment: fixed; }}
-  .stApp, .stApp p, .stApp li, .stApp label, .stApp h1, .stApp h2, .stApp h3, .stApp h4, .stApp td, .stApp th,
-  [class^="cm-"] {{ font-family: 'Fira Sans', system-ui, sans-serif; }}
-  header[data-testid="stHeader"] {{ background: transparent; }}
-  .block-container {{ padding-top: 1.6rem; padding-bottom: 3rem; max-width: 1400px; }}
-  h1 {{ font-weight: 700; letter-spacing: -0.01em; }}
-  div[data-testid="stCaptionContainer"], div[data-testid="stCaptionContainer"] p {{ font-size: 0.875rem; color: var(--cm-muted); }}
-  .cm-status {{ display: flex; gap: 0.6rem; align-items: center; padding: 0.5rem 0.9rem; margin-bottom: 0.9rem;
-               background: {p['strip']}; border: 1px solid {p['strip_border']}; border-radius: 8px; font-size: 0.9rem;
-               color: var(--cm-text); }}
-  .cm-status svg {{ flex: none; }}
-  .cm-chip {{ display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.12rem 0.6rem; border-radius: 999px;
-             font-size: 0.8rem; font-weight: 600; border: 1px solid var(--cm-border); color: var(--cm-text); }}
-  .cm-chip .dot {{ width: 0.55rem; height: 0.55rem; border-radius: 50%; display: inline-block; }}
-  .cm-eyebrow {{ color: var(--cm-accent); font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em;
-                text-transform: uppercase; margin: 0.4rem 0 0.35rem 0; }}
-  .cm-lede {{ color: var(--cm-muted); font-size: 1rem; margin-top: -0.4rem; margin-bottom: 1rem; }}
-  .cm-titlebar {{ display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 0.75rem 1.1rem;
-                 margin-bottom: 0.8rem; border: 1px solid var(--cm-border); border-radius: 10px; background: var(--cm-panel); }}
-  .cm-titlebar .t {{ font-size: 1.4rem; font-weight: 700; color: var(--cm-text); }}
-  .cm-titlebar .s {{ font-size: 0.85rem; color: var(--cm-muted); }}
-  .cm-context {{ display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0 0 0.9rem 0; }}
-  .cm-context .item {{ padding: 0.3rem 0.7rem; border-radius: 8px; border: 1px solid var(--cm-border); background: var(--cm-panel);
-                      font-size: 0.88rem; color: var(--cm-text); }}
-  .cm-context .item b {{ color: var(--cm-muted); font-weight: 500; margin-right: 0.3rem; }}
-  .cm-card {{ background: var(--cm-panel); border: 1px solid var(--cm-border); border-radius: 10px; padding: 0.9rem 1.1rem; }}
-  .cm-kpi {{ background: var(--cm-panel); border: 1px solid var(--cm-border); border-radius: 10px; padding: 0.8rem 1rem;
-            text-align: center; }}
-  .cm-kpi .label {{ color: var(--cm-muted); font-size: 0.88rem; }}
-  .cm-kpi .value {{ font-size: 1.85rem; font-weight: 700; line-height: 1.2; margin-top: 0.15rem; color: var(--cm-text); }}
-  .cm-kpi .unit {{ font-size: 0.95rem; font-weight: 500; color: var(--cm-muted); margin-left: 0.25rem; }}
-  .cm-panel-title {{ font-weight: 600; font-size: 1.02rem; color: var(--cm-text); }}
-  .cm-panel-sub {{ font-size: 0.82rem; color: var(--cm-muted); margin-bottom: 0.4rem; }}
-  .cm-row {{ display: flex; justify-content: space-between; gap: 1rem; padding: 0.42rem 0; border-bottom: 1px solid var(--cm-border); }}
-  .cm-row:last-child {{ border-bottom: none; }}
-  .cm-row .k {{ color: var(--cm-muted); }}
-  .cm-row .v {{ font-weight: 700; font-size: 1.05rem; color: var(--cm-text); text-align: right; }}
-  .cm-kpi .value, .cm-row .v, div[data-testid="stMetricValue"] {{ font-variant-numeric: tabular-nums; }}
-  div[data-testid="stVerticalBlockBorderWrapper"] {{ background: var(--cm-panel); border-color: var(--cm-border) !important;
-                                                     border-radius: 10px; }}
-  div[data-testid="stMetric"] {{ background: var(--cm-panel); border: 1px solid var(--cm-border); border-radius: 10px;
-                                padding: 0.7rem 1rem; }}
-  div[data-testid="stMetricValue"] {{ font-size: 1.4rem; }}
-  div[data-testid="stAlert"] {{ border-radius: 10px; }}
-  section[data-testid="stSidebar"] {{ background: {p['sidebar']}; border-right: 1px solid var(--cm-border); }}
-  div[data-testid="stExpander"] {{ border-radius: 10px; border: 1px solid var(--cm-border); background: var(--cm-panel); }}
-  a, button, [role="button"], [data-baseweb="select"] {{ cursor: pointer; }}
-  .stApp *:focus-visible {{ outline: 2px solid var(--cm-accent) !important; outline-offset: 2px; }}
-  @media (prefers-reduced-motion: reduce) {{ .stApp * {{ transition: none !important; animation: none !important; }} }}
-  footer {{ visibility: hidden; }}
-</style>
-""", unsafe_allow_html=True)
+    """Apply the shared design system. Call once near the top of every page."""
+    st.markdown(_CSS, unsafe_allow_html=True)
 
 
-_INFO_SVG = ('<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2" aria-hidden="true">'
-             '<circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>')
+# --- Layout --------------------------------------------------------------------------------------------------------
+def navbar(active: str) -> None:
+    """Brand, horizontal pill navigation and the permanent synthetic/offline status pill."""
+    with st.container(key="cm_nav", horizontal=True, vertical_alignment="center", horizontal_alignment="distribute"):
+        st.markdown(f'<div class="cm-brand">{_LOGO}CargoMind</div>', unsafe_allow_html=True)
+        with st.container(key="cm_nav_pills", horizontal=True, vertical_alignment="center", gap=None):
+            for i, (label, page, icon) in enumerate(NAV):
+                key = f"cm_nav_active_{i}" if label == active else f"cm_nav_link_{i}"
+                with st.container(key=key):
+                    try:
+                        st.page_link(page, label=label, icon=icon)
+                    except Exception:  # page registry absent (a page run on its own, e.g. in tests): plain label
+                        css = "cm-pill active" if label == active else "cm-pill"
+                        st.markdown(f'<span class="{css}">{label}</span>', unsafe_allow_html=True)
+        st.markdown('<span class="cm-status-pill" title="All data is synthetic; there is no live feed">'
+                    '<span class="dot"></span>Synthetic · offline</span>', unsafe_allow_html=True)
+
+
+def header(title: str, lede: str, eyebrow: str | None = None) -> None:
+    """Page title and one-line description (left side of the header row)."""
+    eb = f'<div class="cm-eyebrow">{eyebrow}</div>' if eyebrow else ""
+    st.markdown(f'{eb}<div class="cm-h1">{title}</div><div class="cm-lede">{lede}</div>', unsafe_allow_html=True)
 
 
 def demo_banner() -> None:
     """Slim, always-visible synthetic/offline status with the supported date range (required on every page)."""
     start = ml_risk.SUPPORTED_DEPARTURE_START.strftime("%Y-%m-%d")
     end = ml_risk.SUPPORTED_DEPARTURE_END.strftime("%Y-%m-%d")
-    st.markdown(f'<div class="cm-status" role="status">{_INFO_SVG}<span><b>{DEMO_NOTICE}</b> '
+    st.markdown(f'<div class="cm-banner" role="status"><span class="dot"></span><span><b>{DEMO_NOTICE}</b> '
                 f'Supported departures: {start} to {end} (UTC).</span></div>', unsafe_allow_html=True)
 
 
-def header(title: str, lede: str, eyebrow: str = "CargoMind") -> None:
-    """Page heading: small accent label, title and one-line description."""
-    st.markdown(f'<div class="cm-eyebrow">{eyebrow}</div>', unsafe_allow_html=True)
-    st.title(title)
-    st.markdown(f'<div class="cm-lede">{lede}</div>', unsafe_allow_html=True)
+def section(text: str) -> None:
+    st.markdown(f'<div class="cm-section">{text}</div>', unsafe_allow_html=True)
 
 
-def titlebar(title: str, subtitle: str) -> None:
-    """Dashboard title strip with a permanent 'synthetic replay' chip."""
-    st.markdown(f'<div class="cm-titlebar"><div><div class="t">{title}</div><div class="s">{subtitle}</div></div>'
-                f'<span class="cm-chip"><span class="dot" style="background:{FLAG_COLOR}"></span>Synthetic · offline</span></div>',
-                unsafe_allow_html=True)
+def panel(name: str):
+    """A frosted card. Use as a context manager: `with ui.panel("forecast"): ...`."""
+    return st.container(key=f"card_{name}")
+
+
+def tile(name: str):
+    """A solid white inner card, for grouping inside a panel."""
+    return st.container(key=f"tile_{name}")
+
+
+def row(name: str):
+    """Wrap a set of columns whose cards should stretch to equal height."""
+    return st.container(key=f"row_{name}")
+
+
+def card_head(title: str, subtitle: str | None = None, right: str = "") -> None:
+    """Card heading: title and source/model subtitle on the left, an optional badge on the right."""
+    sub = f'<div class="cm-card-sub">{subtitle}</div>' if subtitle else ""
+    st.markdown(f'<div class="cm-card-head"><div><div class="cm-card-title">{title}</div>{sub}</div>'
+                f'<div>{right}</div></div>', unsafe_allow_html=True)
+
+
+def panel_title(text: str, subtitle: str | None = None) -> None:
+    card_head(text, subtitle)
 
 
 def context_bar(items: dict[str, str]) -> None:
@@ -145,25 +334,41 @@ def context_bar(items: dict[str, str]) -> None:
     st.markdown(f'<div class="cm-context" aria-label="Current selection">{html}</div>', unsafe_allow_html=True)
 
 
+# --- Text blocks ---------------------------------------------------------------------------------------------------
+def badge(text: str, tone: str = "neutral", dot: str | None = None) -> str:
+    d = f'<span class="dot" style="background:{dot}"></span>' if dot else ""
+    return f'<span class="cm-badge {tone}">{d}{text}</span>'
+
+
 def class_chip(cls: str) -> str:
     """HTML badge for a delay class: coloured dot plus the class name."""
     return f'<span class="cm-chip"><span class="dot" style="background:{CLASS_COLORS[cls]}"></span>{cls}</span>'
 
 
+def class_badge(cls: str) -> str:
+    tone = {"On-Time": "green", "At-Risk": "amber", "Critical": "red"}[cls]
+    return badge(cls, tone, CLASS_COLORS[cls])
+
+
 def flag_chip(flagged: bool) -> str:
-    color = FLAG_COLOR if flagged else palette()["accent"]
+    color = FLAG_COLOR if flagged else BLUE
     text = "Unusual conditions detected" if flagged else "Not flagged"
     return f'<span class="cm-chip"><span class="dot" style="background:{color}"></span>{text}</span>'
 
 
-def card(title: str, body: str) -> None:
-    st.markdown(f'<div class="cm-card"><div class="cm-panel-title">{title}</div><p>{body}</p></div>', unsafe_allow_html=True)
-
-
-def kpi(label: str, value: str, unit: str = "") -> None:
+def kpi(label: str, value: str, unit: str = "", accent: bool = False) -> str:
     unit_html = f'<span class="unit">{unit}</span>' if unit else ""
-    st.markdown(f'<div class="cm-kpi"><div class="label">{label}</div><div class="value">{value}{unit_html}</div></div>',
-                unsafe_allow_html=True)
+    return f'<div class="cm-kpi{" accent" if accent else ""}"><div class="label">{label}</div><div class="value">{value}{unit_html}</div></div>'
+
+
+def kpis(items: list[str]) -> None:
+    st.markdown(f'<div class="cm-kpis">{"".join(items)}</div>', unsafe_allow_html=True)
+
+
+def big(value: str, unit: str = "", right: str = "") -> None:
+    u = f'<span class="unit">{unit}</span>' if unit else ""
+    st.markdown(f'<div style="display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap"><span class="cm-big">{value}{u}</span>'
+                f'{right}</div>', unsafe_allow_html=True)
 
 
 def rows(items: dict[str, str]) -> None:
@@ -172,10 +377,25 @@ def rows(items: dict[str, str]) -> None:
     st.markdown(html, unsafe_allow_html=True)
 
 
-def panel_title(text: str, subtitle: str | None = None) -> None:
-    """Panel heading in plain language, with the producing model (or data source) as a subtitle."""
-    sub = f'<div class="cm-panel-sub">{subtitle}</div>' if subtitle else ""
-    st.markdown(f'<div class="cm-panel-title">{text}</div>{sub}', unsafe_allow_html=True)
+def note(text: str, warn: bool = False) -> None:
+    st.markdown(f'<div class="cm-note{" warn" if warn else ""}">{text}</div>', unsafe_allow_html=True)
+
+
+def seg_bar(value: float, color: str, segments: int = 18) -> str:
+    """Segmented bar for a 0-1 quantity (display only; no threshold is implied)."""
+    n = round(max(0.0, min(1.0, value)) * segments)
+    cells = "".join(f'<i style="background:{color}"></i>' if i < n else "<i></i>" for i in range(segments))
+    return f'<span class="cm-seg" aria-hidden="true">{cells}</span>'
+
+
+def meter(lo: float, hi: float, value: float, mark: float | None = None, lo_label: str = "", hi_label: str = "") -> None:
+    """Range meter: track from lo to hi, a knob at `value` and an optional thin mark (e.g. the observed value)."""
+    span = (hi - lo) or 1.0
+    pos = lambda v: max(0.0, min(100.0, (v - lo) / span * 100))  # noqa: E731
+    mk = f'<span class="mark" style="left:{pos(mark):.1f}%"></span>' if mark is not None else ""
+    st.markdown(f'<div class="cm-meter"><span class="fill" style="width:{pos(value):.1f}%"></span>{mk}'
+                f'<span class="knob" style="left:{pos(value):.1f}%"></span></div>'
+                f'<div class="cm-meter-legend"><span>{lo_label}</span><span>{hi_label}</span></div>', unsafe_allow_html=True)
 
 
 def help_popover(text: str) -> None:
@@ -184,78 +404,136 @@ def help_popover(text: str) -> None:
         st.markdown(text)
 
 
+def error_box(message: str) -> None:
+    """A user-facing error: plain words only, no paths, stack traces or internal names."""
+    st.error(message, icon=":material/error:")
+
+
+# --- Controls (shared across pages) --------------------------------------------------------------------------------
+def port_picker(ports: list[str], names: dict[str, str], key: str, required: bool, label: str = "Port",
+                placeholder: str = "Choose a port") -> str | None:
+    """Port selectbox seeded from the shared selection, so Overview and Port Forecast follow the same port."""
+    shared = st.session_state.get(SHARED_PORT)
+    if key not in st.session_state and (shared in ports or required):
+        st.session_state[key] = shared if shared in ports else ports[0]
+    value = st.selectbox(label, ports, index=None, key=key, placeholder=placeholder, label_visibility="collapsed",
+                         format_func=lambda p: f"{p} · {names[p]}" if p in names else p)
+    if value is not None:
+        st.session_state[SHARED_PORT] = value
+    return value
+
+
 def hour_picker(first_end: pd.Timestamp, last: pd.Timestamp, default: pd.Timestamp, key: str,
-                label: str = "Hour (UTC)") -> pd.Timestamp:
-    """Date + hour selection limited to [first_end, last] (UTC). Only valid hours are offered."""
-    day = st.date_input(f"{label}: date", value=default.date(), min_value=first_end.date(), max_value=last.date(),
-                        key=f"{key}_date", format="YYYY-MM-DD")
+                label: str = "Hour (UTC)", columns=None) -> pd.Timestamp:
+    """Date + hour selection limited to [first_end, last] (UTC), seeded from the shared replay hour.
+
+    `columns` is an optional pair of containers to place the date and the hour in.
+    """
+    seed = pd.Timestamp(st.session_state.get(SHARED_HOUR, default))
+    seed = min(max(seed, first_end), last)
+    dk, hk = f"{key}_date", f"{key}_hour"
+    if dk not in st.session_state:
+        st.session_state[dk] = seed.date()
+    c1, c2 = columns if columns else (st.container(), st.container())
+    with c1:
+        day = st.date_input(f"{label}: date", value=None, min_value=first_end.date(), max_value=last.date(), key=dk,
+                            format="YYYY-MM-DD", label_visibility="collapsed") or seed.date()
     hours = [h for h in range(24) if first_end <= pd.Timestamp(datetime.combine(day, time(h)), tz="UTC") <= last]
-    index = hours.index(default.hour) if day == default.date() and default.hour in hours else len(hours) - 1
-    hour = st.selectbox(f"{label}: hour", hours, index=index, format_func=lambda h: f"{h:02d}:00")
-    return pd.Timestamp(datetime.combine(day, time(hour)), tz="UTC")
+    if st.session_state.get(hk) not in hours:
+        st.session_state[hk] = seed.hour if seed.hour in hours else hours[-1]
+    with c2:
+        hour = st.selectbox(f"{label}: hour", hours, key=hk, format_func=lambda h: f"{h:02d}:00 UTC", label_visibility="collapsed")
+    ts = pd.Timestamp(datetime.combine(day, time(hour)), tz="UTC")
+    st.session_state[SHARED_HOUR] = ts
+    return ts
 
 
+# --- Charts --------------------------------------------------------------------------------------------------------
 def style(chart: alt.TopLevelMixin) -> alt.TopLevelMixin:
-    """Theme-matched axes, legend and transparent background for any top-level Altair chart."""
-    p = palette()
+    """Shared axes, legend and transparent background for any top-level Altair chart."""
     return (chart.properties(background="transparent")
-            .configure_axis(labelColor=p["chart_text"], titleColor=p["chart_text"], gridColor=p["grid"], domainColor=p["grid"],
-                            tickColor=p["grid"], labelFontSize=12, titleFontSize=12, labelFont=FONT, titleFont=FONT)
-            .configure_legend(labelColor=p["chart_text"], titleColor=p["chart_text"], labelFont=FONT)
+            .configure_axis(labelColor=MUTED, titleColor=INK2, gridColor=GRID, domainColor=GRID, tickColor=GRID,
+                            labelFontSize=11, titleFontSize=11, labelFont=FONT, titleFont=FONT, titleFontWeight=500,
+                            labelPadding=6)
+            .configure_legend(labelColor=INK2, titleColor=INK2, labelFont=FONT, labelFontSize=11, symbolSize=70)
             .configure_view(strokeWidth=0))
 
 
-def gauge(percent: float, label: str, color: str) -> alt.Chart:
-    """Donut gauge for a 0-100 % quantity (used for utilisation only), value in the centre and label below."""
-    p = palette()
+def gauge(percent: float, label: str, color: str = BLUE, size: int = 120) -> alt.Chart:
+    """Thin ring gauge for a 0-100 % quantity (used for utilisation only), value in the centre."""
     pct = max(0.0, min(100.0, float(percent)))
     data = pd.DataFrame({"part": ["value", "rest"], "amount": [pct, 100 - pct]})
-    ring = alt.Chart(data).mark_arc(innerRadius=56, outerRadius=76, cornerRadius=4).encode(
+    r = size / 2 - 6
+    ring = alt.Chart(data).mark_arc(innerRadius=r - 7, outerRadius=r, cornerRadius=6).encode(
         theta=alt.Theta("amount:Q", stack=True),
-        color=alt.Color("part:N", scale=alt.Scale(domain=["value", "rest"], range=[color, p["track"]]), legend=None),
+        color=alt.Color("part:N", scale=alt.Scale(domain=["value", "rest"], range=[color, TRACK]), legend=None),
         tooltip=alt.value(None))
-    text = alt.Chart(pd.DataFrame({"t": [f"{pct:.0f}%"]})).mark_text(fontSize=24, fontWeight="bold", color=p["text"],
-                                                                        font=FONT).encode(text="t:N")
-    caption = alt.Chart(pd.DataFrame({"t": [label]})).mark_text(dy=96, fontSize=13, color=p["chart_text"],
-                                                                 font=FONT).encode(text="t:N")
-    return style((ring + text + caption).properties(height=225))
+    text = alt.Chart(pd.DataFrame({"t": [f"{pct:.0f}%"]})).mark_text(fontSize=17, fontWeight=600, color=INK, font=FONT,
+                                                                        dy=-5).encode(text="t:N")
+    caption = alt.Chart(pd.DataFrame({"t": [label]})).mark_text(dy=12, fontSize=10, color=MUTED, font=FONT).encode(text="t:N")
+    return style((ring + text + caption).properties(height=size, width=size))
 
 
 def probability_chart(probabilities: dict[str, float]) -> alt.Chart:
     """Three raw probabilities as labelled bars on a 0-1 scale of their own."""
-    p = palette()
     data = pd.DataFrame({"class": CLASS_ORDER, "probability": [probabilities[c] for c in CLASS_ORDER]})
-    bars = alt.Chart(data).mark_bar(cornerRadiusEnd=3).encode(
-        x=alt.X("probability:Q", scale=alt.Scale(domain=[0, 1]), title="Raw model probability (not calibrated)"),
-        y=alt.Y("class:N", sort=CLASS_ORDER, title=None),
+    base = alt.Chart(data).encode(y=alt.Y("class:N", sort=CLASS_ORDER, title=None, axis=alt.Axis(labelFontSize=12, labelColor=INK2)))
+    track = base.mark_bar(cornerRadius=6, color=TRACK, height=14).encode(x=alt.X("one:Q", scale=alt.Scale(domain=[0, 1])))
+    bars = base.mark_bar(cornerRadius=6, height=14).encode(
+        x=alt.X("probability:Q", scale=alt.Scale(domain=[0, 1]), title="Raw model probability (not calibrated)",
+                axis=alt.Axis(format=".1f", tickCount=5)),
         color=alt.Color("class:N", legend=None, scale=alt.Scale(domain=CLASS_ORDER, range=[CLASS_COLORS[c] for c in CLASS_ORDER])),
         tooltip=[alt.Tooltip("class:N"), alt.Tooltip("probability:Q", format=".3f")])
-    labels = bars.mark_text(align="left", dx=4, color=p["text"], font=FONT).encode(
-        text=alt.Text("probability:Q", format=".2f"), color=alt.value(p["text"]))
-    return style((bars + labels).properties(height=135))
+    labels = base.mark_text(align="left", dx=6, color=INK, font=FONT, fontWeight=600).encode(
+        x="probability:Q", text=alt.Text("probability:Q", format=".2f"))
+    return style(alt.layer(track, bars, labels).transform_calculate(one="1").properties(height=150))
 
 
 def anomaly_scale(score: float, threshold: float, flagged: bool) -> alt.Chart:
     """The anomaly score on its own scale with the flag threshold marked. Never shares an axis with probabilities."""
-    p = palette()
     lo, hi = min(score, threshold), max(score, threshold)
     pad = max((hi - lo) * 0.6, 0.05)
     domain = [lo - pad, hi + pad]
-    x = alt.X("x:Q", scale=alt.Scale(domain=domain), title="Anomaly score (own scale; higher = more unusual)")
+    x = alt.X("x:Q", scale=alt.Scale(domain=domain), title="Anomaly score (own scale; higher = more unusual)",
+              axis=alt.Axis(offset=22, tickCount=6))
     track = alt.Chart(pd.DataFrame({"x": [domain[0]], "x2": [domain[1]]})).mark_rule(
-        strokeWidth=10, color=p["track"], strokeCap="round").encode(x=x, x2="x2:Q")
+        strokeWidth=10, color=TRACK, strokeCap="round").encode(x=x, x2="x2:Q")
     tick = alt.Chart(pd.DataFrame({"x": [threshold], "t": ["Flag threshold"]}))
     marker = alt.Chart(pd.DataFrame({"x": [score], "t": ["This shipment"]}))
-    color = FLAG_COLOR if flagged else p["accent"]
+    color = FLAG_COLOR if flagged else BLUE
     layers = [track,
-              tick.mark_tick(thickness=3, size=30, color=p["chart_text"]).encode(x="x:Q"),
-              tick.mark_text(dy=-24, fontSize=12, color=p["chart_text"], font=FONT).encode(x="x:Q", text="t:N"),
-              marker.mark_point(shape="diamond", filled=True, size=260, color=color).encode(
+              tick.mark_tick(thickness=2, size=28, color=INK2).encode(x="x:Q"),
+              tick.mark_text(dy=-24, fontSize=11, color=INK2, font=FONT).encode(x="x:Q", text="t:N"),
+              marker.mark_point(shape="circle", filled=True, size=230, color=color, stroke="white", strokeWidth=3).encode(
                   x="x:Q", tooltip=[alt.Tooltip("x:Q", format=".3f", title="Anomaly score")]),
-              marker.mark_text(dy=24, fontSize=12, color=p["text"], font=FONT).encode(x="x:Q", text="t:N")]
-    return style(alt.layer(*layers).properties(height=110, padding={"top": 26, "bottom": 4, "left": 6, "right": 10}))
+              marker.mark_text(dy=24, fontSize=11, color=INK, font=FONT, fontWeight=600).encode(x="x:Q", text="t:N")]
+    return style(alt.layer(*layers).properties(height=96, padding={"top": 26, "bottom": 4, "left": 6, "right": 10}))
 
 
+def area_line(data: pd.DataFrame, x: alt.X, y_field: str, y_title: str, tooltip: list, height: int = 190) -> alt.Chart:
+    """Soft area + line in the accent blue (trend charts)."""
+    grad = alt.Gradient(gradient="linear", x1=1, x2=1, y1=1, y2=0,
+                        stops=[alt.GradientStop(color="rgba(47,125,225,0.0)", offset=0),
+                               alt.GradientStop(color="rgba(47,125,225,0.22)", offset=1)])
+    lo, hi = float(data[y_field].min()), float(data[y_field].max())
+    pad = max((hi - lo) * 0.35, 0.5)
+    y = alt.Y(f"{y_field}:Q", title=y_title, scale=alt.Scale(domain=[lo - pad, hi + pad], nice=False), axis=alt.Axis(tickCount=4))
+    base = alt.Chart(data).encode(x=x, y=y)
+    return style(alt.layer(base.mark_area(color=grad, line=False, interpolate="monotone", clip=True),
+                           base.mark_line(color=BLUE, strokeWidth=2.2, interpolate="monotone"),
+                           base.mark_point(color=BLUE, filled=True, size=46, stroke="white", strokeWidth=1.5).encode(tooltip=tooltip))
+                 .properties(height=height))
+
+
+def thin_bars(data: pd.DataFrame, x: alt.X, y_field: str, y_title: str | None, tooltip: list, height: int = 140) -> alt.Chart:
+    """Thin rounded bars (the reference's 'wave' bars), shaded by value."""
+    return style(alt.Chart(data).mark_bar(width=4, cornerRadius=3).encode(
+        x=x, y=alt.Y(f"{y_field}:Q", title=y_title, axis=alt.Axis(tickCount=3)),
+        color=alt.Color(f"{y_field}:Q", legend=None, scale=alt.Scale(range=[BLUE_SOFT, BLUE])),
+        tooltip=tooltip).properties(height=height))
+
+
+# --- ML interpretation ---------------------------------------------------------------------------------------------
 def interpret(predicted_class: str, anomaly_flag: bool | None) -> str:
     """Plain-language reading of both outputs together. Keeps them independent; implies no causation."""
     if anomaly_flag is None:
@@ -269,8 +547,3 @@ def interpret(predicted_class: str, anomaly_flag: bool | None) -> str:
         conditions = "unusual operating conditions detected" if anomaly_flag else "no unusual operating conditions flagged"
         text = f"Predicted delay category: {predicted_class}. The origin shows {conditions}."
     return f"{text} An anomaly is not a delay prediction, and neither output proves what will happen."
-
-
-def error_box(message: str) -> None:
-    """A user-facing error: plain words only, no paths, stack traces or internal names."""
-    st.error(message, icon=":material/error:")
