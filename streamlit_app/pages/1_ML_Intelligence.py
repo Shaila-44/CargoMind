@@ -1,4 +1,6 @@
 """ML Intelligence: XGBoost delay class and Isolation Forest anomaly, shown together but kept as two separate outputs."""
+from __future__ import annotations
+
 import logging
 
 import pandas as pd
@@ -11,9 +13,15 @@ log = logging.getLogger("cargomind.ml_page")
 
 st.set_page_config(page_title="ML Intelligence | CargoMind", layout="wide")
 ui.theme()
+ui.navbar("ML Intelligence")
+h_left, h_right = st.columns([1.6, 1], vertical_alignment="bottom")
+with h_left:
+    ui.header("ML Intelligence", "Delay outlook and unusual conditions at origin for one shipment: two independent model "
+                                 "outputs, shown side by side and never combined into one score.")
+with h_right:
+    st.markdown('<div style="text-align:right">' + ui.badge("Model A · XGBoost classifier", "navy") + " "
+                + ui.badge("Model B · Isolation Forest", "orange", ui.FLAG_COLOR) + "</div>", unsafe_allow_html=True)
 ui.demo_banner()
-ui.header("ML Intelligence", "Delay outlook and unusual conditions at origin for one shipment: two independent model "
-                             "outputs, shown side by side and never combined into one score.")
 
 
 @st.cache_data(show_spinner=False)
@@ -36,6 +44,17 @@ def _score(shipment: pd.DataFrame) -> list[dict]:
     return ml_risk.predict_shipments(shipment[ml_risk.SHIPMENT_INPUT_COLUMNS])
 
 
+def _origin_context(port: str, departure: pd.Timestamp) -> pd.Series | None:
+    """Observed state of the origin port at the last full hour before departure (history, not a model output)."""
+    try:
+        snap = port_ops.snapshot(departure.floor("h") - pd.Timedelta(hours=1))
+    except Exception:
+        log.exception("origin context unavailable")
+        return None
+    hit = snap[snap["port_id"] == port]
+    return None if hit.empty else hit.iloc[0]
+
+
 def _reset():
     for key in ("origin", "shipment", "dest", "carrier", "dates"):
         st.session_state.pop(key, None)
@@ -49,23 +68,36 @@ except Exception:  # the file read failed; details go to the log, not the page
     st.stop()
 names = _names()
 label = lambda p: f"{p} · {names[p]}" if p in names else p  # noqa: E731
+origins = sorted(shipments["origin_port_id"].unique())
+seed = st.session_state.pop("cm_ml_origin_seed", None)  # set by the Overview's "Open in ML Intelligence"
+if seed in origins:
+    st.session_state["origin"] = seed
+    st.session_state["shipment"] = None
 
-with st.sidebar:
-    st.header("Find a shipment")
-    st.button("Reset selection", icon=":material/restart_alt:", on_click=_reset)
-    origin = st.selectbox("Origin port", sorted(shipments["origin_port_id"].unique()), index=None, format_func=label,
-                          placeholder="Choose an origin port", key="origin",
-                          on_change=lambda: st.session_state.update(shipment=None))  # a new port invalidates the shipment
+# --- Shipment finder -----------------------------------------------------------------------------------------------
+with ui.panel("finder"):
+    ui.card_head("Find a shipment", "Synthetic shipments whose departure the models support")
+    f1, f2, f3, f4, f5 = st.columns([1.25, 1, 1, 1.25, 0.6], vertical_alignment="bottom")
+    with f1:
+        origin = st.selectbox("Origin port", origins, index=None, format_func=label, placeholder="Choose an origin port",
+                              key="origin", on_change=lambda: st.session_state.update(shipment=None))  # new port: new shipment
+    from_origin = shipments[shipments["origin_port_id"] == origin] if origin else shipments.iloc[0:0]
+    with f2:
+        dests = st.multiselect("Destination", sorted(from_origin["destination_port_id"].unique()), format_func=label,
+                               placeholder="Any destination", key="dest", disabled=origin is None)
+    with f3:
+        carriers = st.multiselect("Carrier", sorted(from_origin["carrier"].unique()), placeholder="Any carrier", key="carrier",
+                                  disabled=origin is None)
+    with f4:
+        lo, hi = ml_risk.SUPPORTED_DEPARTURE_START.date(), ml_risk.SUPPORTED_DEPARTURE_END.date()
+        dates = st.date_input("Departure dates (UTC)", value=(lo, hi), min_value=lo, max_value=hi, key="dates",
+                              format="YYYY-MM-DD", help="Only the synthetic period the models support can be chosen.",
+                              disabled=origin is None)
+    with f5:
+        st.button("Reset", icon=":material/restart_alt:", on_click=_reset, width="stretch")
     if origin is None:
         st.info("Choose an origin port to list its supported shipments.")
         st.stop()
-    from_origin = shipments[shipments["origin_port_id"] == origin]
-    dests = st.multiselect("Destination", sorted(from_origin["destination_port_id"].unique()), format_func=label,
-                           placeholder="Any destination", key="dest")
-    carriers = st.multiselect("Carrier", sorted(from_origin["carrier"].unique()), placeholder="Any carrier", key="carrier")
-    lo, hi = ml_risk.SUPPORTED_DEPARTURE_START.date(), ml_risk.SUPPORTED_DEPARTURE_END.date()
-    dates = st.date_input("Departure dates (UTC)", value=(lo, hi), min_value=lo, max_value=hi, key="dates",
-                          format="YYYY-MM-DD", help="Only the synthetic period the models support can be chosen.")
     candidates = from_origin
     if dests:
         candidates = candidates[candidates["destination_port_id"].isin(dests)]
@@ -81,7 +113,7 @@ with st.sidebar:
                                placeholder=f"{len(candidates)} matching · type to search", key="shipment")
 
 if candidates.empty:
-    st.info("No supported shipments match these filters. Widen the filters or press Reset selection.")
+    st.info("No supported shipments match these filters. Widen the filters or press Reset.")
     st.stop()
 
 with st.expander(f"All {len(candidates)} matching shipments from {origin} (sortable table)", icon=":material/table:"):
@@ -102,20 +134,17 @@ with st.expander(f"All {len(candidates)} matching shipments from {origin} (sorta
             } for r in batch]).merge(candidates[["shipment_id", "destination_port_id", "departure_ts"]]
                                      .rename(columns={"shipment_id": "Shipment", "destination_port_id": "Destination",
                                                       "departure_ts": "Departure (UTC)"}), on="Shipment")
-            st.dataframe(table, hide_index=True, use_container_width=True,
+            st.dataframe(table, hide_index=True, width="stretch",
                          column_config={f"Raw P({c})": st.column_config.NumberColumn(format="%.3f") for c in ui.CLASS_ORDER}
                          | {"Anomaly score": st.column_config.NumberColumn(format="%.3f")})
             st.caption("Click a header to sort. The anomaly score has its own scale and cannot be compared with the probabilities.")
 
 if shipment_id is None:
-    st.info("Select a shipment in the sidebar to see both outputs. The list is searchable: type a shipment id, "
-            "destination or carrier.")
+    st.info("Select a shipment above to see both outputs. The list is searchable: type a shipment id, destination or carrier.")
     st.stop()
 
 row = candidates[candidates["shipment_id"] == shipment_id].reset_index(drop=True)
 r0 = row.iloc[0]
-ui.context_bar({"Shipment": shipment_id, "Route": f"{r0['origin_port_id']} → {r0['destination_port_id']}",
-                "Departs": f"{r0['departure']:%a %d %b %Y, %H:%M} UTC"})
 
 try:
     result = _score(row)[0]
@@ -132,45 +161,66 @@ classification = result["classification"]
 anomaly = result["anomaly"]
 predicted = classification["predicted_class"]
 
-with st.container(border=True):
-    ui.panel_title("Shipment summary")
-    s1, s2 = st.columns(2, gap="large")
+# --- Shipment summary ----------------------------------------------------------------------------------------------
+with ui.panel("summary"):
+    s1, s2 = st.columns([1.1, 2], vertical_alignment="center", gap="large")
     with s1:
-        ui.rows({"Route": f"{label(r0['origin_port_id'])} → {label(r0['destination_port_id'])}", "Carrier": r0["carrier"],
-                 "Mode · cargo": f"{r0['shipping_mode']} · {r0['cargo_type']}"})
+        st.markdown(f'<div class="cm-eyebrow">Shipment {shipment_id}</div>'
+                    f'<div class="cm-big" style="font-size:1.9rem">{r0["origin_port_id"]} → {r0["destination_port_id"]}</div>'
+                    f'<div class="cm-card-sub">{names.get(r0["origin_port_id"], "")} to {names.get(r0["destination_port_id"], "")}</div>',
+                    unsafe_allow_html=True)
     with s2:
-        ui.rows({"Size · priority": f"{r0['container_teu']:g} TEU · {r0['shipment_priority']}",
-                 "Departure (UTC)": f"{r0['departure']:%d %b %Y %H:%M}",
-                 "Expected arrival (UTC)": f"{pd.Timestamp(r0['expected_arrival_ts']):%d %b %Y %H:%M}"})
+        ui.context_bar({"Shipment": shipment_id, "Carrier": r0["carrier"], "Mode": r0["shipping_mode"], "Cargo": r0["cargo_type"],
+                        "Size": f"{r0['container_teu']:g} TEU", "Priority": r0["shipment_priority"],
+                        "Departs": f"{r0['departure']:%a %d %b %Y, %H:%M} UTC",
+                        "Expected arrival": f"{pd.Timestamp(r0['expected_arrival_ts']):%d %b %H:%M} UTC"})
 
-left, right = st.columns(2, gap="large")
+ui.section("Two independent outputs · never combined into one score")
+with ui.row("models"):
+    left, right = st.columns(2, gap="medium")
 
-with left, st.container(border=True):
-    ui.panel_title("Delay outlook", f"{classification['model_label']} · primary delay classifier")
-    st.markdown(f"Predicted class&nbsp; {ui.class_chip(predicted)}", unsafe_allow_html=True)
-    st.altair_chart(ui.probability_chart(classification["class_probabilities"]), use_container_width=True)
+with left, ui.panel("xgb"):
+    ui.card_head("Delay outlook", f"Model A · {classification['model_label']} · primary delay classifier", ui.badge("Classification", "navy"))
+    st.markdown(f'<div style="display:flex;align-items:center;gap:0.6rem;margin:0.4rem 0 0.2rem 0">'
+                f'<span class="cm-card-sub" style="margin:0">Predicted class</span>{ui.class_chip(predicted)}</div>',
+                unsafe_allow_html=True)
+    st.altair_chart(ui.probability_chart(classification["class_probabilities"]), use_container_width=True,
+                    key=f"ml_probs_{shipment_id}")
     st.caption(ui.UNCALIBRATED_NOTE)
+    ui.note("<b>Uncalibrated probabilities.</b> The predicted class is simply the highest raw probability. 0.6 does not mean "
+            "a 60 % real-world chance, and no alert threshold has been approved, so the app raises no alerts.")
     ui.help_popover("XGBoost gives a raw probability for each delay class; the predicted class is simply the highest "
                     "one. The probabilities are **not calibrated**: 0.6 does not mean a 60 % real-world chance. No "
                     "alert threshold has been approved, so the app does not raise alerts.")
 
-with right, st.container(border=True):
-    ui.panel_title("Unusual conditions at origin", "Isolation Forest · anomaly detector")
+with right, ui.panel("iforest"):
+    ui.card_head("Unusual conditions at origin", "Model B · Isolation Forest · anomaly detector",
+                 ui.badge("Anomaly detection", "orange"))
     if anomaly is None:
         st.info("No anomaly result was produced for this shipment.")
     else:
         flagged = bool(anomaly["anomaly_flag"])
-        st.markdown(f"Anomaly flag&nbsp; {ui.flag_chip(flagged)}", unsafe_allow_html=True)
-        st.metric("Anomaly score", f"{anomaly['anomaly_score']:.3f}",
-                  help=f"{anomaly['score_definition']}. Flag threshold {anomaly['threshold']:.3f}.")
-        st.altair_chart(ui.anomaly_scale(anomaly["anomaly_score"], anomaly["threshold"], flagged), use_container_width=True)
+        m1, m2 = st.columns([1, 1.2], vertical_alignment="center")
+        with m1:
+            st.metric("Anomaly score", f"{anomaly['anomaly_score']:.3f}",
+                      help=f"{anomaly['score_definition']}. Flag threshold {anomaly['threshold']:.3f}.")
+        with m2:
+            st.markdown(f'<div class="cm-card-sub">Anomaly flag</div>{ui.flag_chip(flagged)}', unsafe_allow_html=True)
+        st.altair_chart(ui.anomaly_scale(anomaly["anomaly_score"], anomaly["threshold"], flagged), use_container_width=True,
+                        key=f"ml_anomaly_{shipment_id}")
+        ctx = _origin_context(r0["origin_port_id"], r0["departure"])
+        if ctx is not None:
+            st.markdown(f'<div class="cm-card-sub" style="margin-top:0.3rem">Observed at {r0["origin_port_id"]} '
+                        f'the hour before departure (history, for context)</div>', unsafe_allow_html=True)
+            ui.rows({"Dwell time": f"{ctx['dwell']:.1f} h", "Utilisation": f"{ctx['utilization']:.0f}%",
+                     "Vessels at anchor": f"{ctx['vessels_at_anchor']:.0f}", "Wind gust": f"{ctx['wind_gust']:.0f} km/h",
+                     "Disruption · strike": f"{'yes' if ctx['disruption_active'] else 'no'} · {'yes' if ctx['labour_strike'] else 'no'}"})
     ui.help_popover("A separate model compares the origin port's operating state at departure with normal on-time "
                     "conditions. Scores above the threshold are flagged. **An anomaly is not a delay prediction**, and it "
                     "does not explain a delay.")
 
-st.write("")
-with st.container(border=True):
-    ui.panel_title("Reading both outputs together", "A plain-language note; it does not change either output")
+with ui.panel("reading"):
+    ui.card_head("Reading both outputs together", "A plain-language note; it does not change either output")
     st.markdown(ui.interpret(predicted, bool(anomaly["anomaly_flag"]) if anomaly else None))  # None: no anomaly result
 
 if result["warnings"]:
@@ -179,4 +229,4 @@ if result["warnings"]:
             st.write(f"- {note}")
 
 with st.expander("Shipment input context", icon=":material/description:"):
-    st.dataframe(row[ml_risk.SHIPMENT_INPUT_COLUMNS], hide_index=True, use_container_width=True)
+    st.dataframe(row[ml_risk.SHIPMENT_INPUT_COLUMNS], hide_index=True, width="stretch")
